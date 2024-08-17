@@ -1,0 +1,10 @@
+{% extends 'components/base.html' %} {% load static %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+{% block content %}
+<h1>PROYECTO CS</h1>
+  {% if user.is_authenticated %}
+  <h2>BIENVENIDO,  <span>{{ user.get_full_name}}</span></h2>
+  {% else %}
+  <h2>BIENVENIDO, POR FAVOR INICIE SESIÓN</h2>
+  {% endif %}
+{% endblock content %}

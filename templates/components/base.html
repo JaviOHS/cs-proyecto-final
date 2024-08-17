@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS - PROJECT </title>
+</head>
+
+<body style="background-color: aliceblue;">
+  <header>
+    <nav>
+      {% if user.is_authenticated %}
+      <ul>
+        <li>{{ user.username }}</li>
+        <li>
+          <a href="{% url 'security:auth_logout' %}">
+            Cerrar Sesión
+          </a>
+        </li>
+      </ul>
+      {% else %}
+      <ul>
+        <li>
+          <a href="{% url 'security:auth_signup' %}">
+            Registrarse
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'security:auth_login' %}">
+            Iniciar Sesión
+          </a>
+        </li>
+      </ul>
+      {% endif %}
+    </nav>
+
+    <section>
+      {% block content %}
+      {% endblock content %}
+  </header>
+
+</body>
+
+</html>
