@@ -5,42 +5,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CS - PROJECT </title>
+  <title>{% block title %} CS PROJECT {% endblock title %}</title>
+  <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
-<body style="background-color: aliceblue;">
-  <header>
+<body class="bg-white dark:bg-primary-dark text-lg font-sans">
+  <header class="bg-slate-50 dark:bg-primary-dark">
     <nav>
-      {% if user.is_authenticated %}
-      <ul>
-        <li>{{ user.username }}</li>
-        <li>
-          <a href="{% url 'security:auth_logout' %}">
-            Cerrar Sesión
-          </a>
-        </li>
-      </ul>
-      {% else %}
-      <ul>
-        <li>
-          <a href="{% url 'security:auth_signup' %}">
-            Registrarse
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'security:auth_login' %}">
-            Iniciar Sesión
-          </a>
-        </li>
-      </ul>
-      {% endif %}
+      <div class="flex flex-wrap justify-between p-4 items-center">
+        <a href="/" class="text-xl font-semibold dark:text-white">CS - PROYECTO</a>
+        <ul class="flex gap-4">
+          <li><a class="dark:text-gray-300" href="{% url 'home' %}">Inicio</a></li>
+          <li><a class="dark:text-gray-300" href="#">Acerca de</a></li>
+        </ul>
+        <ul class="flex gap-4 items-center">
+          {% if user.is_authenticated %}
+          <li class="dark:text-white font-bold">{{ user.username }}</li>
+          <li>
+            {% if user.image %}
+            <img src="{{ user.image.url }}" alt="profile" class="w-10 h-10 rounded-full">
+            {% else %}
+            <img src="{% static 'img/components/default_user.jpg' %}" alt="profile" class="w-10 h-10 rounded-full">
+            {% endif %}
+          </li>
+          <li>
+            <a href="{% url 'security:auth_logout' %}" class="bg-red-500 hover:bg-red-700 px-4 py-2 rounded-3xl font-bold text-white">
+              Cerrar Sesión
+            </a>
+          </li>
+          {% else %}
+          <li>
+            <a href="{% url 'security:auth_signup' %}" class="font-bold bg-indigo-200 hover:bg-indigo-500 px-4 py-2 rounded-3xl">
+              Registrarse
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'security:auth_login' %}" class="font-bold bg-indigo-200 hover:bg-indigo-500 px-4 py-2 rounded-3xl">
+              Iniciar Sesión
+            </a>
+          </li>
+          {% endif %}
+          <li>
+            <a id="theme-toggle">Toggle Dark Mode</a>
+          </li>
+        </ul>
+      </div>
     </nav>
-
-    <section>
-      {% block content %}
-      {% endblock content %}
   </header>
 
+  {% block content %}
+  {% endblock content %}
+
+  {% block scripts %}
+  {% include 'components/scripts.html' %}
+  {% endblock scripts %}
 </body>
 
 </html>

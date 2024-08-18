@@ -18,7 +18,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app.security.apps.SecurityConfig',
     'app.core.apps.CoreConfig',
+    'livereload',
 ]
+
+NPM_BIN_PATH = r'C:\Program Files\nodejs\npm.cmd'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -28,6 +31,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'livereload.middleware.LiveReloadScript',
 ]
 
 ROOT_URLCONF = 'cs_project.urls'

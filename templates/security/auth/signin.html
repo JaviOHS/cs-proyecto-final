@@ -2,13 +2,27 @@
 {% load static %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %}
-    <h1>{{ title2 }}</h1>
-    <form method="POST" enctype="multipart/form-data" class="space-y-8">
-        {% csrf_token %}
-        <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-        {{ form.username }}
-        <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
-        {{ form.password }}
-        <button type="submit">Sign in</button>
-    </form>
+<div class="min-h-screen flex justify-center items-center" data-aos="zoom-in">
+  <form method="POST" enctype="multipart/form-data" class="py-12 px-12 dark:bg-primary-dark_secondary bg-white rounded-2xl shadow-xl z-20">
+    {% csrf_token %}
+    <h1 class=" dark:text-white text-3xl font-bold text-center mb-4">{{ title2 }}</h1>
+    <div class="space-y-4">
+      <div>
+        <label class="dark:text-gray-300 font-bold" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        <input id="id_username" name="username" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+      </div>
+      <div>
+        <label class="dark:text-gray-300 font-bold" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+        <input id="id_password" name="password" type="password" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+      </div>
+    </div>
+    <div class="text-center mt-6 space-y-2">
+      <button class="font-bold w-full py-2 text-xl text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-all"
+        type="submit">Iniciar Sesión</button>
+      <button class="font-bold w-full py-2 text-xl text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-all"
+        type="submit">Reconocimiento Facial</button>
+    </div>
+  </form>
+</div>
+
 {% endblock content %}

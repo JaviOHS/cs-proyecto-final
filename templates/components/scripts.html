@@ -1,0 +1,25 @@
+{% load static %}
+<script src="{% static 'js/img.js' %}"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
+<script>
+    const toggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    toggle.addEventListener('click', () => {
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        } else {
+            html.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+
+    // Cargar el tema guardado en localStorage
+    if (localStorage.getItem('theme') === 'dark') {
+        html.classList.add('dark');
+    }
+</script>

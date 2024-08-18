@@ -2,25 +2,55 @@
 {% load static %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %}
-    <h1>{{ title2 }}</h1>
-    <form method="POST" enctype="multipart/form-data" class="space-y-8">
-        {% csrf_token %}
-        <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-        {{ form.username }}
-        <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
-        {{ form.first_name }}
-        <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
-        {{ form.last_name }}
-        <label for="{{ form.dni.id_for_label }}">{{ form.dni.label }}</label>
-        {{ form.dni }}
-        <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
-        {{ form.phone }}
-        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-        {{ form.email }}
-        <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
-        {{ form.password1 }}
-        <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
-        {{ form.password2 }}
-        <button type="submit">Sign up</button>
-    </form>
+<div class="min-h-screen flex justify-center items-center my-2" data-aos="zoom-in">
+  <form method="POST" enctype="multipart/form-data" class="py-12 px-12 dark:bg-primary-dark_secondary bg-white rounded-2xl shadow-xl z-20 space-y-2">
+    <h1 class=" dark:text-white text-3xl font-bold text-center mb-4">{{ title2 }}</h1>
+    {% csrf_token %}
+    <div class="flex flex-col items-center justify-center">
+      <img id="selected-img" src="{% static 'img/components/default_user.jpg' %}" alt="profile" class="w-[20%] rounded-full cursor-pointer">
+      {{ form.image }}
+    </div>
+    <div class="grid grid-cols-2 mx-10 space-x-4">
+      <div class="bg-indigo-100 dark:bg-primary-dark  space-y-2 p-4 rounded-3xl">
+        <div>
+          <label class="dark:text-gray-300 font-bold" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+          <input id="id_username" name="username" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+        </div>
+        <div>
+          <label class="dark:text-gray-300 font-bold" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+          <input id="id_first_name" name="first_name" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+        </div>
+        <div>
+          <label class="dark:text-gray-300 font-bold" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+          <input id="id_email" name="email" type="email" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+        </div>
+        <div>
+          <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+          <input id="id_password1" name="password1" type="password" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+        </div>
+      </div>
+      <div class="bg-indigo-100 dark:bg-primary-dark  space-y-2 p-4 rounded-3xl">
+        <div>
+          <label class="dark:text-gray-300 font-bold" for="{{ form.dni.id_for_label }}">{{ form.dni.label }}</label>
+          <input id="id_dni" name="dni" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+        </div>
+        <div>
+          <label class="dark:text-gray-300 font-bold" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+          <input id="id_last_name" name="last_name" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+        </div>
+        <div>
+          <label class="dark:text-gray-300 font-bold" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+          <input id="id_phone" name="phone" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+        </div>
+        <div>
+          <label class="dark:text-gray-300 font-bold" for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+          <input id="id_password2" name="password2" type="password" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-center">
+      <button type="submit" class="font-bold w-full py-2 text-xl text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-all">Registrarse</button>
+    </div>
+  </form>
+</section>
 {% endblock content %}

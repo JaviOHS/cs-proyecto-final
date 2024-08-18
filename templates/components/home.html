@@ -1,10 +1,31 @@
 {% extends 'components/base.html' %} {% load static %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %}
-<h1>PROYECTO CS</h1>
-  {% if user.is_authenticated %}
-  <h2>BIENVENIDO,  <span>{{ user.get_full_name}}</span></h2>
-  {% else %}
-  <h2>BIENVENIDO, POR FAVOR INICIE SESIÓN</h2>
-  {% endif %}
+<div data-aos="fade-in">
+  <section class="text-gray-600 bg-white dark:bg-primary-dark_secondary">
+    <div class="container mx-auto flex md:px-24 md:py-10 md:flex-row flex-col items-center">
+      <div class="lg:flex-grow mt-5 md:mt-0   md:w-1.5/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+        <h1 class="text-2xl font-extrabold leading-9 tracking-tight mb-3 text-gray-900 dark:text-white sm:text-4xl sm:leading-10 md:text-5xl md:leading-normal">
+          PROYECTO CS
+        </h1>
+        {% if user.is_authenticated %}
+        <p class="mb-8 md:pl-0  pl-2 pr-2 leading-relaxed dark:text-gray-300">
+          BIENVENIDO, {{ user.get_full_name}}.
+        </p>
+        {% else %}
+        <p class="mb-8 md:pl-0  pl-2 pr-2 leading-relaxed dark:text-gray-300">
+          BIENVENIDO, POR FAVOR INICIE SESIÓN.
+        </p>
+        {% endif %}
+        <p class="mb-8 md:pl-0  pl-2 pr-2 leading-relaxed dark:text-gray-300">
+          Proyecto de la materia de Construccion de Software, en el cual se implementa un sistema de reconocimiento facial.
+        </p>
+      </div>
+      <div class="lg:max-w-lg lg:w-full mb-5 md:mb-0 md:w-1/2 w-3/6">
+        <img class="object-cover object-center rounded" alt="hero"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfRklXyWQy1ditXPl8oBPdbcdjxuiVU3Z3VA&s">
+      </div>
+    </div>
+  </section>
+</div>
 {% endblock content %}
