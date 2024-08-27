@@ -5,21 +5,104 @@
     AOS.init();
 </script>
 <script>
-    const toggle = document.getElementById('theme-toggle');
-    const html = document.documentElement;
-
-    toggle.addEventListener('click', () => {
-        if (html.classList.contains('dark')) {
-            html.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-        } else {
-            html.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-        }
-    });
-
-    // Cargar el tema guardado en localStorage
-    if (localStorage.getItem('theme') === 'dark') {
-        html.classList.add('dark');
-    }
+    document.addEventListener('DOMContentLoaded', function () {
+                const themeToggleBtn = document.getElementById('themeIconContainer');
+                const themeIcon = document.getElementById('themeIcon');
+    
+                // Función para cambiar el ícono del tema
+                function toggleThemeIcon() {
+                    if (document.documentElement.classList.contains('dark')) {
+                        themeIcon.classList.remove('fa-moon');
+                        themeIcon.classList.add('fa-sun');
+                    } else {
+                        themeIcon.classList.remove('fa-sun');
+                        themeIcon.classList.add('fa-moon');
+                    }
+                }
+    
+                // Función para aplicar un tema y actualizar el ícono
+                function setTheme(theme) {
+                    document.documentElement.className = theme;
+                    localStorage.setItem('theme', theme); // Guarda el tema seleccionado en localStorage para persistencia
+    
+                    // Mostrar u ocultar la imagen de fondo según el tema seleccionado (si es necesario)
+                    const heroSection = document.getElementById('hero-section');
+                    if (heroSection) {
+                        if (theme === 'theme1') {
+                            heroSection.classList.remove('no-background');
+                        } else {
+                            heroSection.classList.add('no-background');
+                        }
+                    }
+    
+                    // Cambia el ícono del tema
+                    toggleThemeIcon();
+                }
+    
+                // Verifica si hay un tema guardado en el almacenamiento local
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                setTheme(savedTheme);
+    
+                // Cambiar el ícono del tema al cargar la página
+                toggleThemeIcon();
+    
+                // Agrega un listener para el evento 'click' en el botón
+                themeToggleBtn.addEventListener('click', function (event) {
+                    event.preventDefault(); // Previene el comportamiento predeterminado del ícono
+                    // Cambia entre temas light y dark
+                    if (document.documentElement.classList.contains('dark')) {
+                        setTheme('light');
+                    } else {
+                        setTheme('dark');
+                    }
+                });
+    
+                // Exponer setTheme globalmente para usarlo en el menú de temas
+                window.setTheme = setTheme;
+            });
 </script>
+
+
+    <!-- Script para hacer blur la navbar -->
+    <script>
+        const navbar = document.getElementById('navbar');
+        	
+        	window.addEventListener('scroll', () => {
+        	  const isDarkMode = navbar.classList.contains('dark:bg-principal'); // Verifica si la navbar está en modo oscuro
+        	  
+        	  if (window.scrollY > 50) {
+        		navbar.classList.add('bg-opacity-80', 'backdrop-blur-sm');
+        		if (isDarkMode) {
+        		  navbar.classList.add('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
+        		}
+        	  } else {
+        		navbar.classList.remove('bg-opacity-80', 'backdrop-blur-sm');
+        		if (isDarkMode) {
+        		  navbar.classList.remove('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
+        		}
+        	  }
+        	});
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        			window.addEventListener('scroll', function () {
+        				var goTopBtn = document.getElementById('goTopBtn');
+        				if (window.scrollY > 100) {
+        					goTopBtn.classList.remove('translate-y-20');
+        					goTopBtn.classList.remove('opacity-0');
+        					goTopBtn.classList.add('translate-y-0');
+        					goTopBtn.classList.add('opacity-100');
+        				} else {
+        					goTopBtn.classList.add('translate-y-20');
+        					goTopBtn.classList.add('opacity-0');
+        					goTopBtn.classList.remove('translate-y-0');
+        					goTopBtn.classList.remove('opacity-100');
+        				}
+        			});
+        
+        			document.getElementById('goTopBtn').addEventListener('click', function () {
+        				window.scrollTo({ top: 0, behavior: 'smooth' });
+        			});
+        		});
+    </script>

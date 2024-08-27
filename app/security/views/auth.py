@@ -21,6 +21,7 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
+            print('El usuario', username, 'ha sido creado exitosamente')
             messages.success(request, f"Bienvenido {username}, tu cuenta ha sido creada exitosamente. Inicia sesión para continuar.")
             return redirect("security:auth_login")
         else:
@@ -46,4 +47,3 @@ def signin(request):
             else:
                 messages.error(request, "El usuario o la contraseña son incorrectos")
         return render(request, "security/auth/signin.html", {"form": form, "error": "Datos inválidos", **data})
-

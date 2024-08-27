@@ -2,55 +2,126 @@
 {% load static %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %}
-<div class="min-h-screen flex justify-center items-center my-2" data-aos="zoom-in">
-  <form method="POST" enctype="multipart/form-data" class="py-12 px-12 dark:bg-primary-dark_secondary bg-white rounded-2xl shadow-xl z-20 space-y-2">
-    <h1 class=" dark:text-white text-3xl font-bold text-center mb-4">{{ title2 }}</h1>
-    {% csrf_token %}
-    <div class="flex flex-col items-center justify-center">
-      <img id="selected-img" src="{% static 'img/components/default_user.jpg' %}" alt="profile" class="w-[20%] rounded-full cursor-pointer">
-      {{ form.image }}
-    </div>
-    <div class="grid grid-cols-2 mx-10 space-x-4">
-      <div class="bg-indigo-100 dark:bg-primary-dark  space-y-2 p-4 rounded-3xl">
-        <div>
-          <label class="dark:text-gray-300 font-bold" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-          <input id="id_username" name="username" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+{% load i18n %}
+
+<div class="bg-slate-100 dark:bg-principal p-8 relative overflow-hidden">
+  <div class="absolute inset-0 bg-center blur-[106px]"></div>
+  <div class="relative">
+    <a href="/" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse text-center justify-center" data-aos="fade-up">
+      <img src="{% static 'img/iguana_corporation.png' %}" class="w-12 h-12" alt="Logo" />
+      <span class="self-center whitespace-nowrap dark:text-blue-300 font-extrabold"></span>
+    </a> 
+    <section class="p-8 my-4 mx-auto max-w-4xl rounded-3xl bg-white dark:bg-secundario" data-aos="fade-up" data-aos-delay="200">
+      <div class="gap-2 mb-8">
+        <div class="flex flex-col items-center justify-center">
+          <span class="bg-navbar rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+            {% trans 'REGISTRO' %}
+          </span>
         </div>
-        <div>
-          <label class="dark:text-gray-300 font-bold" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
-          <input id="id_first_name" name="first_name" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+        <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
+          {{ title2 }}
+        </h1>
+        <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">
+          {% trans '¡Por favor completa el siguiente formulario para registrarte en nuestro sistema!' %}
+        </p>
+      </div> 
+      {% csrf_token %}
+
+      <!-- Mostrar errores generales del formulario -->
+      {% if form.non_field_errors %}
+        <p class="text-red-500 text-center">{{ form.non_field_errors }}</p>
+      {% endif %}
+
+      <div class="grid lg:grid-cols-2 grid-cols-1 gap-8">
+        <!-- Columna izquierda: Formulario -->
+        <div class="bg-indigo-100 dark:bg-primary-dark space-y-4 p-4 rounded-3xl">
+
+          <!-- Dividir formulario en dos columnas de cuatro campos cada una -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="{{ form.username.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.username.label }}</label>
+              <input id="id_username" name="username" type="text" class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              {% if form.username.errors %}
+                <p class="text-red-500">{{ form.username.errors }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.first_name.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.first_name.label }}</label>
+              <input id="id_first_name" name="first_name" type="text" class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              {% if form.first_name.errors %}
+                <p class="text-red-500">{{ form.first_name.errors }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.last_name.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.last_name.label }}</label>
+              <input id="id_last_name" name="last_name" type="text" class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              {% if form.last_name.errors %}
+                <p class="text-red-500">{{ form.last_name.errors }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.dni.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.dni.label }}</label>
+              <input id="id_dni" name="dni" type="text" class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              {% if form.dni.errors %}
+                <p class="text-red-500">{{ form.dni.errors }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.email.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.email.label }}</label>
+              <input id="id_email" name="email" type="email" class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              {% if form.email.errors %}
+                <p class="text-red-500">{{ form.email.errors }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.phone.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.phone.label }}</label>
+              <input id="id_phone" name="phone" type="text" class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              {% if form.phone.errors %}
+                <p class="text-red-500">{{ form.phone.errors }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.password1.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.password1.label }}</label>
+              <input id="id_password1" name="password1" type="password" class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              {% if form.password1.errors %}
+                <p class="text-red-500">{{ form.password1.errors }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label for="{{ form.password2.id_for_label }}" class="dark:text-blue-300 font-black uppercase text-lg">{{ form.password2.label }}</label>
+              <input id="id_password2" name="password2" type="password" class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              {% if form.password2.errors %}
+                <p class="text-red-500">{{ form.password2.errors }}</p>
+              {% endif %}
+            </div>
+          </div>
         </div>
-        <div>
-          <label class="dark:text-gray-300 font-bold" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-          <input id="id_email" name="email" type="email" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
-        </div>
-        <div>
-          <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
-          <input id="id_password1" name="password1" type="password" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
+
+        <!-- Columna derecha: Imagen y selector de imagen -->
+        <div class="lg:col-span-1 w-full h-[600px] flex items-center justify-center bg-cover bg-no-repeat bg-[url('https://pagedone.io/asset/uploads/1696245837.png')]">
+          <div class="rounded-lg w-full h-auto bg-white shadow-xl p-6 backdrop-filter backdrop-blur-md bg-opacity-70">
+            <h2 class="text-2xl font-bold mb-4 text-center">{% trans 'Imagen de perfil' %}</h2>
+            <div class="flex flex-col items-center justify-center">
+              <img id="selected-img" src="{% static 'img/components/default_user.jpg' %}" alt="profile" class="w-32 h-32 rounded-full cursor-pointer mb-2">
+              {{ form.image }}
+            </div>
+            <p class="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">
+              {% trans 'Haz clic en la imagen para cambiarla' %}
+            </p>
+          </div>
         </div>
       </div>
-      <div class="bg-indigo-100 dark:bg-primary-dark  space-y-2 p-4 rounded-3xl">
-        <div>
-          <label class="dark:text-gray-300 font-bold" for="{{ form.dni.id_for_label }}">{{ form.dni.label }}</label>
-          <input id="id_dni" name="dni" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
-        </div>
-        <div>
-          <label class="dark:text-gray-300 font-bold" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
-          <input id="id_last_name" name="last_name" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
-        </div>
-        <div>
-          <label class="dark:text-gray-300 font-bold" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
-          <input id="id_phone" name="phone" type="text" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
-        </div>
-        <div>
-          <label class="dark:text-gray-300 font-bold" for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
-          <input id="id_password2" name="password2" type="password" class="block text-sm py-3 px-4 rounded-lg w-full border outline-indigo-500" />
-        </div>
+      <div class="mt-6 text-center">
+        <p class="dark:text-gray-400">{% trans '¿Ya tienes una cuenta?' %} <a href="{% url 'security:auth_login' %}" class="text-blue-600 hover:underline dark:text-blue-300 font-Tiny5 uppercase">{% trans 'Inicia Sesión' %}</a></p>
       </div>
-    </div>
-    <div class="flex justify-center">
-      <button type="submit" class="font-bold w-full py-2 text-xl text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-all">Registrarse</button>
-    </div>
-  </form>
-</section>
+    </section>
+  </div>
+</div>
 {% endblock content %}
