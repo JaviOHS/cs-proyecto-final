@@ -37,8 +37,7 @@
                   <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                     <i class="text-blue-400 fa-solid fa-user"></i>
                   </span>
-                  <input type="text" id="id_username" name="username"
-                         class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
+                  <input type="text" id="id_username" name="username" class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
                 </div>
               </div>
               <div>
@@ -47,8 +46,7 @@
                   <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                     <i class="text-blue-400 fa-solid fa-lock"></i>
                   </span>
-                  <input type="password" id="id_password" name="password"
-                         class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
+                  <input type="password" id="id_password" name="password" class="pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
                   <button class="absolute inset-y-0 right-0 flex items-center pr-3" type="button" id="togglePassword">
                     <i class="fa-solid fa-eye"></i>
                   </button>
@@ -61,7 +59,7 @@
               </div>
             </form>
             <div class="mt-6">
-              <p class="dark:text-gray-400 text-center">{% trans '¿No tienes una cuenta?' %} <a href="{% url 'security:auth_signup' %}" class="text-blue-600 hover:underline dark:text-blue-300 font-Tiny5 uppercase">{% trans 'Regístrate' %}</a></p>
+              <p class="dark:text-gray-400 text-center">{% trans '¿No tienes una cuenta?' %} <a href="{% url 'security:signup' %}" class="text-blue-600 hover:underline dark:text-blue-300 font-Tiny5 uppercase">{% trans 'Regístrate' %}</a></p>
               <p class="dark:text-gray-400 text-center mt-3">
                 {% trans '¿Has olvidado tu contraseña?' %}
                 <a href="" class="text-blue-600 hover:underline dark:text-blue-300 font-Tiny5 uppercase">

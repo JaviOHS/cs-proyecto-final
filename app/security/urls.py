@@ -1,9 +1,9 @@
 from django.urls import path
 from app.security.views import auth
+app_name = 'security'
 
-app_name = "security"
 urlpatterns = [
-    path('auth/login/',auth.signin,name="auth_login"),
-    path('auth/signup/',auth.signup,name='auth_signup'),
-    path('auth/logout/',auth.signout,name='auth_logout'),
+    path('signup/', auth.SignupView.as_view(), name='signup'),
+    path('signin/', auth.SigninView.as_view(), name='signin'),
+    path('signout/', auth.SignoutView.as_view(), name='signout'),
 ]
