@@ -65,24 +65,27 @@
 
     <!-- Script para hacer blur la navbar -->
     <script>
-        const navbar = document.getElementById('navbar');
-        	
-        	window.addEventListener('scroll', () => {
-        	  const isDarkMode = navbar.classList.contains('dark:bg-principal'); // Verifica si la navbar está en modo oscuro
-        	  
-        	  if (window.scrollY > 50) {
-        		navbar.classList.add('bg-opacity-80', 'backdrop-blur-sm');
-        		if (isDarkMode) {
-        		  navbar.classList.add('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
-        		}
-        	  } else {
-        		navbar.classList.remove('bg-opacity-80', 'backdrop-blur-sm');
-        		if (isDarkMode) {
-        		  navbar.classList.remove('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
-        		}
-        	  }
-        	});
-    </script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const navbar = document.getElementById('navbar');
+          
+          window.addEventListener('scroll', () => {
+            const isDarkMode = document.documentElement.classList.contains('dark'); // Verifica si el modo oscuro está activado
+            
+            if (window.scrollY > 50) {
+              navbar.classList.add('bg-opacity-80', 'backdrop-blur-sm');
+              if (isDarkMode) {
+                navbar.classList.add('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
+              }
+            } else {
+              navbar.classList.remove('bg-opacity-80', 'backdrop-blur-sm');
+              if (isDarkMode) {
+                navbar.classList.remove('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
+              }
+            }
+          });
+        });
+      </script>
+      
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -106,3 +109,4 @@
         			});
         		});
     </script>
+
