@@ -65,10 +65,10 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': '-',  # El nombre de la base de datos que especificaste
+#         'NAME': 'db_proyecto',  # El nombre de la base de datos que especificaste
 #         'USER': 'postgres',  # O el nombre de usuario que estableciste
 #         'PASSWORD': 'Alexis2004',  # La contraseña que estableciste
-#         'HOST': 'database-1.cf66s8o8e8mz.us-east-2.rds.amazonaws.com',  # Reemplaza con tu endpoint real
+#         'HOST': 'database-proyecto.cf66s8o8e8mz.us-east-2.rds.amazonaws.com',  # Reemplaza con tu endpoint real
 #         'PORT': '5432',
 #     }
 # }

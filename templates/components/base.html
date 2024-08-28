@@ -21,7 +21,7 @@
           <img src="{% static 'img/components/logo.jpeg' %}" class="h-8" alt="PASYS ALERT Logo" />
           <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">PASYS ALERT</span>
         </a>        
-        <div class="flex items-center justify-between w-auto" id="navbar-user">
+        <div class="flex items-center space-x-8 w-auto" id="navbar-user">
           <ul class="flex flex-row items-center space-x-8 p-4 md:p-0 font-medium border border-gray-100 rounded-lg md:space-x-8 md:border-0">
             <li>
               <a href="{% url 'home' %}" class="block py-2 px-3 text-blue-700 rounded md:bg-transparent md:p-0 md:dark:text-blue-500" aria-current="page">Inicio</a>
@@ -30,32 +30,45 @@
               <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Acerca de</a>
             </li>
             {% if user.is_authenticated %}
-              <li>
-                <span class="block py-2 px-3 dark:text-white font-bold">{{ user.username }}</span>
-              </li>
-              <li>
-                {% if user.image %}
-                  <img src="{{ user.image.url }}" alt="profile" class="w-10 h-10 rounded-full">
-                {% else %}
-                  <img src="{% static 'img/components/default_user.jpg' %}" alt="profile" class="w-10 h-10 rounded-full">
-                {% endif %}
-              </li>
-              <li>
-                <a href="{% url 'security:auth_logout' %}" class="block py-2 px-3 bg-red-500 hover:bg-red-700 text-white font-bold rounded-3xl">
-                  Cerrar Sesión
-                </a>
+              <li class="relative">
+                <button type="button" class="flex items-center space-x-2 text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
+                  {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="profile" class="w-10 h-10 rounded-full">
+                  {% else %}
+                    <img src="{% static 'img/components/default_user.jpg' %}" alt="profile" class="w-10 h-10 rounded-full">
+                  {% endif %}
+                  <span class="sr-only">Open user menu</span>
+                </button>
+                <!-- Dropdown menu -->
+                <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+                  <div class="px-4 py-3">
+                    <span class="block text-sm text-gray-900 dark:text-white">{{ user.username }}</span>
+                    <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ user.email }}</span>
+                  </div>
+                  <ul class="py-2" aria-labelledby="user-menu-button">
+                    <li>
+                      <a href="" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Perfil</a>
+                    </li>
+                    <li>
+                      <a href="" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Configuraciones</a>
+                    </li>
+                    <li>
+                      <a href="{% url 'security:auth_logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cerrar Sesión</a>
+                    </li>
+                  </ul>
+                </div>
               </li>
             {% else %}
-            <li>
-              <a href="{% url 'security:auth_signup' %}" class="inline-flex items-center justify-center h-10 px-6 font-medium tracking-wide text-white transition duration-200 rounded-full shadow-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
-                Registrarse
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'security:auth_login' %}" class="inline-flex items-center justify-center h-10 px-6 font-medium tracking-wide text-white transition duration-200 rounded-full shadow-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
-                Iniciar Sesión
-              </a>
-            </li>                        
+              <li>
+                <a href="{% url 'security:auth_signup' %}" class="inline-flex items-center justify-center h-10 px-6 font-medium tracking-wide text-white transition duration-200 rounded-full shadow-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                  Registrarse
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'security:auth_login' %}" class="inline-flex items-center justify-center h-10 px-6 font-medium tracking-wide text-white transition duration-200 rounded-full shadow-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                  Iniciar Sesión
+                </a>
+              </li>                        
             {% endif %}
             <li>
               <!-- Tema oscuro/claro -->
@@ -73,6 +86,7 @@
         </div>
       </div>
     </nav>
+    
   </header>
   
   {% block content %}
