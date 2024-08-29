@@ -5,7 +5,9 @@ from django.conf.urls.static import static
 from app.core.views.home import HomeTemplateView
 
 urlpatterns = [
-    path('',HomeTemplateView.as_view(), name='home'),
+    path('', HomeTemplateView.as_view(), name='home'),
     path('admin/', admin.site.urls),
     path('security/', include('app.security.urls', namespace='security')),
+    path('monitoring/', include('app.monitoring.urls', namespace='monitoring')),
+    path('detection/', include('app.threat_management.urls', namespace='detection')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

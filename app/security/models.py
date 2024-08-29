@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
-    dni = models.CharField(verbose_name='Cédula o RUC', max_length=13, unique=True, blank=True, null=True)
+    dni = models.CharField(verbose_name='DNI', max_length=13, unique=True, blank=True, null=True)
     image = models.ImageField(
         verbose_name='Archivo de Imagen',
         upload_to='users/',
@@ -10,8 +10,8 @@ class User(AbstractUser):
         blank=True,
         null=True
     )
-    phone=models.CharField('Telefono',max_length=50,blank=True,null=True)
-    email=models.EmailField('Correo Electrónico',max_length=254,unique=True)
+    phone=models.CharField(verbose_name='Celular',max_length=50,blank=True,null=True)
+    email=models.EmailField(verbose_name='Correo Electrónico',max_length=254,unique=True)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "first_name", "last_name"]
 

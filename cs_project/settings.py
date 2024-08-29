@@ -18,6 +18,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app.security.apps.SecurityConfig',
     'app.core.apps.CoreConfig',
+    'app.monitoring.apps.MonitoringConfig',
+    'app.threat_management.apps.ThreatManagementConfig',
     'livereload',
 ]
 
@@ -54,17 +56,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cs_project.wsgi.application'
 
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',  # El nombre de la base de datos que especificaste
-        'USER': 'postgres',  # O el nombre de usuario que estableciste
-        'PASSWORD': 'postgres',  # La contraseña que estableciste
-        'HOST': 'database-1.cf66s8o8e8mz.us-east-2.rds.amazonaws.com',  # Reemplaza con tu endpoint real
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',  # El nombre de la base de datos que especificaste
+#         'USER': 'postgres',  # O el nombre de usuario que estableciste
+#         'PASSWORD': 'postgres',  # La contraseña que estableciste
+#         'HOST': 'database-1.cf66s8o8e8mz.us-east-2.rds.amazonaws.com',  # Reemplaza con tu endpoint real
+#         'PORT': '5432',
+#     }
+# }
 
 
 AUTH_PASSWORD_VALIDATORS = [
