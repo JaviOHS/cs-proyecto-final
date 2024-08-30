@@ -11,8 +11,8 @@ class MonitoringSession(models.Model):
     detection_models = models.ManyToManyField(Detection, blank=True, verbose_name='Modelos de Detección')
 
     class Meta:
-            verbose_name = "Sesión de Monitoreo"  # Nombre en singular
-            verbose_name_plural = "Sesiones de Monitoreo"  # Nombre en plural
+        verbose_name = "Sesión de Monitoreo"
+        verbose_name_plural = "Sesiones de Monitoreo"
             
     def __str__(self):
         return f"Session {self.id} - {self.user.username}"

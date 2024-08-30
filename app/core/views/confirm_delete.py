@@ -4,14 +4,15 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 
 class ConfirmDeleteView(DeleteView):
-    template_name = 'components/confirm_delete.html'  # Plantilla genérica
+    template_name = 'components/confirm_delete.html' 
     success_url = reverse_lazy('home')
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        if obj.user != self.request.user:
+        if hasattr(obj, 'user') and obj.user != self.request.user:
             raise PermissionDenied("No tienes permiso para eliminar este objeto.")
         return obj
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

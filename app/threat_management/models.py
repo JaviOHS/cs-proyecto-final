@@ -1,10 +1,19 @@
 from django.db import models
 
 class Detection(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Nombre de Amenaza')
-    description = models.TextField(max_length=500, verbose_name='Descripción')
-    icon = models.CharField(max_length=100, verbose_name='Ícono')
+    name = models.CharField(max_length=100, verbose_name='Nombre de Amenaza', unique=True)
+    description = models.TextField(max_length=500, verbose_name='Descripción', blank=True, null=True)
+    icon = models.CharField(max_length=100, verbose_name='Ícono', blank=True, null=True, default='fa-solid fa-exclamation-triangle')
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name = "Modelo de Detección de Amenaza"
+        verbose_name_plural = "Modelos de Detección de Amenazas"
+    
+    def save(self, *args, **kwargs):
+        if not self.icon:
+            self.icon = 'fa-solid fa-exclamation-triangle'
+        super().save(*args, **kwargs)

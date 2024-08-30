@@ -20,7 +20,7 @@
             <span class="inline-block text-blue-700 dark:text-blue-300 text-3xl font-Tiny5 font-bold">{% trans 'Bienvenido, usuario anónimo.' %}</span>
             {% endif %}
         </h1>
-        <p class="mt-3 text-lg text-gray-800 dark:text-neutral-400">
+        <p class="mt-3 text-lg text-gray-800 dark:text-neutral-400 font-semibold">
           {% trans "¡Explora nuestro increíble sistema!" %}<br>
           {% trans "Te invitamos a descubrir un mundo de múltiples posibilidades y beneficios, con el objetivo de optimizar tu emprendimiento al siguiente nivel." %}
         </p>
@@ -33,9 +33,11 @@
           </div>
         </div>
       </div>
-
-      <div class="lg:col-span-4" data-aos="fade-zoom-in">
-        <img class="w-full h-56 rounded-3xl shadow-lg md:h-96 lg:h-full" src="https://www.protek.com.py/sitio/wp-content/uploads/2021/10/camara-de-videovigilancia-1024x576.jpg" alt="Imagen de hero">
+      <div class="lg:col-span-4" data-aos="zoom-in" data-aos-duration="700">
+        <a href="https://es.vecteezy.com/arte-vectorial/14908144-ilustracion-de-vector-de-sistema-de-camara-de-seguridad-de-forma-redonda-concepto-de-icono-de-objetos-de-ciencia-y-tecnologia-diseno-de-vector-de-camara-cctv-de-montaje-de-seguridad-de-la-ciudad-diseno-de-icono-de-camara-de-seguridad-del-aeropuerto">
+        <img class="w-full h-56 rounded-3xl shadow-lg md:h-96 lg:h-full" 
+        src="https://static.vecteezy.com/system/resources/previews/014/908/144/non_2x/round-shape-security-camera-system-illustration-science-and-technology-objects-icon-concept-city-security-mount-cctv-camera-design-airport-security-camera-icon-design-free-vector.jpg" alt="ilustración de vector de sistema de cámara de seguridad de forma redonda. concepto de icono de objetos de ciencia y tecnología. diseño de vector de cámara cctv de montaje de seguridad de la ciudad. diseño de icono de cámara de seguridad del aeropuerto. Vectores por Vecteezy">
+        </a>
       </div>
     </div>
   </div>
@@ -58,67 +60,65 @@
     <div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
         <!-- Módulo de Monitoreo -->
-        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-red-500 dark:hover:bg-red-600">
+        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
           <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="fa-solid fa-camera text-2xl text-red-500 dark:text-red-400"></i>
+            <i class="fa-solid fa-video text-2xl text-blue-500 dark:text-blue-400"></i>
           </div>
-          <h4 class="text-xl font-black dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
+          <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
             {% trans 'Módulo de Monitoreo' %}</h4>
           <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">
             {% trans 'Configuración de comportamientos predefinidos para detección.' %}
           </p>
           {% if user.is_authenticated %}
-          <a href="{% url 'monitoring:monitoring_session' %}" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-red-500 rounded-lg hover:bg-red-600 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+          <a href="{% url 'monitoring:monitoring_session' %}" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             Empezar
           </a>
           {% endif %}
         </div>
         <!-- Módulo de Alertas -->
-        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
+        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-orange-500 dark:hover:bg-orange-600">
           <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="fa-solid fa-bell text-2xl text-blue-500 dark:text-blue-400"></i>
+            <i class="fa-solid fa-bell text-2xl text-orange-500 dark:text-orange-400"></i>
           </div>
-          <h4 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
+          <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
             {% trans 'Módulo de Alertas' %}</h4>
           <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">
             {% trans 'Configuración de alertas personalizadas para diferentes situaciones.' %}
           </p>
           {% if user.is_authenticated %}
-          <a href="" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          <a href="" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
             {% trans 'Empezar' %}
           </a>
           {% endif %}
         </div>
         <!-- Módulo de Amenazas -->
-        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-green-500 dark:hover:bg-green-600">
+        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-red-500 dark:hover:bg-red-600">
           <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="ri-shield-fill text-2xl text-green-500 dark:text-green-400"></i>
+            <i class="ri-shield-fill text-2xl text-red-500 dark:text-red-400"></i>
           </div>
-          <h4
-            class="text-xl font-semibold text-gray-900 dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
-            {% trans 'Módulo de categorias y Amenazas' %}</h4>
+          <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
+            {% trans 'Módulo de Amenazas' %}</h4>
           <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">            
             {% trans 'Implementación de funcionalidades para agregar nuevas amenazas.' %}
           </p>
           {% if user.is_authenticated %}
-          <a href="{% url 'detection:detection_list' %}" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+          <a href="{% url 'detection:detection_list' %}" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-red-500 rounded-lg hover:bg-red-600 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
             {% trans 'Empezar' %}
           </a>
           {% endif %}
         </div>
         <!-- Módulo de Estadisticas -->
-        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-yellow-500 dark:hover:bg-yellow-600">
+        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-green-500 dark:hover:bg-green-600">
           <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="fa-solid fa-chart-line text-2xl text-yellow-500 dark:text-yellow-400"></i>
+            <i class="fa-solid fa-chart-line text-2xl text-green-500 dark:text-green-400"></i>
           </div>
-          <h4
-            class="text-xl font-semibold text-gray-900 dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
+          <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
             {% trans 'Módulo de Estadísticas' %}</h4>
           <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">
             {% trans 'Implementación de generación de reportes en diferentes formatos.' %}
           </p>
           {% if user.is_authenticated %}
-          <a href="" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">
+          <a href="" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
             {% trans 'Empezar' %}
           </a>
           {% endif %}
