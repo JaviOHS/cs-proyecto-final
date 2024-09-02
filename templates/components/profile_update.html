@@ -5,9 +5,8 @@
 
 {% block content %}
 <section class="dark:bg-gray-900 py-20">
-
     <div class="container mx-auto px-4 text-center" data-aos="fade-up" data-aos-delay="300">
-        <div class="inline-flex items-center justify-center bg-indigo-500 rounded-full px-4 py-2 text-white uppercase text-sm">
+        <div class="inline-flex items-center justify-center bg-indigo-500 rounded-full px-4 py-2 text-white uppercase text-sm shadow-md">
             {{ title1 }}
         </div>
         <h1 class="dark:text-white text-4xl mt-6 font-extrabold">
@@ -18,30 +17,30 @@
         </p>
     </div>
 
-    <div class="w-full max-w-5xl mx-auto px-6 sm:px-8 mt-10" data-aos="fade-up" data-aos-delay="300">
-        <form method="post" enctype="multipart/form-data" class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8">
+    <div class="w-full max-w-4xl mx-auto px-6 sm:px-8 mt-12" data-aos="fade-up" data-aos-delay="300">
+        <form method="post" enctype="multipart/form-data" class="bg-white dark:bg-gray-800 shadow-2xl rounded-lg p-8 space-y-12">
             {% csrf_token %}
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 <!-- Imagen de perfil -->
-                <div class="rounded-lg w-full bg-white dark:bg-gray-700 shadow-xl p-6">
-                    <h2 class="text-2xl font-semibold mb-4 text-center dark:text-white">{% trans 'Imagen de perfil' %}</h2>
+                <div class="rounded-lg w-full bg-gray-100 dark:bg-gray-700 shadow-xl p-6 text-center">
+                    <h2 class="text-2xl font-semibold mb-6 dark:text-white">{% trans 'Imagen de perfil' %}</h2>
                     <div class="flex flex-col items-center">
-                        <img id="selected-img" src="{% if form.instance.image %}{{ form.instance.image.url }}{% else %}{% static 'img/components/default_user.jpg' %}{% endif %}" alt="profile" class="w-32 h-32 rounded-full cursor-pointer mb-2 object-cover border-4 border-green-500">
+                        <img id="selected-img" src="{% if form.instance.image %}{{ form.instance.image.url }}{% else %}{% static 'img/components/default_user.jpg' %}{% endif %}" alt="profile" class="w-36 h-36 rounded-full cursor-pointer mb-4 object-cover border-4 border-green-500 transition-all duration-300 hover:border-indigo-500">
                         <div class="hidden">
                             {{ form.image }}
                         </div>
                     </div>
-                    <p class="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-4">
                         {% trans 'Haz clic en la imagen para cambiarla' %}
                     </p>
                 </div>
 
                 <!-- Información del perfil y campos del formulario -->
                 <div class="lg:col-span-2">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {% for field in form %}
                             {% if field.name != 'image' %}
-                                <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-sm">
+                                <div class="bg-white dark:bg-gray-700 p-5 rounded-lg shadow-sm">
                                     <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         {{ field.label }}
                                     </label>
@@ -58,13 +57,13 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Sección para el cambio de contraseña -->
-            <div class="mt-12">
-                <h2 class="text-2xl font-semibold mb-6 text-center dark:text-white">{% trans 'Cambiar Contraseña' %}</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <h2 class="text-2xl font-semibold mb-8 text-center dark:text-white">{% trans 'Cambiar Contraseña' %}</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {% for field in password_form %}
-                        <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow-sm">
+                        <div class="bg-gray-100 dark:bg-gray-700 p-5 rounded-lg shadow-sm">
                             <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 {{ field.label }}
                             </label>
@@ -81,16 +80,21 @@
             </div>
 
             <!-- Botones de acción -->
-            <div class="mt-8 flex justify-center space-x-4">
-                <button type="submit" name="profile_update" class="py-3 px-8 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-semibold text-base leading-7 shadow-md transition-all duration-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-700">
-                  {% trans 'Actualizar Perfil' %}
+            <div class="mt-10 flex justify-center space-x-6">
+                <button type="submit" name="profile_update" class="flex items-center py-3 px-6 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base leading-7 shadow-md transition-all duration-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {% trans 'Actualizar Perfil' %}
                 </button>
-                <button type="submit" name="password_change" class="py-3 px-8 rounded-full bg-green-500 hover:bg-green-600 text-white font-semibold text-base leading-7 shadow-md transition-all duration-300 focus:ring-4 focus:ring-green-300 dark:focus:ring-green-700">
-                  {% trans 'Cambiar Contraseña' %}
+                <button type="submit" name="password_change" class="flex items-center py-3 px-6 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold text-base leading-7 shadow-md transition-all duration-300 focus:ring-4 focus:ring-green-300 dark:focus:ring-green-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    {% trans 'Cambiar Contraseña' %}
                 </button>
-              </div>
+            </div>
         </form>
     </div>
 </section>
-
 {% endblock content %}

@@ -5,71 +5,73 @@
 {% block content %}
 <section class="dark:bg-principal py-20">
     <div class="container mx-auto px-4" data-aos="fade-up" data-aos-delay="300">
-        <div class="flex flex-col items-center justify-center mb-8">
+        <!-- Encabezado -->
+        <div class="text-center mb-8">
             <span class="bg-indigo-500 text-white text-sm font-semibold px-4 py-1 rounded-full uppercase mb-4">
                 {{ title1 }}
             </span>
-            <h1 class="dark:text-white text-4xl text-center font-Pacifico mb-4">
+            <h1 class="dark:text-white text-4xl font-Pacifico mb-4">
                 {{ title2 }}
             </h1>
-            <p class="dark:text-gray-400 text-center text-lg font-light mb-8">
+            <p class="dark:text-gray-400 text-lg font-light">
                 {% trans 'Visualice su información personal.' %}
             </p>
         </div>
 
-        <div class="flex flex-col lg:flex-row items-start justify-start mb-10 space-y-4 lg:space-y-0">
-            <!-- Sección de perfil y botón -->
-            <div class="flex flex-col lg:flex-row items-start lg:items-center lg:space-x-6 lg:w-3/4">
-                <div class="flex-shrink-0 text-left">
+        <div class="flex flex-col lg:flex-row items-start justify-between mb-10 space-y-4 lg:space-y-0 lg:space-x-6">
+            <!-- Sección de perfil -->
+            <div class="lg:w-2/3 flex flex-col lg:flex-row items-center lg:space-x-6">
+                <div class="flex-shrink-0 text-center lg:text-left mb-4 lg:mb-0">
                     {% if profile.image %}
-                        <img src="{{ profile.image.url }}" alt="user-avatar-image" class="border-4 border-green-500 rounded-full w-16 h-16 object-cover mb-4">
+                        <img src="{{ profile.image.url }}" alt="user-avatar-image" class="border-4 border-green-500 rounded-full w-24 h-24 object-cover">
                     {% else %}
-                        <img src="{% static 'img/usuario_anonimo_2.png' %}" alt="default-avatar-image" class="border-4 border-green-500 rounded-full w-16 h-16 object-cover mb-4">
+                        <img src="{% static 'img/usuario_anonimo_2.png' %}" alt="default-avatar-image" class="border-4 border-green-500 rounded-full w-24 h-24 object-cover">
                     {% endif %}
-                    <div class="text-left">
-                        <h3 class="font-manrope font-bold text-3xl text-gray-900 dark:text-white mb-2">{{ profile.first_name }} {{ profile.last_name }}</h3>
-                        <p class="font-normal text-base text-gray-500 dark:text-gray-400 mb-4">{{ profile.email|default:"Correo no registrado" }}</p>
-                        <a href="{% url 'core:profile_update' %}" class="inline-block py-2 px-4 rounded-full bg-indigo-500 text-white font-semibold text-sm leading-7 shadow-md transition-all duration-300 hover:bg-indigo-600">
-                            {% trans 'Editar Perfil' %}
-                        </a>
-                    </div>
                 </div>
-                <!-- Botón de usuario/administrador alineado a la izquierda -->
-                <div class="flex items-end lg:w-1/4 lg:justify-start">
-                    <div class="rounded-full py-3 px-4 bg-gray-100 dark:bg-gray-700 flex items-center transition-all duration-300 hover:bg-indigo-100 dark:hover:bg-indigo-900">
-                        <span class="font-medium text-sm text-gray-700 dark:text-gray-300 transition-all duration-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
-                            {% if user.is_superuser %}
-                                {% trans 'Administrador' %}
-                            {% else %}
-                                {% trans 'Usuario' %}
-                            {% endif %}
-                        </span>
-                    </div>
+                <div class="text-center lg:text-left">
+                    <h3 class="font-manrope font-bold text-2xl text-gray-900 dark:text-white mb-1">
+                        {{ profile.first_name }} {{ profile.last_name }}
+                    </h3>
+                    <p class="font-medium text-lg text-gray-500 dark:text-gray-400 mb-4">
+                        {{ profile.email|default:"Correo no registrado" }}
+                    </p>
+                    <a href="{% url 'core:profile_update' %}" class="py-2 px-4 rounded-full bg-indigo-500 text-white font-semibold text-sm leading-7 shadow-md transition-all duration-300 hover:bg-indigo-600">
+                        {% trans 'Editar Perfil' %}
+                    </a>
                 </div>
             </div>
 
-            <!-- Sección de información -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <div class="flex flex-col items-start lg:flex-row lg:items-center lg:space-x-6">
-                    <div class="flex items-center mb-4 lg:mb-0">
-                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mr-2">{% trans 'Información' %}</h2>
-                    </div><br>
-                    <ul class="flex flex-wrap gap-4">
-                        <li class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 text-center flex-1 min-w-[150px]">
-                            <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{% trans 'Cédula' %}</span>
-                            <span class="text-lg font-semibold text-gray-800 dark:text-white">{{ profile.dni|default:"No Registrado" }}</span>
-                        </li>
-                        <li class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 text-center flex-1 min-w-[150px]">
-                            <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{% trans 'Celular' %}</span>
-                            <span class="text-lg font-semibold text-gray-800 dark:text-white">{{ profile.phone|default:"No Registrado" }}</span>
-                        </li>
-                        <li class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 text-center flex-1 min-w-[150px]">
-                            <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{% trans 'Correo Electrónico' %}</span>
-                            <span class="text-lg font-semibold text-gray-800 dark:text-white">{{ profile.email|default:"No Registrado" }}</span>
-                        </li>
-                    </ul>
+            <!-- Botón de usuario/administrador -->
+            <div class="lg:w-1/3 flex justify-center lg:justify-end">
+                <div class="py-3 px-6 bg-gray-100 dark:bg-gray-700 rounded-full shadow-sm flex items-center transition-all duration-300 hover:bg-indigo-100 dark:hover:bg-indigo-900">
+                    <span class="font-medium text-sm text-gray-700 dark:text-gray-300 transition-all duration-300">
+                        {% if user.is_superuser %}
+                            {% trans 'Administrador' %}
+                        {% else %}
+                            {% trans 'Usuario' %}
+                        {% endif %}
+                    </span>
                 </div>
             </div>
+        </div>
+
+        <!-- Sección de información -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">{% trans 'Información' %}</h2>
+            <ul class="flex flex-wrap gap-6">
+                <li class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 flex-1 min-w-[150px] text-center">
+                    <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{% trans 'Cédula' %}</span>
+                    <span class="text-lg font-semibold text-gray-800 dark:text-white">{{ profile.dni|default:"No Registrado" }}</span>
+                </li>
+                <li class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 flex-1 min-w-[150px] text-center">
+                    <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{% trans 'Celular' %}</span>
+                    <span class="text-lg font-semibold text-gray-800 dark:text-white">{{ profile.phone|default:"No Registrado" }}</span>
+                </li>
+                <li class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 flex-1 min-w-[150px] text-center">
+                    <span class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{% trans 'Correo Electrónico' %}</span>
+                    <span class="text-lg font-semibold text-gray-800 dark:text-white">{{ profile.email|default:"No Registrado" }}</span>
+                </li>
+            </ul>
         </div>
     </div>
 </section>
