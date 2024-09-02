@@ -193,3 +193,36 @@
     }
   });  
 </script>
+
+<!-- CSS y Script para el efecto de luz en la seccion de estadisticas -->
+<style>
+  #light-effect {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(99,102,241,0) 70%);
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s ease;
+      opacity: 0;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const section = document.querySelector('.py-10.dark\\:bg-bg-principal');
+      const lightEffect = document.getElementById('light-effect');
+
+      section.addEventListener('mousemove', (e) => {
+          const rect = section.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          lightEffect.style.left = `${x}px`;
+          lightEffect.style.top = `${y}px`;
+          lightEffect.style.opacity = '1';
+      });
+
+      section.addEventListener('mouseleave', () => {
+          lightEffect.style.opacity = '0';
+      });
+  });
+</script>

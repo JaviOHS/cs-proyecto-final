@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from app.core.views.home import HomeTemplateView
 
 urlpatterns = [
+    path('core/', include('app.core.urls')),
     path('', HomeTemplateView.as_view(), name='home'),
     path('admin/', admin.site.urls),
     path('security/', include('app.security.urls', namespace='security')),

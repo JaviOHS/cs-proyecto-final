@@ -1,4 +1,5 @@
 from django.views.generic import TemplateView
+from app.core.models import UserProfile
 from app.monitoring.models import MonitoringSession
 
 class HomeTemplateView(TemplateView):
@@ -8,6 +9,7 @@ class HomeTemplateView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["title1"] = "Inicio"
         if self.request.user.is_authenticated:
+            context['user_profile'] = UserProfile.objects.get(user=self.request.user)
             monitoring_sessions = self.get_monitoring_sessions()
             if monitoring_sessions.exists():
                 context['monitoring_sessions'] = monitoring_sessions

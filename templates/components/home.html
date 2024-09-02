@@ -1,130 +1,179 @@
 {% extends 'components/base.html' %} {% load static %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
-{% block content %}
-{% load i18n %}
+{% block content %} {% load i18n %}
 <!-- SECCIÓN DEL HERO -->
-<div class="sm:py-20 lg:py-8"></div>
-<section id="hero-section" class="lg:py-14 bg-white dark:bg-primary-dark py-10 bg-cover bg-center bg-no-repeat">
-  <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid lg:grid-cols-7 lg:gap-x-8 xl:gap-x-12 lg:items-center">
-      <div class="lg:col-span-3 space-y-2" data-aos="fade-right" data-aos-delay="300">
-        <h1 class="mb-5 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl sm:leading-none dark:text-white">
-            {% trans "Una solución para tu negocio." %}<br>
-            {% if user.is_authenticated %}
-            {% if user.is_superuser %}
-            <span class="inline-block text-blue-700 dark:text-blue-300 text-3xl font-Tiny5 font-bold">{% trans 'Bienvenido,' %} {{ user.username }}.</span>
-            {% else %}
-            <span class="inline-block text-blue-700 dark:text-blue-300 text-3xl font-Tiny5 font-bold">{% trans 'Bienvenido,' %} {{ user.username }}.</span>
-            {% endif %}
-            {% else %}
-            <span class="inline-block text-blue-700 dark:text-blue-300 text-3xl font-Tiny5 font-bold">{% trans 'Bienvenido, usuario anónimo.' %}</span>
-            {% endif %}
-        </h1>
-        <p class="mt-3 text-lg text-gray-800 dark:text-neutral-400 font-semibold">
-          {% trans "¡Explora nuestro increíble sistema!" %}<br>
-          {% trans "Te invitamos a descubrir un mundo de múltiples posibilidades y beneficios, con el objetivo de optimizar tu emprendimiento al siguiente nivel." %}
-        </p>
-        
-        <div class="py-4 mt-6">
-          <div class="mt-4 flex gap-x-8">
-            <svg role="img" class="w-12 h-12 text-black dark:text-gray-100" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Django</title><path d="M11.146 0h3.924v18.166c-2.013.382-3.491.535-5.096.535-4.791 0-7.288-2.166-7.288-6.32 0-4.002 2.65-6.6 6.753-6.6.637 0 1.121.05 1.707.203zm0 9.143a3.894 3.894 0 00-1.325-.204c-1.988 0-3.134 1.223-3.134 3.365 0 2.09 1.096 3.236 3.109 3.236.433 0 .79-.025 1.35-.102V9.142zM21.314 6.06v9.098c0 3.134-.229 4.638-.917 5.937-.637 1.249-1.478 2.039-3.211 2.905l-3.644-1.733c1.733-.815 2.574-1.53 3.109-2.625.561-1.121.739-2.421.739-5.835V6.059h3.924zM17.39.021h3.924v4.026H17.39z"/></svg>
-            <svg role="img" class="w-12 h-12 text-black dark:text-gray-100" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>OpenCV</title><path d="M11.8992.8525C8.735.8525 6.17 3.4175 6.17 6.5817c0 2.102 1.1321 3.9398 2.8198 4.9366l1.6412-2.7849c.0411-.0699.0176-.1593-.0495-.2048-.6233-.4227-1.0328-1.137-1.0328-1.947 0-1.298 1.0524-2.3504 2.3505-2.3504 1.2981 0 2.3505 1.0524 2.3505 2.3505 0 .8098-.4095 1.5242-1.0328 1.947-.0671.0454-.0907.1348-.0495.2047l1.6414 2.785c1.6878-.9969 2.8199-2.8346 2.8199-4.9367 0-3.1642-2.5653-5.7292-5.7295-5.7292zm-6.17 10.8366C2.565 11.6891 0 14.2541 0 17.4183c0 3.1642 2.565 5.7292 5.7292 5.7292 3.1798 0 5.8074-2.6995 5.7275-5.8762H8.2313c-.0847 0-.1513.0717-.1519.1564-.0082 1.266-1.0644 2.3411-2.3502 2.3411-1.2981 0-2.3505-1.0524-2.3505-2.3505 0-1.2982 1.0524-2.3505 2.3505-2.3505.34 0 .663.0724.9547.2022.0713.0318.1566.0077.1962-.0595l1.6464-2.7935c-.8273-.4636-1.7815-.7279-2.7973-.7279zm15.4424.7614l-1.6366 2.7878c-.041.07-.0172.1594.05.2048.624.4217 1.0348 1.1354 1.0363 1.9452.0022 1.298-1.0483 2.352-2.3465 2.3542-1.298.0023-2.3523-1.0482-2.3545-2.3462-.0015-.8098.4068-1.5248 1.0294-1.9486.067-.0457.0905-.1353.0492-.2051l-1.6464-2.7818c-1.6859.9998-2.8146 2.8394-2.811 4.9415.0056 3.1641 2.575 5.7248 5.7393 5.7192 3.1641-.0054 5.7246-2.575 5.7192-5.7392-.0037-2.1022-1.139-3.938-2.8284-4.9318z"/></svg>
-            <svg role="img" class="w-12 h-12 text-black dark:text-gray-100" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Amazon Web Services</title><path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.031-.863.103-.295.072-.583.16-.862.272a2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.023c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.151c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586zm-3.24 1.214c.263 0 .534-.048.822-.144.287-.096.543-.271.758-.51.128-.152.224-.32.272-.512.047-.191.08-.423.08-.694v-.335a6.66 6.66 0 0 0-.735-.136 6.02 6.02 0 0 0-.75-.048c-.535 0-.926.104-1.19.32-.263.215-.39.518-.39.917 0 .375.095.655.295.846.191.2.47.296.838.296zm6.41.862c-.144 0-.24-.024-.304-.08-.064-.048-.12-.16-.168-.311L7.586 5.55a1.398 1.398 0 0 1-.072-.32c0-.128.064-.2.191-.2h.783c.151 0 .255.025.31.08.065.048.113.16.16.312l1.342 5.284 1.245-5.284c.04-.16.088-.264.151-.312a.549.549 0 0 1 .32-.08h.638c.152 0 .256.025.32.08.063.048.12.16.151.312l1.261 5.348 1.381-5.348c.048-.16.104-.264.16-.312a.52.52 0 0 1 .311-.08h.743c.127 0 .2.065.2.2 0 .04-.009.08-.017.128a1.137 1.137 0 0 1-.056.2l-1.923 6.17c-.048.16-.104.263-.168.311a.51.51 0 0 1-.303.08h-.687c-.151 0-.255-.024-.32-.08-.063-.056-.119-.16-.15-.32l-1.238-5.148-1.23 5.14c-.04.16-.087.264-.15.32-.065.056-.177.08-.32.08zm10.256.215c-.415 0-.83-.048-1.229-.143-.399-.096-.71-.2-.918-.32-.128-.071-.215-.151-.247-.223a.563.563 0 0 1-.048-.224v-.407c0-.167.064-.247.183-.247.048 0 .096.008.144.024.048.016.12.048.2.08.271.12.566.215.878.279.319.064.63.096.95.096.502 0 .894-.088 1.165-.264a.86.86 0 0 0 .415-.758.777.777 0 0 0-.215-.559c-.144-.151-.416-.287-.807-.415l-1.157-.36c-.583-.183-1.014-.454-1.277-.813a1.902 1.902 0 0 1-.4-1.158c0-.335.073-.63.216-.886.144-.255.335-.479.575-.654.24-.184.51-.32.83-.415.32-.096.655-.136 1.006-.136.175 0 .359.008.535.032.183.024.35.056.518.088.16.04.312.08.455.127.144.048.256.096.336.144a.69.69 0 0 1 .24.2.43.43 0 0 1 .071.263v.375c0 .168-.064.256-.184.256a.83.83 0 0 1-.303-.096 3.652 3.652 0 0 0-1.532-.311c-.455 0-.815.071-1.062.223-.248.152-.375.383-.375.71 0 .224.08.416.24.567.159.152.454.304.877.44l1.134.358c.574.184.99.44 1.237.767.247.327.367.702.367 1.117 0 .343-.072.655-.207.926-.144.272-.336.511-.583.703-.248.2-.543.343-.886.447-.36.111-.734.167-1.142.167zM21.698 16.207c-2.626 1.94-6.442 2.969-9.722 2.969-4.598 0-8.74-1.7-11.87-4.526-.247-.223-.024-.527.272-.351 3.384 1.963 7.559 3.153 11.877 3.153 2.914 0 6.114-.607 9.06-1.852.439-.2.814.287.383.607zM22.792 14.961c-.336-.43-2.22-.207-3.074-.103-.255.032-.295-.192-.063-.36 1.5-1.053 3.967-.75 4.254-.399.287.36-.08 2.826-1.485 4.007-.215.184-.423.088-.327-.151.32-.79 1.03-2.57.695-2.994z"/></svg>
-          </div>
+
+<section id="hero-section" class="bg-white dark:bg-primary-dark pt-16 hero-background bg-cover bg-center bg-no-repeat">
+    <div class="relative flex flex-col-reverse py-16 lg:pt-0 lg:flex-col lg:pb-0">
+        <div class="inset-y-0 top-0 right-0 z-0 w-full max-w-xl px-4 mx-auto md:px-0 lg:pr-0 lg:mb-0 lg:mx-0 lg:w-7/12 lg:max-w-full lg:absolute xl:px-0">
+            <svg class="absolute left-0 hidden h-full text-blue-700 transform -translate-x-1/2 lg:block" viewBox="0 0 100 100" fill="currentColor" preserveAspectRatio="none slice">
+                <path d="M50 0H100L50 100H0L50 0Z"></path>
+            </svg>
+            <img class="object-cover w-full h-56 rounded shadow-lg lg:rounded-none lg:shadow-none md:h-96 lg:h-full" src="https://www.protek.com.py/sitio/wp-content/uploads/2021/10/camara-de-videovigilancia-1024x576.jpg" alt="Imagen de hero" />
         </div>
-      </div>
-      <div class="lg:col-span-4" data-aos="zoom-in" data-aos-duration="700">
-        <a href="https://es.vecteezy.com/arte-vectorial/14908144-ilustracion-de-vector-de-sistema-de-camara-de-seguridad-de-forma-redonda-concepto-de-icono-de-objetos-de-ciencia-y-tecnologia-diseno-de-vector-de-camara-cctv-de-montaje-de-seguridad-de-la-ciudad-diseno-de-icono-de-camara-de-seguridad-del-aeropuerto">
-        <img class="w-full h-56 rounded-3xl shadow-lg md:h-96 lg:h-full" 
-        src="https://static.vecteezy.com/system/resources/previews/014/908/144/non_2x/round-shape-security-camera-system-illustration-science-and-technology-objects-icon-concept-city-security-mount-cctv-camera-design-airport-security-camera-icon-design-free-vector.jpg" alt="ilustración de vector de sistema de cámara de seguridad de forma redonda. concepto de icono de objetos de ciencia y tecnología. diseño de vector de cámara cctv de montaje de seguridad de la ciudad. diseño de icono de cámara de seguridad del aeropuerto. Vectores por Vecteezy">
-        </a>
-      </div>
+        <div class="relative flex flex-col items-left w-full max-w-xl px-4 mx-auto md:px-0 lg:px-8 lg:max-w-screen-xl lg:ml-16">
+            <div class="mb-16 lg:my-40 lg:max-w-lg lg:pr-5" data-aos="fade-right" data-aos-delay="200">
+                <h1 class="mb-5 font-Pacifico text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl sm:leading-none dark:text-white">
+                  {% trans "Una solución para tu negocio." %}<br>
+                  {% if user.is_authenticated %}
+                      {% if user.is_superuser %}
+                          <span class="inline-block text-blue-700 dark:text-blue-300 text-3xl font-Tiny5 font-bold">{% trans 'Bienvenido,' %} {{ user.username }}.</span>
+                      {% else %}
+                          <span class="inline-block text-blue-700 dark:text-blue-300 text-3xl font-Tiny5 font-bold">{% trans 'Bienvenido,' %} {{ user.username }}.</span>
+                      {% endif %}
+                  {% else %}
+                      <span class="inline-block text-blue-700 dark:text-blue-300 text-3xl font-Tiny5 font-bold">{% trans 'Bienvenido, usuario anónimo.' %}</span>
+                  {% endif %}
+              </h1>
+                <p class="pr-5 mb-5 text-base text-gray-700 md:text-lg dark:text-gray-400">
+                    {% trans "¡Explora nuestro increíble sistema!" %}
+                    <br>{% trans "Te invitamos a descubrir un mundo de múltiples posibilidades y beneficios, con el objetivo de optimizar tu emprendimiento al siguiente nivel." %}
+                </p>
+                <div class="flex items-center">
+                    <a href="#herramientas" class="inline-flex items-center justify-center h-12 px-6 mr-6 font-medium tracking-wide text-white transition duration-200 rounded-full shadow-md bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+                      {% trans "Explorar" %}
+                      <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                          <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                      </svg>
+                  </a>
+                </div>
+            </div>
+        </div>
     </div>
+</section>
+
+<!-- SECCIÓN DE TECNOLOGÍAS -->
+<section class="py-10 dark:bg-bg-principal relative overflow-hidden">
+  <div id="light-effect" class="absolute pointer-events-none"></div>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="rounded-2xl py-10 px-10 xl:py-16 xl:px-20 bg-gray-50 dark:bg-gray-900 flex items-center justify-between flex-col gap-16 lg:flex-row">
+          <div class="w-full lg:w-60">
+              <h2 class="font-manrope text-4xl font-bold text-gray-900 dark:text-white mb-4 text-center lg:text-left">
+                  {% trans "Tecnologías Empleadas" %}
+              </h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400 leading-6 text-center lg:text-left">
+                  {% trans "Hecha un vistazo a las tecnologías usadas en este proyecto" %}
+              </p>
+          </div>
+          <div class="w-full lg:w-4/5">
+              <div class="flex flex-col flex-1 gap-10 lg:gap-0 lg:flex-row lg:justify-between">
+                  <div class="block">
+                      <div class="font-manrope font-bold text-4xl text-indigo-600 mb-3 text-center lg:text-left">
+                        <a href="https://www.djangoproject.com/" class="flex justify-center items-center" target="_blank">
+                          <img src="{% static 'img/components/django_logo.PNG' %}" alt="Django Logo" class="h-16 rounded-lg">
+                        </a>
+                      </div>
+                      <span class="text-gray-900 dark:text-white text-center block lg:text-left">{% trans "Python" %}</span>
+                  </div>
+                  <div class="block">
+                      <div class="font-manrope font-bold text-4xl text-indigo-600 mb-3 text-center lg:text-left">
+                        <a href="https://www.python.org/" class="flex justify-center items-center" target="_blank">
+                          <img src="{% static 'img/components/python_logo.PNG' %}" alt="Python Logo" class="h-16 rounded-lg">
+                        </a>
+                      </div>
+                      <span class="text-gray-900 dark:text-white text-center block lg:text-left">{% trans "Django" %}</span>
+                  </div>
+                  <div class="block">
+                      <div class="font-manrope font-bold text-4xl text-indigo-600 mb-3 text-center lg:text-left">
+                        <a href="https://aws.amazon.com/es/free/?gclid=CjwKCAjwxNW2BhAkEiwA24Cm9KwARwJtjk1YuI-knrH-YzlP_awLKr01lxwFHe93UhAhNA8GMU8JBhoCcPwQAvD_BwE&trk=ac00e2de-8a41-4a1e-b3cd-eb4cc45abb02&sc_channel=ps&ef_id=CjwKCAjwxNW2BhAkEiwA24Cm9KwARwJtjk1YuI-knrH-YzlP_awLKr01lxwFHe93UhAhNA8GMU8JBhoCcPwQAvD_BwE:G:s&s_kwcid=AL!4422!3!647999754699!e!!g!!aws%20services!19685287093!146461585896" class="flex justify-center items-center" target="_blank">
+                          <img src="{% static 'img/components/AWS_logo.PNG' %}" alt="AWS Logo" class="h-16 rounded-lg">
+                        </a>
+                      </div>
+                      <span class="text-gray-900 dark:text-white text-center block lg:text-left">{% trans "Amazon Web Services" %}</span>
+                  </div>
+                  <div class="block">
+                      <div class="font-manrope font-bold text-4xl text-indigo-600 mb-3 text-center lg:text-left">
+                        <a href="https://opencv.org/" class="flex justify-center items-center" target="_blank">
+                          <img src="{% static 'img/components/opencv_logo.PNG' %}" alt="OpenCV Logo" class="h-16 rounded-lg">
+                        </a>
+                      </div>
+                      <span class="text-gray-900 dark:text-white text-center block lg:text-left">{% trans "OpenCVs" %}</span>
+                  </div>
+              </div>
+          </div>
+      </div>
   </div>
 </section>
 
+
 <!-- SECCIÓN DE MODULOS -->
-<section class="bg-slate-50 dark:bg-primary-dark_secondary py-10">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" data-aos="fade-up" data-aos-delay="300">
-    <div class="flex flex-col items-center justify-center">
-      <span class="bg-navbar rounded-full bg-blue-500 px-2 py-1 text-white uppercase text-sm">
+<section id="herramientas" class="bg-slate-50 dark:bg-primary-dark_secondary py-10">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" data-aos="fade-up" data-aos-delay="300">
+        <div class="flex flex-col items-center justify-center">
+            <span class="bg-navbar rounded-full bg-blue-500 px-2 py-1 text-white uppercase text-sm">
         {% trans 'Módulos' %}
       </span>
-    </div>
-    <h2 class="dark:text-white text-4xl text-center mt-6 font-black">
+        </div>
+        <h2 class="dark:text-white text-4xl text-center mt-6 font-black">
       {% trans 'Módulos Disponibles' %}
     </h2>
-    <p class=" dark:text-gray-400 text-center mt-6 text-lg font-bold">
-      {% trans 'Como administrador, puedes gestionar los módulos de tu sistema.' %}
-    </p>
-    <div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-        <!-- Módulo de Monitoreo -->
-        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
-          <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="fa-solid fa-video text-2xl text-blue-500 dark:text-blue-400"></i>
-          </div>
-          <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
+        <p class=" dark:text-gray-400 text-center mt-6 text-lg font-bold">
+            {% trans 'Como administrador, puedes gestionar los módulos de tu sistema.' %}
+        </p>
+        <div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+                <!-- Módulo de Monitoreo -->
+                <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
+                    <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
+                        <i class="fa-solid fa-video text-2xl text-blue-500 dark:text-blue-400"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
             {% trans 'Módulo de Monitoreo' %}</h4>
-          <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">
-            {% trans 'Configuración de comportamientos predefinidos para detección.' %}
-          </p>
-          {% if user.is_authenticated %}
-          <a href="{% url 'monitoring:monitoring_session' %}" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">
+                        {% trans 'Configuración de comportamientos predefinidos para detección.' %}
+                    </p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'monitoring:monitoring_session' %}" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             Empezar
-          </a>
-          {% endif %}
-        </div>
-        <!-- Módulo de Alertas -->
-        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-orange-500 dark:hover:bg-orange-600">
-          <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="fa-solid fa-bell text-2xl text-orange-500 dark:text-orange-400"></i>
-          </div>
-          <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
+          </a> {% endif %}
+                </div>
+                <!-- Módulo de Alertas -->
+                <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-orange-500 dark:hover:bg-orange-600">
+                    <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
+                        <i class="fa-solid fa-bell text-2xl text-orange-500 dark:text-orange-400"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
             {% trans 'Módulo de Alertas' %}</h4>
-          <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">
-            {% trans 'Configuración de alertas personalizadas para diferentes situaciones.' %}
-          </p>
-          {% if user.is_authenticated %}
-          <a href="" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
+                    <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">
+                        {% trans 'Configuración de alertas personalizadas para diferentes situaciones.' %}
+                    </p>
+                    {% if user.is_authenticated %}
+                    <a href="" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
             {% trans 'Empezar' %}
-          </a>
-          {% endif %}
-        </div>
-        <!-- Módulo de Amenazas -->
-        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-red-500 dark:hover:bg-red-600">
-          <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="ri-shield-fill text-2xl text-red-500 dark:text-red-400"></i>
-          </div>
-          <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
+          </a> {% endif %}
+                </div>
+                <!-- Módulo de Amenazas -->
+                <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-red-500 dark:hover:bg-red-600">
+                    <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
+                        <i class="ri-shield-fill text-2xl text-red-500 dark:text-red-400"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
             {% trans 'Módulo de Amenazas' %}</h4>
-          <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">            
-            {% trans 'Implementación de funcionalidades para agregar nuevas amenazas.' %}
-          </p>
-          {% if user.is_authenticated %}
-          <a href="{% url 'detection:detection_list' %}" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-red-500 rounded-lg hover:bg-red-600 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                    <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">
+                        {% trans 'Implementación de funcionalidades para agregar nuevas amenazas.' %}
+                    </p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'detection:detection_list' %}" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-red-500 rounded-lg hover:bg-red-600 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
             {% trans 'Empezar' %}
-          </a>
-          {% endif %}
-        </div>
-        <!-- Módulo de Estadisticas -->
-        <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-green-500 dark:hover:bg-green-600">
-          <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="fa-solid fa-chart-line text-2xl text-green-500 dark:text-green-400"></i>
-          </div>
-          <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
+          </a> {% endif %}
+                </div>
+                <!-- Módulo de Estadisticas -->
+                <div class="relative bg-slate-100 dark:bg-primary-dark rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-green-500 dark:hover:bg-green-600">
+                    <div class="bg-white dark:bg-gray-700 rounded-full flex justify-center items-center mb-5 w-14 h-14">
+                        <i class="fa-solid fa-chart-line text-2xl text-green-500 dark:text-green-400"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white">
             {% trans 'Módulo de Estadísticas' %}</h4>
-          <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">
-            {% trans 'Implementación de generación de reportes en diferentes formatos.' %}
-          </p>
-          {% if user.is_authenticated %}
-          <a href="" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                    <p class="text-sm font-bold text-gray-500 dark:text-gray-400 transition-all duration-500 leading-5 group-hover:text-white">
+                        {% trans 'Implementación de generación de reportes en diferentes formatos.' %}
+                    </p>
+                    {% if user.is_authenticated %}
+                    <a href="" class="mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
             {% trans 'Empezar' %}
-          </a>
-          {% endif %}
+          </a> {% endif %}
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 </section>
 
 {% endblock content %}

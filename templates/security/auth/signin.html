@@ -5,13 +5,13 @@
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 
 {% block content %}
-<div class="bg-white dark:bg-primary-dark p-8 relative overflow-hidden">
+<div class="bg-slate-100 dark:bg-primary-dark p-8 relative overflow-hidden">
   <div class="absolute inset-0 bg-center blur-[106px]"></div>
   <div class="relative">
     <a href="/" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse text-center justify-center" data-aos="fade-up">
       <img src="{% static 'img/components/icon.png' %}" class="w-12 h-12" alt="Logo" />
     </a> 
-    <section class="p-8 my-4 mx-auto max-w-4xl rounded-3xl bg-slate-100 dark:bg-primary-dark_secondary" data-aos="fade-up" data-aos-delay="200">
+    <section class="p-8 my-4 mx-auto max-w-4xl rounded-3xl bg-white dark:bg-primary-dark_secondary" data-aos="fade-up" data-aos-delay="200">
       <div class="gap-2 mb-8">
         <div class="flex flex-col items-center justify-center">
           <span class="bg-navbar rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
@@ -46,9 +46,6 @@
                     <i class="text-blue-400 fa-solid fa-lock"></i>
                   </span>
                   <input type="password" id="id_password" name="password" class="bg-white text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-primary-dark dark:placeholder-gray-400 dark:text-gray-200 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                  <button class="absolute inset-y-0 right-0 flex items-center pr-3" type="button" id="togglePassword">
-                    <i class="fa-solid fa-eye"></i>
-                  </button>
                 </div>
               </div>
               <div>
@@ -61,7 +58,7 @@
               <p class="font-semibold dark:text-gray-400 text-center">{% trans '¿No tienes una cuenta?' %} <a href="{% url 'security:signup' %}" class="font-black text-blue-600 hover:underline dark:text-blue-300">{% trans 'Regístrate' %}</a></p>
               <p class="font-semibold dark:text-gray-400 text-center">
                 {% trans '¿Has olvidado tu contraseña?' %}
-                <a href="" class="font-black text-blue-600 hover:underline dark:text-blue-300">
+                <a href="{% url 'core:password_reset' %}" class="font-black text-blue-600 hover:underline dark:text-blue-300">
                   Recupérala aquí
                 </a>
               </p>
@@ -82,6 +79,84 @@
     </section>
   </div>
 </div>
+
+<!-- Modal para reconocimiento facial -->
+<div id="facialRecognitionModal" class="hidden fixed z-50 inset-0 overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white dark:bg-secundario rounded-lg shadow-lg w-full max-w-3xl">
+      <div class="flex justify-end p-2">
+        <button id="closeFacialModal" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+      </div>
+      <video id="facialVideo" class="w-full aspect-video"></video>
+      <button id="captureFacial" class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full m-2">
+        {% trans 'Capturar' %}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const facialRecognitionButton = document.getElementById('facialRecognitionButton');
+    const facialRecognitionModal = document.getElementById('facialRecognitionModal');
+    const closeFacialModal = document.getElementById('closeFacialModal');
+    const facialVideo = document.getElementById('facialVideo');
+    const captureFacial = document.getElementById('captureFacial');
+  
+    let stream;
+  
+    facialRecognitionButton.addEventListener('click', async () => {
+      facialRecognitionModal.classList.remove('hidden');
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      facialVideo.srcObject = stream;
+      facialVideo.play();
+    });
+  
+    closeFacialModal.addEventListener('click', () => {
+      facialRecognitionModal.classList.add('hidden');
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    });
+  
+    captureFacial.addEventListener('click', () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = facialVideo.videoWidth;
+      canvas.height = facialVideo.videoHeight;
+      canvas.getContext('2d').drawImage(facialVideo, 0, 0);
+      const imageData = canvas.toDataURL('image/jpeg');
+  
+      fetch('{% url "core:facial_recognition" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ image: imageData })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          window.location.href = data.redirect;
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Ocurrió un error durante el reconocimiento facial');
+      })
+      .finally(() => {
+        facialRecognitionModal.classList.add('hidden');
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+        }
+      });
+    });
+  });
+  </script>
+
 {% endblock content %}
 
 {% block navbar %}

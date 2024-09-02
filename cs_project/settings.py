@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'app.monitoring.apps.MonitoringConfig',
     'app.threat_management.apps.ThreatManagementConfig',
     'livereload',
+    'widget_tweaks',
 ]
 
 NPM_BIN_PATH = r'C:\Program Files\nodejs\npm.cmd'
@@ -56,23 +57,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cs_project.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',  # El nombre de la base de datos que especificaste
-#         'USER': 'postgres',  # O el nombre de usuario que estableciste
-#         'PASSWORD': 'postgres',  # La contraseña que estableciste
-#         'HOST': 'database-1.cf66s8o8e8mz.us-east-2.rds.amazonaws.com',  # Reemplaza con tu endpoint real
-#         'PORT': '5432',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',  # El nombre de la base de datos que especificaste
+        'USER': 'postgres',  # O el nombre de usuario que estableciste
+        'PASSWORD': 'postgres',  # La contraseña que estableciste
+        'HOST': 'database-1.cf66s8o8e8mz.us-east-2.rds.amazonaws.com',  # Reemplaza con tu endpoint real
+        'PORT': '5432',
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -112,3 +113,14 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 SESSION_COOKIE_AGE = 1800  # 30 minutos en segundos
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+
+# SECCIÓN DE CORREOS
+# Configuración de correo
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'duranalexis879@gmail.com'
+EMAIL_HOST_PASSWORD = 'nqep rint ewqy rumb'
+
