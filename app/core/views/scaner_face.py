@@ -34,33 +34,39 @@ class FacialRecognitionView(View):
             if image is None:
                 return JsonResponse({"success": False, "message": "Error al decodificar la imagen"}, status=400)
 
-            image_np = np.array(image.convert('RGB'))
-            image_gray = cv2.cvtColor(image_np, cv2.COLOR_RGB2GRAY)
-            image_gray_resized = cv2.resize(image_gray, (100, 100))
+            # Convertir la imagen de entrada en escala de grises
+            gray_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2GRAY)
+            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+            faces = face_cascade.detectMultiScale(gray_image, 1.1, 4)
 
-            user_profiles = UserProfile.objects.all()
-            for user_profile in user_profiles:
-                if user_profile.image:
-                    profile_image = Image.open(user_profile.image.path)
-                    profile_image_np = np.array(profile_image.convert('RGB'))
-                    profile_image_gray = cv2.cvtColor(profile_image_np, cv2.COLOR_RGB2GRAY)
-                    profile_image_gray_resized = cv2.resize(profile_image_gray, (100, 100))
+            if len(faces) == 0:
+                return JsonResponse({"success": False, "message": "No se detectó un rostro en la imagen"}, status=400)
 
-                    # Usa el método de comparación de histogramas
-                    similarity = cv2.compareHist(
-                        cv2.calcHist([image_gray_resized], [0], None, [256], [0, 256]),
-                        cv2.calcHist([profile_image_gray_resized], [0], None, [256], [0, 256]),
-                        cv2.HISTCMP_CORREL
-                    )
+            for (x, y, w, h) in faces:
+                face_region = gray_image[y:y + h, x:x + w]
 
-                    # Ajusta este umbral según sea necesario
-                    if similarity > 0.7:
-                        login(request, user_profile.user)
-                        return JsonResponse({
-                            "success": True,
-                            "message": "Coincidencia facial válida, usuario autenticado",
-                            "redirect": reverse('home')
-                        }, status=200)
+                user_profiles = UserProfile.objects.all()
+                for user_profile in user_profiles:
+                    if user_profile.image:
+                        profile_image = Image.open(user_profile.image.path)
+                        profile_image_np = np.array(profile_image)
+                        gray_profile_image = cv2.cvtColor(profile_image_np, cv2.COLOR_RGB2GRAY)
+                        
+                        profile_faces = face_cascade.detectMultiScale(gray_profile_image, 1.1, 4)
+                        if len(profile_faces) > 0:
+                            for (px, py, pw, ph) in profile_faces:
+                                profile_face_region = gray_profile_image[py:py + ph, px:px + pw]
+                                # Comparar la región de la cara usando correlación normalizada (método básico)
+                                match_result = cv2.matchTemplate(face_region, profile_face_region, cv2.TM_CCOEFF_NORMED)
+                                similarity = cv2.minMaxLoc(match_result)[1]
+
+                                if similarity > 0.6:  # Umbral para determinar si es una coincidencia
+                                    login(request, user_profile.user)
+                                    return JsonResponse({
+                                        "success": True,
+                                        "message": "Coincidencia facial válida, usuario autenticado",
+                                        "redirect": reverse('home')
+                                    }, status=200)
 
             return JsonResponse({"success": False, "message": "No se encontró una coincidencia facial válida"}, status=400)
 
@@ -75,6 +81,7 @@ class FacialRecognitionView(View):
             return image
         except Exception as e:
             return None
+
 
 
 class LoginUserView(View):

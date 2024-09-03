@@ -2,6 +2,9 @@ from django.db import models
 from django.conf import settings
 from django.core.files.base import ContentFile
 import base64
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -20,11 +23,6 @@ class UserProfile(models.Model):
             ext = format.split('/')[-1]
             data = ContentFile(base64.b64decode(imgstr), name=f'{self.user.username}_face.{ext}')
             self.image.save(f'{self.user.username}_face.{ext}', data, save=True)
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.conf import settings
-from .models import UserProfile
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_user_profile(sender, instance, created, **kwargs):
