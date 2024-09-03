@@ -226,3 +226,140 @@
       });
   });
 </script>
+
+
+<!-- Modal Sobre La version del software -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const versionModal = document.getElementById('versionModal');
+      const closeVersionModalButtons = document.querySelectorAll('[data-modal-hide="versionModal"]');
+      const modalShownKey = 'versionModalShown';
+
+      // Mostrar el modal de versión después de un segundo si no se ha mostrado antes
+      if (!localStorage.getItem(modalShownKey)) {
+          setTimeout(() => {
+              if (versionModal) {
+                  versionModal.classList.remove('hidden');
+                  versionModal.classList.add('scale-100'); // Para la animación
+                  localStorage.setItem(modalShownKey, 'true');
+              }
+          }, 1000); // Espera 1 segundo antes de mostrar el modal
+      }
+
+      // Cerrar el modal al hacer clic en los botones de cerrar
+      closeVersionModalButtons.forEach(button => {
+          button.addEventListener('click', () => {
+              if (versionModal) {
+                  versionModal.classList.add('hidden');
+              }
+          });
+      });
+  });
+</script>
+
+<!-- Modal Sobre Nosotros -->
+<script>
+    document.querySelectorAll('[data-modal-target]').forEach(button => {
+      button.addEventListener('click', () => {
+          const modal = document.getElementById(button.getAttribute('data-modal-target'));
+          modal.classList.remove('hidden');
+
+          // Recalcula la posición centrada del modal
+          const modalContent = modal.querySelector('.relative.bg-white');
+          const modalHeight = modalContent.clientHeight;
+          const windowHeight = window.innerHeight;
+          const topOffset = (windowHeight - modalHeight) / 2;
+
+          modalContent.style.marginTop = `${topOffset}px`;
+      });
+  });
+
+  document.querySelectorAll('[data-modal-hide]').forEach(button => {
+      button.addEventListener('click', () => {
+          const modal = button.closest('.fixed');
+          modal.classList.add('hidden');
+
+          // Restablece la posición del modal
+          const modalContent = modal.querySelector('.relative.bg-white');
+          modalContent.style.marginTop = `0`;
+      });
+  });
+</script>
+
+<!-- Boton de accesibilidad -->
+<style>
+  @keyframes pulse {
+                          0% {
+                              box-shadow: 0 0 0 0 rgba(66, 153, 225, 0.7);
+                          }
+                          70% {
+                              box-shadow: 0 0 0 15px rgba(66, 153, 225, 0);
+                          }
+                          100% {
+                              box-shadow: 0 0 0 0 rgba(66, 153, 225, 0);
+                          }
+                      }
+                  
+                      #dropdownDefaultButton {
+                          animation: pulse 2s infinite;
+                          position: fixed;
+                          bottom: 140px; /* Movido más arriba */
+                          left: 32px;
+                          width: 50px;
+                          height: 50px;
+                          border-radius: 50%;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          z-index: 50;
+                      }
+                  
+                      #dropdown {
+                          position: fixed;
+                          bottom: 200px; /* Posicionado encima del botón */
+                          left: 32px;
+                          transform: translateY(10px);
+                          opacity: 0;
+                          visibility: hidden;
+                          transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+                      }
+                  
+                      #dropdown.show {
+                          transform: translateY(0);
+                          opacity: 1;
+                          visibility: visible;
+                      }
+</style>
+<script>
+  const button = document.getElementById('dropdownDefaultButton');
+                  const dropdown = document.getElementById('dropdown');
+              
+                  button.addEventListener('click', () => {
+                      dropdown.classList.toggle('show');
+                  });
+              
+                  // Cerrar el dropdown si se hace clic fuera de él
+                  document.addEventListener('click', (event) => {
+                      if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                          dropdown.classList.remove('show');
+                      }
+                  });
+
+                  // Funciones para controlar el zoom
+      let currentZoom = 100;
+
+      function changeZoom(direction) {
+          if (direction === 'in') {
+              currentZoom += 10;
+          } else if (direction === 'out') {
+              currentZoom -= 10;
+          }
+          currentZoom = Math.max(50, Math.min(currentZoom, 200)); // Limitar entre 50% y 200%
+          document.body.style.zoom = `${currentZoom}%`;
+      }
+
+      function resetZoom() {
+          currentZoom = 100;
+          document.body.style.zoom = '100%';
+      }
+</script>
