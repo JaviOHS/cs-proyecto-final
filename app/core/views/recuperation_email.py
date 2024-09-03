@@ -34,194 +34,179 @@ class PasswordResetView(View):
             web_url = 'http://127.0.0.1:8000/'  # Reemplaza con tu URL real de la aplicación
 
             # Configurar el asunto y el mensaje del correo
-            subject = 'Restablecimiento de Contraseña - IGUANA CORP'
+            subject = 'Restablecimiento de Contraseña - PASYS ALERT'
 
             message = format_html(
                 """
                 <!DOCTYPE html>
                 <html lang="es">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>Restablecimiento de Contraseña - IGUANA CORP</title>
-                        <style>
-                            @keyframes fadeIn {{
-                                from {{ opacity: 0; }}
-                                to {{ opacity: 1; }}
-                            }}
-                            @keyframes slideIn {{
-                                from {{ transform: translateY(-20px); opacity: 0; }}
-                                to {{ transform: translateY(0); opacity: 1; }}
-                            }}
-                            body {{
-                                font-family: 'Arial', sans-serif;
-                                line-height: 1.6;
-                                color: #333333;
-                                background-color: #f4f4f4;
-                                margin: 0;
-                                padding: 0;
-                            }}
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Restablecimiento de Contraseña - PASYS ALERT</title>
+                    <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+                        
+                        body {{
+                            font-family: 'Roboto', Arial, sans-serif;
+                            line-height: 1.6;
+                            color: #333333;
+                            background-color: #f6f9fc;
+                            margin: 0;
+                            padding: 0;
+                        }}
+                        .container {{
+                            max-width: 600px;
+                            margin: 40px auto;
+                            background-color: #ffffff;
+                            border-radius: 12px;
+                            overflow: hidden;
+                            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                        }}
+                        .header {{
+                            background: linear-gradient(135deg, #0056b3, #00a0e9);
+                            color: #ffffff;
+                            text-align: center;
+                            padding: 40px 20px;
+                        }}
+                        .logo {{
+                            width: 100px;
+                            height: auto;
+                            margin-bottom: 20px;
+                        }}
+                        .company-name {{
+                            font-size: 32px;
+                            font-weight: 700;
+                            letter-spacing: 1px;
+                            margin: 0;
+                        }}
+                        .content {{
+                            padding: 40px 30px;
+                        }}
+                        h2 {{
+                            color: #0056b3;
+                            font-size: 24px;
+                            margin-top: 0;
+                            margin-bottom: 20px;
+                            text-align: center;
+                        }}
+                        p {{
+                            margin-bottom: 20px;
+                            font-size: 16px;
+                        }}
+                        .button {{
+                            display: inline-block;
+                            padding: 14px 30px;
+                            background-color: #0056b3;
+                            color: #ffffff !important;
+                            text-decoration: none;
+                            border-radius: 50px;
+                            font-weight: 700;
+                            font-size: 16px;
+                            text-align: center;
+                            transition: all 0.3s ease;
+                            margin: 20px 0;
+                        }}
+                        .button:hover {{
+                            background-color: #003d82;
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 10px rgba(0,86,179,0.3);
+                        }}
+                        .footer {{
+                            background-color: #f8f8f8;
+                            text-align: center;
+                            padding: 30px 20px;
+                            font-size: 14px;
+                            color: #666666;
+                        }}
+                        .contact-container {{
+                            display: flex;
+                            justify-content: center;
+                            flex-wrap: wrap;
+                            margin-top: 30px;
+                        }}
+                        .contact-section {{
+                            flex: 1 1 200px;
+                            margin: 10px;
+                            text-align: center;
+                        }}
+                        .section-icon svg {{
+                            width: 30px;
+                            height: 30px;
+                            fill: #0056b3;
+                            margin-bottom: 10px;
+                        }}
+                        .contact-item a {{
+                            color: #0056b3;
+                            text-decoration: none;
+                            transition: color 0.3s ease;
+                        }}
+                        .contact-item a:hover {{
+                            color: #003d82;
+                        }}
+                        @media only screen and (max-width: 600px) {{
                             .container {{
-                                max-width: 600px;
-                                margin: 20px auto;
-                                background-color: #ffffff;
-                                border-radius: 8px;
-                                overflow: hidden;
-                                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-                                animation: fadeIn 0.5s ease-out;
-                            }}
-                            .header {{
-                                background-color: #0056b3;
-                                color: #ffffff;
-                                text-align: center;
-                                padding: 20px;
-                            }}
-                            .logo {{
-                                width: 80px;
-                                height: auto;
-                            }}
-                            .company-name {{
-                                font-size: 28px;
-                                font-weight: bold;
-                                margin-top: 10px;
+                                width: 100%;
+                                margin: 0;
+                                border-radius: 0;
                             }}
                             .content {{
-                                padding: 30px;
-                                animation: slideIn 0.5s ease-out;
+                                padding: 30px 20px;
                             }}
-                            h2 {{
-                                color: #0056b3;
-                                border-bottom: 2px solid #0056b3;
-                                padding-bottom: 10px;
-                            }}
-                            .button {{
-                                display: inline-block;
-                                padding: 12px 24px;
-                                background-color: #0056b3;
-                                color: #ffffff !important;
-                                text-decoration: none;
-                                border-radius: 5px;
-                                font-weight: bold;
-                                margin-top: 20px;
-                                transition: background-color 0.3s ease;
-                            }}
-                            .button:hover {{
-                                background-color: #003d82;
-                            }}
-                            .footer {{
-                                background-color: #f8f8f8;
-                                text-align: center;
-                                padding: 20px;
-                                font-size: 14px;
-                                color: #666666;
-                            }}
-                            .contact-info {{
-                                margin-top: 20px;
-                                border-top: 1px solid #dddddd;
-                                padding-top: 20px;
-                            }}
-                            .contact-info h3 {{
-                                color: #0056b3;
-                                font-size: 18px;
-                                margin-bottom: 15px;
-                            }}
-                            .contact-item {{
-                                display: flex;
-                                align-items: flex-start;
-                                margin-bottom: 15px;
-                            }}
-                            .contact-item svg {{
-                                flex-shrink: 0;
-                                margin-right: 10px;
-                                margin-top: 3px;
-                            }}
-                            .contact-item a, .contact-item span {{
-                                color: #333333;
-                                text-decoration: none;
-                            }}
-                            .contact-item a:hover {{
-                                color: #0056b3;
-                                text-decoration: underline;
-                            }}
-                            @media only screen and (max-width: 600px) {{
-                                .container {{
-                                    width: 100%;
-                                    margin: 0;
-                                    border-radius: 0;
-                                }}
-                            }}
-                            .contact-container {{
-                                display: flex;
-                                justify-content: space-around;
-                                text-align: center;
-                            }}
-                            .contact-section {{
-                                flex: 1;
-                                margin: 0 10px;
-                            }}
-                            .section-icon {{
-                                font-size: 24px;
-                                margin-bottom: 10px;
-                            }}
-                            .contact-item {{
-                                display: flex;
-                                flex-direction: column;
-                                align-items: center;
-                            }}
-                            .contact-item svg {{
-                                margin-bottom: 5px;
-                            }}
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <div class="header">
-                                <div class="company-name">Iguana Corp</div>
-                            </div>
-                            <div class="content">
-                                <h2>Restablecimiento de Contraseña</h2>
-                                <p>Estimado usuario,</p>
-                                <p>Hemos recibido una solicitud para restablecer la contraseña de su cuenta.</p>
-                                <p>Para proceder con el restablecimiento, por favor haga clic en el siguiente botón:</p>
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcShcy1kdTpTBXxMA-0XfsTqZP95UMFiRR3HgsK8yRa5NtBknor2" alt="PASYS ALERT Logo" class="logo">
+                            <h1 class="company-name">PASYS ALERT</h1>
+                        </div>
+                        <div class="content">
+                            <h2>Restablecimiento de Contraseña</h2>
+                            <p>Estimado usuario,</p>
+                            <p>Hemos recibido una solicitud para restablecer la contraseña de su cuenta. Si usted no ha solicitado este cambio, por favor ignore este correo.</p>
+                            <p>Para proceder con el restablecimiento, haga clic en el siguiente botón:</p>
+                            <div style="text-align: center;">
                                 <a href="{reset_link}" class="button">Restablecer Contraseña</a>
-                                <p>Si usted no solicitó este cambio, puede ignorar este correo. Su contraseña actual seguirá siendo válida.</p>
-                                <p>Este enlace expirará en 24 horas por razones de seguridad.</p>
-                                <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos.</p>
-                                <p>Atentamente,<br><strong>El equipo de Iguana Corp</strong></p>
                             </div>
-                            <div style="text-align: center;" class="footer">
-                                <p>Este es un correo automático, por favor no responda a esta dirección.</p>
-                                <div class="contact-container">
-                                    <div class="contact-section">
-                                        <div class="section-icon">
-                                            <svg width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3h18v18H3z" fill="none"/><path d="M20 4H4v14h16V4zM4 2C2.9 2 2 2.9 2 4v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H4zm0 4l8 5 8-5H4zm0 2l8 5 8-5v6l-8 5-8-5V8z"/></svg>
-                                        </div>
-                                        <div class="contact-item">
-                                            <a href="mailto:support@iguanacorp.com">support@iguanacorp.com</a>
-                                        </div>
+                            <p>Por razones de seguridad, este enlace expirará en 24 horas.</p>
+                            <p>Si necesita asistencia adicional, no dude en contactarnos.</p>
+                            <p>Atentamente,<br><strong>El equipo de PASYS ALERT</strong></p>
+                        </div>
+                        <div class="footer">
+                            <p>Este es un correo automático, por favor no responda a esta dirección.</p>
+                            <div class="contact-container">
+                                <div class="contact-section">
+                                    <div class="section-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                                     </div>
-                                    <div class="contact-section">
-                                        <div class="section-icon">
-                                            <svg width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3.6c4.02 0 7.41 3.05 7.93 7h-2.08c-.42-2.22-2.26-3.9-4.59-4.33V5.61c2.97.35 5.26 2.67 5.67 5.66h-1.74C15.1 9.41 13.66 8.24 12 8.24V5.61zm-1.5 5.49H5.07C5.5 7.95 8.53 5.6 12 5.6v2.62c-1.66 0-3.1 1.17-3.43 2.77zm1.5 5.78c-4.02 0-7.41-3.05-7.93-7h2.08c.42 2.22 2.26 3.9 4.59 4.33v2.77c-2.97-.35-5.26-2.67-5.67-5.66h1.74C8.9 14.59 10.34 15.76 12 15.76v2.63zm1.5-3.37H18.93c-.43 2.42-3.46 4.77-7.93 4.77v-2.62c1.66 0 3.1-1.17 3.43-2.77z"/></svg>
-                                        </div>
-                                        <div class="contact-item">
-                                            <a href="https://www.google.com/maps/place/UNEMI+-+Universidad+Estatal+de+Milagro/@-2.149223,-79.60552,17z/data=!3m1!4b1!4m5!3m4!1s0x902d1edc7183f1e5:0x77206e08da0eb158!8m2!3d-2.1492284!4d-79.6033313" target="_blank">
-                                                Dirección Google Maps
-                                            </a>
-                                        </div>
+                                    <div class="contact-item">
+                                        <a href="mailto:support@pasysalert.com">support@pasysalert.com</a>
                                     </div>
-                                    <div class="contact-section">
-                                        <div class="section-icon">
-                                            <svg width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3h18v18H3z" fill="none"/><path d="M16.59 5.41L12 10l-4.59-4.59L6 6l6 6 6-6zM5 19v-2h14v2H5z"/></svg>
-                                        </div>
-                                        <div class="contact-item">
-                                            <a href="https://iguanacorp.com" target="_blank">www.iguanacorp.com</a>
-                                        </div>
+                                </div>
+                                <div class="contact-section">
+                                    <div class="section-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                    </div>
+                                    <div class="contact-item">
+                                        <a href="https://www.google.com/maps/place/UNEMI+-+Universidad+Estatal+de+Milagro/@-2.149223,-79.60552,17z/data=!3m1!4b1!4m5!3m4!1s0x902d1edc7183f1e5:0x77206e08da0eb158!8m2!3d-2.1492284!4d-79.6033313" target="_blank">
+                                            Ubicación
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="contact-section">
+                                    <div class="section-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+                                    </div>
+                                    <div class="contact-item">
+                                        <a href="https://www.pasysalert.com" target="_blank">www.pasysalert.com</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </body>
+                    </div>
+                </body>
                 </html>
                 """,
                 reset_link=reset_link
