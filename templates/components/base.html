@@ -99,8 +99,8 @@
                   class="flex items-center space-x-2 text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                   id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
                   
-                  {% if user_profile.image %}
-                  <img src="{{ user_profile.image.url }}" alt="profile" class="w-10 h-10 rounded-full">
+                  {% if user.image %}
+                  <img src="{{ user.image.url }}" alt="profile" class="w-10 h-10 rounded-full">
                   {% else %}
                   <img src="{% static 'img/components/default_user.jpg' %}" alt="profile" class="w-10 h-10 rounded-full">
                   {% endif %}

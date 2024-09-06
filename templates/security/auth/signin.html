@@ -98,64 +98,73 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
-    const facialRecognitionButton = document.getElementById('facialRecognitionButton');
-    const facialRecognitionModal = document.getElementById('facialRecognitionModal');
-    const closeFacialModal = document.getElementById('closeFacialModal');
-    const facialVideo = document.getElementById('facialVideo');
-    const captureFacial = document.getElementById('captureFacial');
-  
-    let stream;
-  
-    facialRecognitionButton.addEventListener('click', async () => {
-      facialRecognitionModal.classList.remove('hidden');
-      stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      facialVideo.srcObject = stream;
-      facialVideo.play();
-    });
-  
-    closeFacialModal.addEventListener('click', () => {
-      facialRecognitionModal.classList.add('hidden');
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
-    });
-  
-    captureFacial.addEventListener('click', () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = facialVideo.videoWidth;
-      canvas.height = facialVideo.videoHeight;
-      canvas.getContext('2d').drawImage(facialVideo, 0, 0);
-      const imageData = canvas.toDataURL('image/jpeg');
-  
-      fetch('{% url "core:facial_recognition" %}', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON.stringify({ image: imageData })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          window.location.href = data.redirect;
-        } else {
-          alert(data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Ocurrió un error durante el reconocimiento facial');
-      })
-      .finally(() => {
-        facialRecognitionModal.classList.add('hidden');
-        if (stream) {
-          stream.getTracks().forEach(track => track.stop());
-        }
+      const facialRecognitionButton = document.getElementById('facialRecognitionButton');
+      const facialRecognitionModal = document.getElementById('facialRecognitionModal');
+      const closeFacialModal = document.getElementById('closeFacialModal');
+      const facialVideo = document.getElementById('facialVideo');
+      const captureFacial = document.getElementById('captureFacial');
+      
+      let stream;
+
+      facialRecognitionButton.addEventListener('click', async () => {
+          facialRecognitionModal.classList.remove('hidden');
+          try {
+              stream = await navigator.mediaDevices.getUserMedia({ video: true });
+              facialVideo.srcObject = stream;
+              facialVideo.play();
+          } catch (error) {
+              console.error('Error accediendo a la cámara:', error);
+              alert('No se puede acceder a la cámara. Asegúrate de que has otorgado permisos.');
+          }
       });
-    });
+
+      closeFacialModal.addEventListener('click', () => {
+          facialRecognitionModal.classList.add('hidden');
+          if (stream) {
+              stream.getTracks().forEach(track => track.stop());
+          }
+      });
+
+      captureFacial.addEventListener('click', () => {
+          if (stream) {
+              const canvas = document.createElement('canvas');
+              canvas.width = facialVideo.videoWidth;
+              canvas.height = facialVideo.videoHeight;
+              canvas.getContext('2d').drawImage(facialVideo, 0, 0);
+              
+              const imageData = canvas.toDataURL('image/jpeg');
+
+              fetch('{% url "core:facial_recognition" %}', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': '{{ csrf_token }}'
+                  },
+                  body: JSON.stringify({ image: imageData })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      window.location.href = data.redirect;
+                  } else {
+                      alert(data.message);
+                  }
+              })
+              .catch(error => {
+                  console.error('Error en el reconocimiento facial:', error);
+                  alert('Ocurrió un error durante el reconocimiento facial');
+              })
+              .finally(() => {
+                  facialRecognitionModal.classList.add('hidden');
+                  stream.getTracks().forEach(track => track.stop());
+              });
+          } else {
+              alert('No se ha iniciado el flujo de la cámara.');
+          }
+      });
   });
-  </script>
+</script>
+
 
 {% endblock content %}
 

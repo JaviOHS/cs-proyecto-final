@@ -1,51 +1,44 @@
-from urllib import request
-from django.conf import settings
 from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from app.core.forms.perfil import UserProfileForm, UserProfilePasswordForm
-from app.core.models import UserProfile
-from django.contrib import messages
 from django.contrib.auth import logout
+from django.contrib.auth.models import User
+from django.contrib import messages
+from app.core.forms.perfil import UserProfileForm, UserProfilePasswordForm
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'components/profile.html'
     title1 = 'Perfil'
     title2 = 'Tu Perfil'
-    login_url = reverse_lazy('login')  # Redirect to login page if not authenticated
+    login_url = reverse_lazy('login')
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect(self.login_url)
-
         return super().dispatch(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        try:
-            context['user_profile'] = UserProfile.objects.get(user=self.request.user)
-        except UserProfile.DoesNotExist:
-            # Handle the case where UserProfile doesn't exist
-            context['user_profile'] = None
-        context['profile'] = getattr(self.request.user, 'userprofile', None)
+        context['profile'] = self.request.user
         context['title1'] = self.title1
         context['title2'] = self.title2
         return context
 
     
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
-    model = UserProfile
+    model = User 
     form_class = UserProfileForm
     template_name = 'components/profile_update.html'
     success_url = reverse_lazy('core:profile')
 
     def get_object(self):
-        return self.request.user.userprofile
-    
+        return self.request.user
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
@@ -56,11 +49,16 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
                 password_form.save()
                 messages.success(request, 'Contraseña actualizada con éxito. Por favor, inicia sesión de nuevo.')
                 logout(request)
-                return redirect('security:signin')  # Use the correct URL name
-        elif form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+                return redirect('security:signin')
+            else:
+                return self.render_to_response(self.get_context_data(form=form, password_form=password_form))
+        elif 'profile_update' in request.POST:
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        
+        return self.render_to_response(self.get_context_data(form=form, password_form=password_form))
         
     def form_valid(self, form):
         response = super().form_valid(form)

@@ -22,18 +22,18 @@
             <!-- Sección de perfil -->
             <div class="lg:w-2/3 flex flex-col lg:flex-row items-center lg:space-x-6">
                 <div class="flex-shrink-0 text-center lg:text-left mb-4 lg:mb-0">
-                    {% if profile.image %}
-                        <img src="{{ profile.image.url }}" alt="user-avatar-image" class="border-4 border-green-500 rounded-full w-24 h-24 object-cover">
+                    {% if user.image %}
+                        <img src="{{ user.image.url }}" alt="user-avatar-image" class="border-4 border-green-500 rounded-full w-24 h-24 object-cover">
                     {% else %}
-                        <img src="{% static 'img/usuario_anonimo_2.png' %}" alt="default-avatar-image" class="border-4 border-green-500 rounded-full w-24 h-24 object-cover">
+                        <img src="{% static 'img/components/default_user.jpg' %}" alt="default-avatar-image" class="border-4 border-green-500 rounded-full w-24 h-24 object-cover">
                     {% endif %}
                 </div>
                 <div class="text-center lg:text-left">
                     <h3 class="font-manrope font-bold text-2xl text-gray-900 dark:text-white mb-1">
-                        {{ profile.first_name }} {{ profile.last_name }}
+                        {{ user.first_name }} {{ user.last_name }}
                     </h3>
                     <p class="font-medium text-lg text-gray-500 dark:text-gray-400 mb-4">
-                        {{ profile.email|default:"Correo no registrado" }}
+                        {{ user.email|default:"Correo no registrado" }}
                     </p>
                     <a href="{% url 'core:profile_update' %}" class="py-2 px-4 rounded-full bg-indigo-500 text-white font-semibold text-sm leading-7 shadow-md transition-all duration-300 hover:bg-indigo-600">
                         {% trans 'Editar Perfil' %}

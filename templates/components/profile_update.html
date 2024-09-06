@@ -26,7 +26,7 @@
                     <h2 class="text-2xl font-semibold mb-6 dark:text-white">{% trans 'Imagen de perfil' %}</h2>
                     <div class="flex flex-col items-center">
                         <img id="selected-img" src="{% if form.instance.image %}{{ form.instance.image.url }}{% else %}{% static 'img/components/default_user.jpg' %}{% endif %}" alt="profile" class="w-36 h-36 rounded-full cursor-pointer mb-4 object-cover border-4 border-green-500 transition-all duration-300 hover:border-indigo-500">
-                        <div class="hidden">
+                        <div>
                             {{ form.image }}
                         </div>
                     </div>
