@@ -1,0 +1,299 @@
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+<script src="{% static 'js/img.js' %}"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<!-- Script para inicializar AOS -->
+<script>
+  AOS.init();
+</script>
+
+<!-- Pantallazo blanco al cambiar de pagina -->
+<script>
+  (function () {
+    const isDarkModeEnabled = localStorage.getItem('darkModeEnabled') === 'true';
+    if (isDarkModeEnabled) {
+      document.documentElement.classList.add('dark');
+    }
+    document.documentElement.classList.add('loaded');
+  })();
+  (function () {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.className = savedTheme;
+    document.documentElement.classList.add('loaded');
+  })();
+</script>
+
+<!-- Script para alertas -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const messages = document.querySelectorAll('#message-container > div');
+    messages.forEach(function (message) {
+      setTimeout(function () {
+        message.style.transition = 'opacity 0.5s ease-out';
+        message.style.opacity = '0';
+        setTimeout(function () {
+          message.remove();
+        }, 500);
+      }, 5000);
+    });
+  });
+</script>
+
+<!-- Script para cambiar el tema -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const themeToggleBtn = document.getElementById('themeIconContainer');
+    const themeIcon = document.getElementById('themeIcon');
+
+    // Función para cambiar el ícono del tema
+    function toggleThemeIcon() {
+      if (document.documentElement.classList.contains('dark')) {
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+      } else {
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+      }
+    }
+
+    // Función para aplicar un tema y actualizar el ícono
+    function setTheme(theme) {
+      document.documentElement.className = theme;
+      localStorage.setItem('theme', theme); // Guarda el tema seleccionado en localStorage para persistencia
+
+      // Mostrar u ocultar la imagen de fondo según el tema seleccionado (si es necesario)
+      const heroSection = document.getElementById('hero-section');
+      if (heroSection) {
+        if (theme === 'theme1') {
+          heroSection.classList.remove('no-background');
+        } else {
+          heroSection.classList.add('no-background');
+        }
+      }
+
+      // Cambia el ícono del tema
+      toggleThemeIcon();
+    }
+
+    // Verifica si hay un tema guardado en el almacenamiento local
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+
+    // Cambiar el ícono del tema al cargar la página
+    toggleThemeIcon();
+
+    // Agrega un listener para el evento 'click' en el botón
+    themeToggleBtn.addEventListener('click', function (event) {
+      event.preventDefault(); // Previene el comportamiento predeterminado del ícono
+      // Cambia entre temas light y dark
+      if (document.documentElement.classList.contains('dark')) {
+        setTheme('light');
+      } else {
+        setTheme('dark');
+      }
+    });
+
+    // Exponer setTheme globalmente para usarlo en el menú de temas
+    window.setTheme = setTheme;
+  });
+</script>
+
+<!-- Script para hacer blur la navbar -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const navbar = document.getElementById('navbar');
+
+    window.addEventListener('scroll', () => {
+      const isDarkMode = document.documentElement.classList.contains('dark'); // Verifica si el modo oscuro está activado
+
+      if (window.scrollY > 50) {
+        navbar.classList.add('bg-opacity-80', 'backdrop-blur-sm');
+        if (isDarkMode) {
+          navbar.classList.add('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
+        }
+      } else {
+        navbar.classList.remove('bg-opacity-80', 'backdrop-blur-sm');
+        if (isDarkMode) {
+          navbar.classList.remove('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
+        }
+      }
+    });
+  });
+</script>
+
+<!-- Script para el botón de ir arriba -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.addEventListener('scroll', function () {
+      var goTopBtn = document.getElementById('goTopBtn');
+      if (window.scrollY > 100) {
+        goTopBtn.classList.remove('translate-y-20');
+        goTopBtn.classList.remove('opacity-0');
+        goTopBtn.classList.add('translate-y-0');
+        goTopBtn.classList.add('opacity-100');
+      } else {
+        goTopBtn.classList.add('translate-y-20');
+        goTopBtn.classList.add('opacity-0');
+        goTopBtn.classList.remove('translate-y-0');
+        goTopBtn.classList.remove('opacity-100');
+      }
+    });
+
+    document.getElementById('goTopBtn').addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>
+
+<!-- SCRIPTS QUE ESTABAN EN HOME -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<!-- Modal Sobre Nosotros -->
+<script>
+  document.querySelectorAll('[data-modal-target]').forEach(button => {
+    button.addEventListener('click', () => {
+      const modal = document.getElementById(button.getAttribute('data-modal-target'));
+      modal.classList.remove('hidden');
+
+      // Recalcula la posición centrada del modal
+      const modalContent = modal.querySelector('.relative.bg-white');
+      const modalHeight = modalContent.clientHeight;
+      const windowHeight = window.innerHeight;
+      const topOffset = (windowHeight - modalHeight) / 2;
+
+      modalContent.style.marginTop = `${topOffset}px`;
+    });
+  });
+
+  document.querySelectorAll('[data-modal-hide]').forEach(button => {
+    button.addEventListener('click', () => {
+      const modal = button.closest('.fixed');
+      modal.classList.add('hidden');
+
+      // Restablece la posición del modal
+      const modalContent = modal.querySelector('.relative.bg-white');
+      modalContent.style.marginTop = `0`;
+    });
+  });
+</script>
+
+<!-- Boton de accesibilidad -->
+<style>
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(66, 153, 225, 0.7);
+    }
+
+    70% {
+      box-shadow: 0 0 0 15px rgba(66, 153, 225, 0);
+    }
+
+    100% {
+      box-shadow: 0 0 0 0 rgba(66, 153, 225, 0);
+    }
+  }
+
+  #dropdownDefaultButton {
+    animation: pulse 2s infinite;
+    position: fixed;
+    bottom: 140px;
+    /* Movido más arriba */
+    left: 32px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+
+  #dropdown {
+    position: fixed;
+    bottom: 200px;
+    /* Posicionado encima del botón */
+    left: 32px;
+    transform: translateY(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+  }
+
+  #dropdown.show {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+</style>
+
+<!-- Dropdown -->
+<script>
+  const button = document.getElementById('dropdownDefaultButton');
+  const dropdown = document.getElementById('dropdown');
+
+  button.addEventListener('click', () => {
+    dropdown.classList.toggle('show');
+  });
+
+  // Cerrar el dropdown si se hace clic fuera de él
+  document.addEventListener('click', (event) => {
+    if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+      dropdown.classList.remove('show');
+    }
+  });
+
+  // Funciones para controlar el zoom
+  let currentZoom = 100;
+
+  function changeZoom(direction) {
+    if (direction === 'in') {
+      currentZoom += 10;
+    } else if (direction === 'out') {
+      currentZoom -= 10;
+    }
+    currentZoom = Math.max(50, Math.min(currentZoom, 200)); // Limitar entre 50% y 200%
+    document.body.style.zoom = `${currentZoom}%`;
+  }
+
+  function resetZoom() {
+    currentZoom = 100;
+    document.body.style.zoom = '100%';
+  }
+</script>
+
+<!-- Efecto de luz -->
+<style>
+  #light-effect {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(99,102,241,0) 70%);
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s ease;
+      opacity: 0;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const section = document.querySelector('.py-10.relative.overflow-hidden');
+      const lightEffect = document.getElementById('light-effect');
+
+      section.addEventListener('mousemove', (e) => {
+          const rect = section.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          lightEffect.style.left = `${x}px`;
+          lightEffect.style.top = `${y}px`;
+          lightEffect.style.opacity = '1';
+      });
+
+      section.addEventListener('mouseleave', () => {
+          lightEffect.style.opacity = '0';
+      });
+  });
+</script>
+

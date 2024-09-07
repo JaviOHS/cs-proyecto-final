@@ -15,7 +15,7 @@ class RealTimeMonitoringView(View):
             'details': f'{session.name} - {session.description}'
         }
         
-        return render(request, 'monitoring/real_time_monitoring.html', context)
+        return render(request, 'real_time_monitoring.html', context)
 
 class VideoStreamView(View):
     def get(self, request):

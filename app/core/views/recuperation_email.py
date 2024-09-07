@@ -9,12 +9,14 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.views import View
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.urls import reverse_lazy
 
 User = get_user_model()
 
 class PasswordResetView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'components/password_reset.html', {'title1': 'Recuperar Contraseña'})
+        return render(request, 'password_reset.html', {'title1': 'Recuperar Contraseña'})
     
     def post(self, request, *args, **kwargs):
         email = request.POST['email']
@@ -226,19 +228,28 @@ class PasswordResetView(View):
             error_message = 'El correo no se encuentra registrado.'
             messages.error(request, error_message)
         
-        return render(request, 'components/password_reset.html', {'title1': 'Recuperar Contraseña'})
-
-# Añade estas nuevas vistas
-from django.contrib.auth.views import PasswordResetConfirmView
-from django.urls import reverse_lazy
+        return render(request, 'password_reset.html', {'title1': 'Recuperar Contraseña'})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title1'] = 'Recuperar Contraseña'
+        return context
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-    template_name = 'components/password_reset_confirm.html'
+    template_name = 'password_reset_confirm.html'
     success_url = reverse_lazy('security:signin')
 
     def form_valid(self, form):
-        template_name = 'components/password_reset_confirm.html'
-        success_url = reverse_lazy('core:password_reset_complete')
         success_message = 'Tu contraseña ha sido cambiada exitosamente.'
         messages.success(self.request, success_message)
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        error_message = 'El enlace de restablecimiento de contraseña es inválido o ha expirado.'
+        messages.error(self.request, error_message)
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title1'] = 'Restablecer Contraseña'
+        return context

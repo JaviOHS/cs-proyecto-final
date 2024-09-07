@@ -6,13 +6,13 @@ from django.views.generic.edit import UpdateView
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.contrib import messages
-from app.core.forms.perfil import UserProfileForm, UserProfilePasswordForm
+from app.core.forms.profile_view import UserProfileForm, UserProfilePasswordForm
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 class ProfileView(LoginRequiredMixin, TemplateView):
-    template_name = 'components/profile.html'
+    template_name = 'profile.html'
     title1 = 'Perfil'
     title2 = 'Tu Perfil'
     login_url = reverse_lazy('login')
@@ -28,12 +28,11 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         context['title1'] = self.title1
         context['title2'] = self.title2
         return context
-
     
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = User 
     form_class = UserProfileForm
-    template_name = 'components/profile_update.html'
+    template_name = 'profile_update.html'
     success_url = reverse_lazy('core:profile')
 
     def get_object(self):
@@ -63,6 +62,12 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, 'Perfil actualizado con éxito.')
+        return response
+    
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        for field in form.errors:
+            messages.error(self.request, f'{field}: {form.errors[field][0]}')
         return response
 
     def get_context_data(self, **kwargs):

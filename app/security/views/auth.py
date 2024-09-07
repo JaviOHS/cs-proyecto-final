@@ -15,7 +15,7 @@ class SignoutView(LoginRequiredMixin, View):
 
 class SignupView(FormView):
     form_class = CustomUserCreationForm
-    template_name = "security/auth/signup.html"
+    template_name = "signup.html"
     success_url = reverse_lazy("security:signin")
     extra_context = {"title1": "Registro", "title2": "Registro de Usuarios"}
     
@@ -26,12 +26,17 @@ class SignupView(FormView):
         return super().form_valid(form)
     
     def form_invalid(self, form):
-        messages.error(self.request, "Error al registrar el usuario. Por favor, revisa los datos ingresados.")
+        messages.error(self.request, "Revise los campos.")
+        
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{form[field].label} - {error}")
+        
         return super().form_invalid(form)
 
 class SigninView(FormView):
     form_class = AuthenticationForm
-    template_name = "security/auth/signin.html"
+    template_name = "signin.html"
     extra_context = {"title1": "Login", "title2": "Inicio de Sesión"}
 
     def form_valid(self, form):
@@ -46,6 +51,16 @@ class SigninView(FormView):
         else:
             messages.error(self.request, "El usuario o la contraseña son incorrectos")
             return self.form_invalid(form)
+        
+    
+    def form_invalid(self, form):
+        messages.error(self.request, "Revise los campos.")
+        
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{form[field].label} - {error}")
+        
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

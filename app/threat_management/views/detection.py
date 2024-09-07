@@ -5,10 +5,12 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from app.core.views.confirm_delete import ConfirmDeleteView
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.shortcuts import redirect
 
-class DetectionListView(ListView):
+class DetectionListView(LoginRequiredMixin, ListView):
     model = Detection
-    template_name = 'threat_management/detection_list.html'
+    template_name = 'detection_list.html'
     context_object_name = 'detection_models'
     
     def get_queryset(self):
@@ -20,12 +22,19 @@ class DetectionListView(ListView):
         context["title2"] = "Modelos de Detección de Amenazas"
         return context
     
-class DetectionCreateView(CreateView):
+class DetectionCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Detection
-    template_name = 'threat_management/detection_form.html'
+    template_name = 'detection_form.html'
     form_class = DetectionForm
     success_url = reverse_lazy('detection:detection_list')
     
+    def test_func(self):
+        # Solo permitir acceso a administradores
+        return self.request.user.is_staff or self.request.user.is_superuser
+
+    def handle_no_permission(self):
+        messages.error(self.request, 'No tienes permisos para realizar esta acción.')
+        return redirect('detection:detection_list')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -49,11 +58,19 @@ class DetectionCreateView(CreateView):
         
         return super().form_invalid(form)
     
-class DetectionUpdateView(UpdateView):
+class DetectionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Detection
-    template_name = 'threat_management/detection_form.html'
+    template_name = 'detection_form.html'
     form_class = DetectionForm
     success_url = reverse_lazy('detection:detection_list')
+    
+    def test_func(self):
+        # Solo permitir acceso a administradores
+        return self.request.user.is_staff or self.request.user.is_superuser
+
+    def handle_no_permission(self):
+        messages.error(self.request, 'No tienes permisos para realizar esta acción.')
+        return redirect('detection:detection_list')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,9 +94,17 @@ class DetectionUpdateView(UpdateView):
         
         return super().form_invalid(form)
     
-class DetectionDeleteView(ConfirmDeleteView):
+class DetectionDeleteView(LoginRequiredMixin, UserPassesTestMixin, ConfirmDeleteView):
     model = Detection
     success_url = reverse_lazy('detection:detection_list')
+    
+    def test_func(self):
+        # Solo permitir acceso a administradores
+        return self.request.user.is_staff or self.request.user.is_superuser
+
+    def handle_no_permission(self):
+        messages.error(self.request, 'No tienes permisos para realizar esta acción.')
+        return redirect('detection:detection_list')
     
     def get_details(self):
         """Personaliza los detalles que se muestran en la confirmación."""

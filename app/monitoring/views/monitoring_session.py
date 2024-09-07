@@ -6,11 +6,12 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from app.core.views.confirm_delete import ConfirmDeleteView
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import redirect
 
 class MonitoringSessionView(ListView, LoginRequiredMixin):
     model = MonitoringSession
-    template_name = 'monitoring/monitoring_session.html'
+    template_name = 'monitoring_session.html'
     context_object_name = 'monitoring_sessions'
 
     def get_queryset(self):
@@ -25,7 +26,7 @@ class MonitoringSessionView(ListView, LoginRequiredMixin):
 class CreateMonitoringSessionView(CreateView):
     model = MonitoringSession
     form_class = MonitoringSessionForm
-    template_name = 'monitoring/form_session.html'
+    template_name = 'form_session.html'
     success_url = reverse_lazy('monitoring:monitoring_session')
 
     def get_form_kwargs(self):
@@ -61,13 +62,22 @@ class CreateMonitoringSessionView(CreateView):
     def get_success_url(self):
         return self.success_url
 
-class UpdateMonitoringSessionView(UpdateView):
+class UpdateMonitoringSessionView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = MonitoringSession
     form_class = MonitoringSessionForm
-    template_name = 'monitoring/form_session.html'
+    template_name = 'form_session.html'
     context_object_name = 'session'
     success_url = reverse_lazy('monitoring:monitoring_session')
 
+    def test_func(self):
+        # Solo permitir que el creador de la sesión pueda editarla
+        session = self.get_object()
+        return session.user == self.request.user
+
+    def handle_no_permission(self):
+        messages.error(self.request, 'No tienes permiso para editar esta sesión.')
+        return redirect('monitoring:monitoring_session')
+    
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['detection_models'] = Detection.objects.filter(is_active=True)
@@ -91,10 +101,19 @@ class UpdateMonitoringSessionView(UpdateView):
         messages.error(self.request, 'Revise los campos marcados en rojo.')
         return super().form_invalid(form)
     
-class DeleteMonitoringSessionView(ConfirmDeleteView):
+class DeleteMonitoringSessionView(LoginRequiredMixin, UserPassesTestMixin, ConfirmDeleteView):
     model = MonitoringSession
     success_url = reverse_lazy('monitoring:monitoring_session')
 
+    def test_func(self):
+        # Solo permitir que el creador de la sesión pueda eliminarla
+        session = self.get_object()
+        return session.user == self.request.user
+
+    def handle_no_permission(self):
+        messages.error(self.request, 'No tienes permiso para eliminar esta sesión.')
+        return redirect('monitoring:monitoring_session')
+    
     def get_details(self):
         """Personaliza los detalles que se muestran en la confirmación."""
         return f"ID: {self.object.id} - {self.object.name}"

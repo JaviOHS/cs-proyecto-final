@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 
 class ConfirmDeleteView(DeleteView):
-    template_name = 'components/confirm_delete.html' 
+    template_name = 'confirm_delete.html' 
     success_url = reverse_lazy('home')
 
     def get_object(self, queryset=None):

@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 from app.monitoring.models import MonitoringSession
 
 class HomeTemplateView(TemplateView):
-    template_name = 'components/home.html'
+    template_name = 'home.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

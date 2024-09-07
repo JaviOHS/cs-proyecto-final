@@ -1,0 +1,38 @@
+{% extends 'components/base.html' %} 
+{% load static %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+{% block content %}
+<div class="py-20"></div>
+<div class="container px-6 mx-auto mb-4 flex items-center justify-center" data-aos="fade-up">
+  <div class="w-[50%] p-8 bg-slate-50 dark:bg-primary-dark_secondary shadow-md hover:shadow-lg rounded-2xl">
+    <div>
+      <div class="flex flex-col items-center text-center space-y-4">
+        <!-- Icono de Confirmación -->
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-16 h-16 rounded-2xl p-3 text-red-400 bg-white dark:bg-primary-dark" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        <div class="ml-3">
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ title2 }}</h2>
+          <p class="text-gray-700 dark:text-gray-400 text-center font-bold">¿Está seguro de esta decisión?<br>
+            <span class="font-black text-green-400">{{ details }}</span><br>
+            <span class="text-red-400 font-black">Una vez eliminado, no podrás recuperar los datos.</span>
+          </p>
+        </div>
+        <form method="post" action="{{ confirm_url }}">
+          {% csrf_token %}
+          <div>
+            <button type="submit" class="font-bold bg-red-500 px-5 py-2 text-sm shadow-sm hover:shadow-lg tracking-wider text-white rounded-full">
+              Sí, eliminar
+            </button>
+            <a href="{{ cancel_url }}" class="font-bold bg-blue-500 px-5 py-2 text-sm shadow-sm hover:shadow-lg tracking-wider text-white rounded-full">
+              Cancelar
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

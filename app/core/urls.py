@@ -19,6 +19,4 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('facial_recognition/', FacialRecognitionView.as_view(), name='facial_recognition'),
-
-
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

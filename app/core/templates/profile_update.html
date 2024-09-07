@@ -1,0 +1,170 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ title1 }}{% endblock title %}
+
+{% block content %}
+<div class="py-24 lg:py-14"></div>
+<section class="primary-container-bg mb-8">
+  <div class="container mx-auto px-4 text-center" data-aos="fade-up" data-aos-delay="300">
+    <div class="flex flex-col items-center justify-center">
+      <span class="information">
+        {{ title1 }}
+      </span>
+    </div>
+    <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
+    <p class="description-font text-center">{% trans 'Actualice su información y contraseña.' %}</p>
+  </div>
+  
+  <div class="w-full max-w-4xl mx-auto px-6 sm:px-8 mt-12" data-aos="fade-up" data-aos-delay="300">
+    <form method="post" enctype="multipart/form-data" class="secondary-container-bg shadow-2xl rounded-lg p-3 space-y-4">
+      {% csrf_token %}
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <!-- Imagen de perfil -->
+        <div class="primary-container-bg rounded-lg w-full shadow-xl p-6 text-center space-y-2">
+          <h2 class="labels mt-4">{% trans 'Imagen de perfil' %}</h2>
+          <div class="flex flex-col items-center">
+            <img id="selected-img"
+              src="{% if form.instance.image %}{{ form.instance.image.url }}{% else %}{% static 'img/components/default_user.jpg' %}{% endif %}"
+              alt="profile"
+              class="border-4 border-blue-700 dark:border-indigo-400 rounded-full w-24 h-24 object-cover cursor-pointer">
+            <div>
+              {{ form.image }}
+            </div>
+          </div>
+          <p class="description-font"> {% trans 'Haz clic en la imagen para cambiarla' %}</p>
+        </div>
+        <!-- Información del perfil y campos del formulario -->
+        <div class="lg:col-span-2">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Izquierda -->
+            <div class="space-y-4">
+              <!-- Nombre -->
+              <div>
+                <label for="{{ form.first_name.id_for_label }}" class="labels">
+                  {{ form.first_name.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-user-pen"></i>
+                  </span>
+                  {{ form.first_name }}
+                </div>
+              </div>
+              <!-- Usuario -->
+              <div>
+                <label for="{{ form.username.id_for_label }}" class="labels">
+                  {{ form.username.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-user-tag"></i>
+                  </span>
+                  {{ form.username }}
+                </div>
+              </div>
+              <!-- Correo -->
+              <div>
+                <label for="{{ form.email.id_for_label }}" class="labels">
+                  {{ form.email.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-envelope"></i>
+                  </span>
+                  {{ form.email }}
+                </div>
+              </div>
+            </div>
+            <!-- Derecha -->
+            <div class="space-y-4">
+              <!-- Apellido -->
+              <div>
+                <label for="{{ form.last_name.id_for_label }}" class="labels">
+                  {{ form.last_name.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-user-pen"></i>
+                  </span>
+                  {{ form.last_name }}
+                </div>
+              </div>
+              <!-- DNI -->
+              <div>
+                <label for="{{ form.dni.id_for_label }}" class="labels">
+                  {{ form.dni.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-id-card"></i>
+                  </span>
+                  {{ form.dni }}
+                </div>
+              </div>
+              <!-- Teléfono -->
+              <div>
+                <label for="{{ form.phone.id_for_label }}" class="labels">
+                  {{ form.phone.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-phone"></i>
+                  </span>
+                  {{ form.phone }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Sección para el cambio de contraseña -->
+      <div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {% for field in password_form %}
+          <div class="secondary-container-bg p-2 rounded-lg shadow-sm">
+            <label for="{{ field.id_for_label }}"
+              class="labels">
+              {{ field.label }}
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                <i class="form-icons fa-solid fa-lock"></i>
+              </span>
+              {{ field }}
+            </div>
+            {% if field.help_text %}
+            <p class="description-font">{{ field.help_text }}</p>
+            {% endif %}
+            {% for error in field.errors %}
+            <p class="description-font">{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="mt-10 flex justify-center space-x-6">
+        <button type="submit" name="profile_update"
+          class="flex items-center py-3 px-6 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base leading-7 shadow-md transition-all duration-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-700">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          {% trans 'Actualizar Perfil' %}
+        </button>
+
+        <button type="submit" name="password_change"
+          class="flex items-center py-3 px-6 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold text-base leading-7 shadow-md transition-all duration-300 focus:ring-4 focus:ring-green-300 dark:focus:ring-green-700">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          {% trans 'Cambiar Contraseña' %}
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock content %}

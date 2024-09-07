@@ -3,9 +3,117 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'Quicksand';
-    src: url('../fonts/Quicksand-VariableFont_wght.ttf') format('truetype');
-    font-weight: 200 700;
-    font-style: normal;
-  }
-  
+  font-family: 'Quicksand';
+  src: url('../fonts/Quicksand-VariableFont_wght.ttf') format('truetype');
+  font-weight: 200 700;
+  font-style: normal;
+}
+
+/* 
+  Blue: Modo Claro
+  Indigo: Modo Oscuro
+*/
+
+.primary-container-bg {
+  @apply bg-white dark:bg-[#0c1322];
+}
+
+.secondary-container-bg {
+  @apply bg-slate-50 dark:bg-[#0f172a];
+}
+
+.logo {
+  @apply flex items-center space-x-3 rtl:space-x-reverse
+}
+
+.nav-font-color, .role {
+  @apply text-slate-900 dark:text-white hover:text-blue-700 hover:dark:text-indigo-400 font-semibold block py-2 px-3 transition-colors duration-300;
+}
+
+.profile-picture {
+  @apply w-10 h-10 rounded-full;
+}
+
+.first-element-dropdown, .full-name {
+  @apply text-blue-700 dark:text-indigo-400 font-bold block;
+}
+
+.second-element-dropdown {
+  @apply text-gray-500 dark:text-gray-400 font-semibold block truncate;
+}
+
+.logout {
+  @apply text-slate-900 dark:text-white hover:text-red-700 hover:dark:text-red-400 font-semibold block py-2 px-3 transition-colors duration-300;
+}
+
+.sign-in-and-sign-up-button, .aditional-button {
+  @apply bg-blue-700 hover:bg-blue-800 dark:bg-indigo-700 dark:hover:bg-indigo-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300;
+}
+
+.theme-icon {
+  @apply inline-block p-2 rounded cursor-pointer mr-2 sm:mr-4;
+}
+
+.round-button {
+  @apply text-white bg-blue-500 hover:bg-blue-600 dark:bg-indigo-700 dark:hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm text-center dark:focus:ring-indigo-800 px-4 py-2;
+}
+
+.footer-font-color {
+  @apply text-gray-500 dark:text-gray-400 hover:text-blue-700 hover:dark:text-indigo-400 block font-bold transition-colors duration-300 text-center;
+}
+
+.title-font {
+  @apply text-slate-900 dark:text-white font-black tracking-tight;
+}
+
+.primary-font {
+  @apply text-blue-700 dark:text-indigo-400 text-3xl font-bold;
+}
+
+.description-font {
+  @apply text-gray-800 dark:text-neutral-400 font-semibold;
+}
+
+.information {
+  @apply text-white bg-blue-500 dark:bg-indigo-700 dark:hover:bg-indigo-800 px-4 py-1 capitalize rounded-full;
+}
+
+.title-module-cards {
+  @apply text-xl font-semibold dark:text-white mb-3 capitalize transition-all duration-500 group-hover:text-white;
+}
+
+.description-module-cards {
+  @apply text-gray-500 dark:text-neutral-400 text-sm font-bold transition-all duration-500 leading-5 group-hover:text-white;
+}
+
+.button-module-cards {
+  @apply mt-4 inline-flex items-center justify-center px-5 py-2 text-sm font-bold text-white ;
+}
+
+.home-and-back-button, .monitoring-video-button, .add-threat-button {
+  @apply bg-blue-500 dark:bg-indigo-700 hover:bg-blue-600 dark:hover:bg-indigo-800 text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-center dark:focus:ring-indigo-800 px-6 py-3 rounded-xl transition-colors duration-300;
+}
+
+.save-change-button {
+  @apply bg-green-500 dark:bg-green-700 hover:bg-green-600 dark:hover:bg-green-800 text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium text-center dark:focus:ring-green-800 px-6 py-3 rounded-xl transition-colors duration-300;
+}
+
+.labels {
+  @apply text-slate-900 dark:text-gray-200 text-xl capitalize font-bold mb-2;
+}
+
+.inputs {
+  @apply w-full bg-white dark:bg-[#0c1322] text-gray-800 dark:text-gray-400 text-base font-semibold pl-10 p-2.5 rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-700 dark:focus:ring-indigo-400;
+}
+
+.textarea {
+  @apply w-full bg-white dark:bg-[#0c1322] text-gray-800 dark:text-gray-400 text-base font-semibold p-2.5 rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-700 dark:focus:ring-indigo-400;
+}
+
+.questions {
+  @apply text-gray-800 dark:text-gray-200 hover:text-blue-700 dark:hover:text-indigo-400 text-lg font-bold mb-2 transition-colors duration-300;
+}
+
+.form-icons {
+  @apply text-blue-700 dark:text-indigo-400;
+}

@@ -1,0 +1,163 @@
+{% extends 'components/base.html' %}
+{% load static %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+{% block content %}
+{% load i18n %}
+
+<div class="primary-container-bg p-8 relative overflow-hidden">
+  <div class="absolute inset-0 bg-center blur-[106px]"></div>
+  <div class="relative">
+    <a href="{% url 'home' %}" class="logo justify-center" data-aos="fade-up">
+      <img src="{% static 'img/components/icon.png' %}" class="w-8 h-8" alt="Logo" />
+    </a> 
+    <section class="secondary-container-bg p-8 my-4 mx-auto max-w-7xl rounded-3xl" data-aos="fade-up" data-aos-delay="200">
+      <div class="gap-2 mb-8">
+        <h1 class="title-font text-3xl text-center mt-4">
+          {{ title2 }}
+        </h1>
+        <p class="description-font text-center">
+          {% trans '¡Por favor completa el siguiente formulario para registrarte en nuestro sistema!' %}
+        </p>
+      </div> 
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="grid lg:grid-cols-2 grid-cols-1 gap-8">
+          <!-- Columna izquierda: Formulario -->
+          <div class="lg:col-span-1 space-y-4 p-4 rounded-3xl">
+            <!-- Dividir formulario en dos columnas de cuatro campos cada una -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Usuario -->
+              <div>
+                <label for="{{ form.username.id_for_label }}" class="labels">
+                  {{ form.username.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-user"></i>
+                  </span>
+                  <input type="text" id="id_username" name="username" class="inputs">
+                </div>
+              </div>    
+              <!-- DNI -->
+              <div>
+                <label for="{{ form.dni.id_for_label }}" class="labels">
+                  {{ form.dni.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-id-card"></i>
+                  </span>
+                  <input id="id_dni" name="dni" type="text" class="inputs">
+                </div>
+              </div>         
+              <!-- Nombre -->
+              <div>
+                <label for="{{ form.first_name.id_for_label }}" class="labels">
+                  {{ form.first_name.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-user-pen"></i>
+                  </span>
+                  <input id="id_first_name" name="first_name" type="text" class="inputs">
+                </div>
+              </div>
+              <!-- Apellido -->
+              <div>
+                <label for="{{ form.last_name.id_for_label }}" class="labels">
+                  {{ form.last_name.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-user-pen"></i>
+                  </span>
+                  <input id="id_last_name" name="last_name" type="text" class="inputs">
+                </div>
+              </div>           
+              <!-- Correo -->
+              <div>
+                <label for="{{ form.email.id_for_label }}" class="labels">
+                  {{ form.email.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-envelope"></i>
+                  </span>
+                  <input id="id_email" name="email" type="email" class="inputs">
+                </div>
+              </div>
+              <!-- Celular -->
+              <div>
+                <label for="{{ form.phone.id_for_label }}" class="labels">
+                  {{ form.phone.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-phone"></i>
+                  </span>
+                  <input id="id_phone" name="phone" type="text" class="inputs">
+                </div>
+              </div>
+              <!-- Contrasena -->
+              <div>
+                <label for="{{ form.password1.id_for_label }}" class="labels">
+                  {{ form.password1.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-lock"></i>
+                  </span>
+                  <input id="id_password1" name="password1" type="password" class="inputs">
+                </div>
+              </div>
+              <!-- Contrasena 2 -->
+              <div>
+                <label for="{{ form.password2.id_for_label }}" class="labels">
+                  {{ form.password2.label }}
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-lock"></i>
+                  </span>
+                  <input id="id_password2" name="password2" type="password" class="inputs">
+                </div>
+              </div>
+              
+            </div>
+            <!-- Registrarse -->
+            <div class="mt-8 flex justify-center lg:col-span-2">
+              <button type="submit" class="sign-in-and-sign-up-button">
+                {% trans 'Registrarse' %}
+              </button>
+            </div>
+            <!-- ¿Ya tienes una cuenta? -->
+            <div class="mt-6 text-center">
+              <p class="description-font">{% trans '¿Ya tienes una cuenta?' %} 
+                <a href="{% url 'security:signin' %}" class="questions hover:underline">
+                  {% trans 'Inicia Sesión' %}
+                </a>
+              </p>
+            </div>
+          </div>
+          <!-- Columna derecha: Imagen y selector de imagen -->
+          <div class="lg:max-w-xl w-full h-[375px] flex items-center justify-center bg-cover bg-no-repeat bg-[url('https://pagedone.io/asset/uploads/1696245837.png')]">
+            <div class="primary-container-bg flex flex-col items-center justify-center lg:w-96 w-auto h-auto shadow-xl lg:p-6 p-4 backdrop-filter backdrop-blur-md bg-opacity-70 rounded-2xl">
+              <h2 class="title-font text-xl mb-4 text-center">{% trans 'Imagen de perfil' %}</h2>
+              <div class="flex flex-col items-center justify-center">
+                <img id="selected-img" src="{% static 'img/components/default_user.jpg' %}" alt="profile" class="w-32 h-32 rounded-full cursor-pointer mb-2">
+                {{ form.image }}
+              </div>
+              <p class="description-font">
+                {% trans 'Haz clic en la imagen para cambiarla' %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>
+{% endblock content %}
+
+{% block navbar %}
+{% endblock navbar %}

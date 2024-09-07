@@ -1,0 +1,173 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% load i18n %}
+
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+
+{% block content %}
+<div class="primary-container-bg p-8 relative overflow-hidden">
+  <div class="relative">
+    <a href="{% url 'home' %}" class="logo justify-center" data-aos="fade-up">
+      <img src="{% static 'img/components/icon.png' %}" class="w-8 h-8" alt="Logo" />
+    </a> 
+    <section class="secondary-container-bg p-8 my-4 mx-auto max-w-4xl rounded-3xl" data-aos="fade-up" data-aos-delay="200">
+      <div class="gap-2 mb-8">
+        <h1 class="title-font text-3xl text-center mt-4">
+          {{ title2 }}
+        </h1>
+        <p class="description-font text-center">
+          {% trans '¡Bienvenido de vuelta! Completa el formulario para ingresar a nuestro sistema' %}
+        </p>
+      </div>  
+      <div class="grid lg:grid-cols-2 grid-cols-1 gap-x-24">
+        <!-- Izquierda -->
+        <div class="flex items-center lg:mb-0 mb-10">
+          <div class="w-full max-w-md mx-auto">
+            <form method="POST" enctype="multipart/form-data" class="space-y-8">
+              {% csrf_token %}
+              <div>
+                <label for="{{ form.username.id_for_label }}" class="labels">{{ form.username.label }}</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="form-icons fa-solid fa-user"></i>
+                  </span>
+                  <input type="text" id="id_username" name="username" class="inputs">
+                </div>
+              </div>
+              <div>
+                <label for="{{ form.password.id_for_label }}" class="labels">{{ form.password.label }}</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="fa-solid fa-lock form-icons"></i>
+                  </span>
+                  <input type="password" id="id_password" name="password" class="inputs">
+                </div>
+              </div>
+              <div class="flex items-center justify-center">
+                <button type="submit" class="sign-in-and-sign-up-button">
+                  {% trans 'Iniciar Sesión' %}
+                </button>
+              </div>
+            </form>
+            <div class="text-center mt-6 space-y-2">
+              <p class="description-font"> {% trans '¿No tienes una cuenta?' %}
+                <a href="{% url 'security:signup' %}" class="questions hover:underline">
+                  {% trans 'Regístrate' %}
+                </a>
+              </p>
+              <p class="description-font"> {% trans '¿Has olvidado tu contraseña?' %}<br>
+                <a href="{% url 'core:password_reset' %}" class="questions hover:underline">
+                  Recupérala aquí
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- Derecha -->
+        <div class="lg:max-w-xl w-full h-[400px] flex items-center justify-center bg-cover bg-no-repeat bg-[url('https://pagedone.io/asset/uploads/1696245837.png')]">
+          <div class="primary-container-bg flex flex-col items-center justify-center lg:w-96 w-auto h-auto shadow-xl lg:p-6 p-4 backdrop-filter backdrop-blur-md bg-opacity-70">
+            <h2 class="title-font text-xl mb-4 text-center">{% trans 'Métodos alternativos' %}</h2>
+            <div class="space-y-4 flex items-center justify-center">
+              <button id="facialRecognitionButton" class="aditional-button">
+                <i class="fa-solid fa-camera mr-2"></i> {% trans 'Reconocimiento Facial' %}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Modal para reconocimiento facial -->
+<div id="facialRecognitionModal" class="hidden fixed z-50 inset-0 overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="secondary-container-bg rounded-lg shadow-lg w-full max-w-3xl">
+      <div class="flex justify-end p-2">
+        <button id="closeFacialModal" class="description-font">&times;</button>
+      </div>
+      <video id="facialVideo" class="w-full aspect-video"></video>
+      <div class="flex items-center justify-center">
+        <button id="captureFacial" class="aditional-button text-center my-4">
+          {% trans 'Capturar' %}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+      const facialRecognitionButton = document.getElementById('facialRecognitionButton');
+      const facialRecognitionModal = document.getElementById('facialRecognitionModal');
+      const closeFacialModal = document.getElementById('closeFacialModal');
+      const facialVideo = document.getElementById('facialVideo');
+      const captureFacial = document.getElementById('captureFacial');
+      
+      let stream;
+
+      facialRecognitionButton.addEventListener('click', async () => {
+          facialRecognitionModal.classList.remove('hidden');
+          try {
+              stream = await navigator.mediaDevices.getUserMedia({ video: true });
+              facialVideo.srcObject = stream;
+              facialVideo.play();
+          } catch (error) {
+              console.error('Error accediendo a la cámara:', error);
+              alert('No se puede acceder a la cámara. Asegúrate de que has otorgado permisos.');
+          }
+      });
+
+      closeFacialModal.addEventListener('click', () => {
+          facialRecognitionModal.classList.add('hidden');
+          if (stream) {
+              stream.getTracks().forEach(track => track.stop());
+          }
+      });
+
+      captureFacial.addEventListener('click', () => {
+          if (stream) {
+              const canvas = document.createElement('canvas');
+              canvas.width = facialVideo.videoWidth;
+              canvas.height = facialVideo.videoHeight;
+              canvas.getContext('2d').drawImage(facialVideo, 0, 0);
+              
+              const imageData = canvas.toDataURL('image/jpeg');
+
+              fetch('{% url "core:facial_recognition" %}', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': '{{ csrf_token }}'
+                  },
+                  body: JSON.stringify({ image: imageData })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      window.location.href = data.redirect;
+                  } else {
+                      alert(data.message);
+                  }
+              })
+              .catch(error => {
+                  console.error('Error en el reconocimiento facial:', error);
+                  alert('Ocurrió un error durante el reconocimiento facial');
+              })
+              .finally(() => {
+                  facialRecognitionModal.classList.add('hidden');
+                  stream.getTracks().forEach(track => track.stop());
+              });
+          } else {
+              alert('No se ha iniciado el flujo de la cámara.');
+          }
+      });
+  });
+</script>
+
+
+{% endblock content %}
+
+{% block navbar %}
+{% endblock navbar %}
