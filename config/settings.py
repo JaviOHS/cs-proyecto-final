@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'app.core.apps.CoreConfig',
     'app.monitoring.apps.MonitoringConfig',
     'app.threat_management.apps.ThreatManagementConfig',
+    'app.alarm.apps.AlarmConfig',
     'livereload',
     'widget_tweaks',
 ]

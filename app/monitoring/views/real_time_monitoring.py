@@ -8,6 +8,10 @@ class RealTimeMonitoringView(View):
     def get(self, request, session_id):
         session = get_object_or_404(MonitoringSession, id=session_id)
         
+        # Verificar que el usuario actual es el propietario de la sesión
+        if session.user != request.user:
+            return render(request, '403.html', status=403)  # O redirige a una página de error de permiso
+
         context = {
             'session': session,
             'title1': 'Monitoreo en Tiempo Real',

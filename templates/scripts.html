@@ -48,12 +48,14 @@
 
     // Función para cambiar el ícono del tema
     function toggleThemeIcon() {
-      if (document.documentElement.classList.contains('dark')) {
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
-      } else {
-        themeIcon.classList.remove('fa-sun');
-        themeIcon.classList.add('fa-moon');
+      if (themeIcon) {
+        if (document.documentElement.classList.contains('dark')) {
+          themeIcon.classList.remove('fa-moon');
+          themeIcon.classList.add('fa-sun');
+        } else {
+          themeIcon.classList.remove('fa-sun');
+          themeIcon.classList.add('fa-moon');
+        }
       }
     }
 
@@ -84,15 +86,17 @@
     toggleThemeIcon();
 
     // Agrega un listener para el evento 'click' en el botón
-    themeToggleBtn.addEventListener('click', function (event) {
-      event.preventDefault(); // Previene el comportamiento predeterminado del ícono
-      // Cambia entre temas light y dark
-      if (document.documentElement.classList.contains('dark')) {
-        setTheme('light');
-      } else {
-        setTheme('dark');
-      }
-    });
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', function (event) {
+        event.preventDefault(); // Previene el comportamiento predeterminado del ícono
+        // Cambia entre temas light y dark
+        if (document.documentElement.classList.contains('dark')) {
+          setTheme('light');
+        } else {
+          setTheme('dark');
+        }
+      });
+    }
 
     // Exponer setTheme globalmente para usarlo en el menú de temas
     window.setTheme = setTheme;
@@ -104,21 +108,23 @@
   document.addEventListener('DOMContentLoaded', () => {
     const navbar = document.getElementById('navbar');
 
-    window.addEventListener('scroll', () => {
-      const isDarkMode = document.documentElement.classList.contains('dark'); // Verifica si el modo oscuro está activado
+    if (navbar) {
+      window.addEventListener('scroll', () => {
+        const isDarkMode = document.documentElement.classList.contains('dark'); // Verifica si el modo oscuro está activado
 
-      if (window.scrollY > 50) {
-        navbar.classList.add('bg-opacity-80', 'backdrop-blur-sm');
-        if (isDarkMode) {
-          navbar.classList.add('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
+        if (window.scrollY > 50) {
+          navbar.classList.add('bg-opacity-80', 'backdrop-blur-sm');
+          if (isDarkMode) {
+            navbar.classList.add('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
+          }
+        } else {
+          navbar.classList.remove('bg-opacity-80', 'backdrop-blur-sm');
+          if (isDarkMode) {
+            navbar.classList.remove('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
+          }
         }
-      } else {
-        navbar.classList.remove('bg-opacity-80', 'backdrop-blur-sm');
-        if (isDarkMode) {
-          navbar.classList.remove('dark:bg-opacity-80', 'dark:backdrop-blur-sm');
-        }
-      }
-    });
+      });
+    }
   });
 </script>
 
@@ -278,22 +284,23 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-      const section = document.querySelector('.py-10.relative.overflow-hidden');
-      const lightEffect = document.getElementById('light-effect');
+    const section = document.querySelector('.py-10.relative.overflow-hidden');
+    const lightEffect = document.getElementById('light-effect');
 
+    if (section && lightEffect) {
       section.addEventListener('mousemove', (e) => {
-          const rect = section.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
+        const rect = section.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-          lightEffect.style.left = `${x}px`;
-          lightEffect.style.top = `${y}px`;
-          lightEffect.style.opacity = '1';
+        lightEffect.style.left = `${x}px`;
+        lightEffect.style.top = `${y}px`;
+        lightEffect.style.opacity = '1';
       });
 
       section.addEventListener('mouseleave', () => {
-          lightEffect.style.opacity = '0';
+        lightEffect.style.opacity = '0';
       });
+    }
   });
 </script>
-

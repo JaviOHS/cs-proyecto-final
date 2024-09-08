@@ -34,6 +34,7 @@ class DetectionForm(forms.ModelForm):
         return name.title()
     
     def clean_description(self):
-        description = self.cleaned_data['description']
+        description = self.cleaned_data.get('description', '').strip() 
+        if not description: return description 
         if description[-1] != '.': description += '.'
         return description.capitalize()

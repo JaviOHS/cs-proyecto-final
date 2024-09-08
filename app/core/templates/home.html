@@ -2,7 +2,7 @@
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %} {% load i18n %}
 <!-- SECCIÓN DEL HERO -->
-<div class="py-28 lg:py-8"></div>
+<div class="py-20 lg:py-8"></div>
 <section class="lg:py-14 sm:pt-20 bg-cover bg-center bg-no-repeat">
   <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid lg:grid-cols-7 lg:gap-x-8 xl:gap-x-12 lg:items-center">
@@ -76,7 +76,7 @@
             {% trans 'Configuración de alertas personalizadas para diferentes situaciones.' %}
           </p>
           {% if user.is_authenticated %}
-          <a href="" class="button-module-cards bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800 w-[50%]">
+          <a href="{% url 'alarm:alarm_list' %}" class="button-module-cards bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800 w-[50%]">
             {% trans 'Empezar' %}
           </a> {% endif %}
         </div>

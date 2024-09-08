@@ -11,4 +11,5 @@ urlpatterns = [
     path('security/', include('app.security.urls', namespace='security')),
     path('monitoring/', include('app.monitoring.urls', namespace='monitoring')),
     path('detection/', include('app.threat_management.urls', namespace='detection')),
+    path('alarm/', include('app.alarm.urls', namespace='alarm')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,7 +6,7 @@ class MonitoringSessionForm(forms.ModelForm):
         queryset=None,
         widget=forms.CheckboxSelectMultiple(
             attrs={
-                'class': 'dark:text-gray-300',
+                'class': 'checkbox custom-checkbox-class',
             }
         ),
         error_messages={'required': 'Por favor, seleccione al menos un modelo.'}
@@ -33,6 +33,7 @@ class MonitoringSessionForm(forms.ModelForm):
                 'placeholder': 'Descripción de la sesión'
             }),
         }
+
     def __init__(self, *args, **kwargs):
         detection_models = kwargs.pop('detection_models')
         super().__init__(*args, **kwargs)
@@ -43,6 +44,7 @@ class MonitoringSessionForm(forms.ModelForm):
         return name.title()
     
     def clean_description(self):
-        description = self.cleaned_data['description']
+        description = self.cleaned_data.get('description', '').strip() 
+        if not description: return description 
         if description[-1] != '.': description += '.'
         return description.capitalize()

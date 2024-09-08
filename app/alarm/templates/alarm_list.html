@@ -1,0 +1,81 @@
+{% extends 'components/base.html' %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+{% block content %}
+<div class="sm:py-24 lg:py-14"></div>
+<div class="container px-6 mx-auto" data-aos="fade-up">
+  <div class="flex flex-col items-center justify-center">
+    <span class="information">
+      {{ title1 }}
+    </span>
+  </div>
+  <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
+  <p class="description-font text-center">
+    Gestione los tonos de alarma para detectar amenazas. 
+  </p>
+  <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center">
+    <!-- Tonos disponibles -->
+    <div class="secondary-container-bg p-4 rounded-lg shadow-md">
+      {% if alarm_models %}
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {% for model in alarm_models %}
+        <div class="flex flex-col justify-center text-center items-center bg-orange-100 dark:bg-orange-800 rounded-xl p-3 transition-all duration-500 hover:bg-orange-500 dark:hover:bg-orange-600">
+          <div class="bg-white dark:bg-orange-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+            <i class="fa-solid fa-bell text-lg text-orange-500 dark:text-white text-center"></i>
+          </div>
+          <h2 class="title-module-cards">
+            {{ model.detection }}
+          </h2>
+          <p class="description-module-cards leading-5">
+            {{ model.notification_message }}<br><br>
+            Creación: <br>{{ model.created_at | date:"d/m/Y" }} a las {{ model.created_at | date:"H:i" }} horas. <br><br>
+            Última actualización: <br>{{ model.updated_at | date:"d/m/Y" }} a las {{ model.updated_at | date:"H:i" }} horas.
+          </p>
+          <div class="flex mt-3 space-x-2">
+            <!-- Botón Reproducir -->
+            <button onclick="document.getElementById('audio-{{ model.id }}').play()" class="bg-white dark:bg-orange-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+              <i class="fa-solid fa-play text-lg text-green-600 hover:text-green-800 dark:text-gray-100"></i>
+            </button>
+            <!-- Botón Editar -->
+            <div class="bg-white dark:bg-orange-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+              <a href="{% url 'alarm:alarm_update' model.id %}">
+                <i class="fa-solid fa-edit text-lg text-cyan-600 hover:text-cyan-800 dark:text-gray-100"></i>
+              </a>
+            </div>
+            <!-- Botón Eliminar -->
+            <div class="bg-white dark:bg-orange-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+              <a href="{% url 'alarm:alarm_delete' model.id %}">
+                <i class="fa-solid fa-trash text-lg text-red-600 hover:text-red-800 dark:text-gray-100"></i>
+              </a>
+            </div>
+          </div>
+          <!-- Elemento de audio oculto -->
+          <audio id="audio-{{ model.id }}" src="{{ model.sound_file.url }}"></audio>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="description-module-cards leading-5 text-center">
+        No hay tonos disponibles. <span class="text-green-300 font-bold">Empieza configurando algunos ahora...</span>
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="flex justify-center mt-6 mb-4 space-x-2">
+    <a href="{% url 'alarm:alarm_create' %}">
+      <button class="add-threat-button">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    </a>
+    <a href="{% url 'monitoring:monitoring_session' %}">
+      <button class="monitoring-video-button">
+        <i class="fa-solid fa-video"></i>
+      </button>
+    </a>
+    <a href="{% url 'home' %}">
+      <button class="home-and-back-button">
+        <i class="fa-solid fa-home"></i>
+      </button>
+    </a>
+  </div>
+</div>
+{% endblock %}

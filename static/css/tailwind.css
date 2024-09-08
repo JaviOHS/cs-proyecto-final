@@ -70,7 +70,7 @@
   @apply text-blue-700 dark:text-indigo-400 text-3xl font-bold;
 }
 
-.description-font {
+.description-font, .checkbox {
   @apply text-gray-800 dark:text-neutral-400 font-semibold;
 }
 
@@ -116,4 +116,16 @@
 
 .form-icons {
   @apply text-blue-700 dark:text-indigo-400;
+}
+
+.custom-checkbox-class input[type="checkbox"] {
+  @apply h-4 w-4 rounded bg-blue-700 border-blue-400 dark:bg-indigo-400 dark:border-indigo-700 focus:ring-2 focus:outline-none;
+}
+
+.custom-checkbox-class input[type="checkbox"]:checked {
+  @apply rounded-full bg-blue-700 border-blue-400 dark:bg-indigo-400 dark:border-indigo-700;
+}
+
+.custom-checkbox-class input[type="checkbox"]:focus {
+  @apply rounded-full ring-2 ring-blue-700 dark:ring-indigo-400;
 }

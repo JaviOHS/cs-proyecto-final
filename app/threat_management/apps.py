@@ -9,13 +9,14 @@ class ThreatManagementConfig(AppConfig):
         post_migrate.connect(create_default_detection_models, sender=self)
 
 def create_default_detection_models(sender, **kwargs):
-    from .models import Detection
+    from app.threat_management.models import Detection
     
     default_models = [
-        {"name": "Robos Inesperados", "icon": "fa-solid fa-user-ninja","description": "Detecta cuando un individuo guarda pertenencias ajenas en bolsos, bolsillos o en su cuerpo."},
+        {"name": "Robos Inesperados", "icon": "fa-solid fa-user-ninja", "description": "Detecta cuando un individuo guarda pertenencias ajenas en bolsos, bolsillos o en su cuerpo."},
         {"name": "Pérdidas Inesperadas", "icon": "fa-solid fa-box", "description": "Detecta cuando un individuo pierde objetos de manera inesperada, como caídas de pertenencias."},
         {"name": "Aglomeraciones", "icon": "fa-solid fa-users", "description": "Detecta cuando existen aglomeraciones de personas en un espacio."},
     ]
     
     for model_data in default_models:
         Detection.objects.get_or_create(name=model_data['name'], defaults=model_data)
+        

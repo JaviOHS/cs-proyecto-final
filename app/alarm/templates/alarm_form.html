@@ -1,0 +1,72 @@
+{% extends 'components/base.html' %}
+{% load static %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+{% block content %}
+<div class="sm:py-24 lg:py-14"></div>
+<div class="container px-6 mx-auto" data-aos="fade-up">
+  <div class="flex flex-col items-center justify-center">
+    <span class="information">
+      {{ title1 }}
+    </span>
+  </div>
+  <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
+  <p class="description-font text-center">Complete el formulario. </p>
+  <div class="flex justify-center pt-4 space-y-2">
+    <div class="secondary-container-bg w-full max-w-4xl shadow-lg rounded-lg p-6">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="grid grid-cols-1">
+          <div class="grid grid-cols-3 gap-8">
+            <!-- Modelo de Detección -->
+            <div class="mb-6 flex flex-col">
+              <label class="labels">
+                {{ form.detection.label }}
+              </label>
+              {{ form.detection }}
+            </div>
+            <!-- Notificacion -->
+            <div class="mb-6 flex flex-col">
+              <label class="labels">
+                {{ form.notification_message.label }}
+              </label>
+              {{ form.notification_message }}
+            </div>
+            <!-- Archivo -->
+            <div class="mb-6 flex flex-col justify-center items-center">
+              <label for="dropzone-file"
+                class="cursor-pointer w-[70%] space-y-2 primary-container-bg flex flex-col items-center justify-center rounded-2xl">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                  <i class="form-icons fa-solid fa-bell text-2xl"></i>
+                  <p class="description-module-cards text-center">Click para subir tono de alarma<br>Formato
+                    Mp3<br>Tamaño Máximo: 10Mb<br>Duración Máxima: 20s</p>
+                  <!-- Campo de archivo oculto -->
+                  <input type="file" name="sound_file" id="dropzone-file" class="hidden">
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- Botón de Guardar Cambios -->
+        <div class="flex items-center justify-center">
+          <button type="submit" class="save-change-button">
+            Guardar Cambios
+            <i class="fa-solid fa-floppy-disk px-2"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="flex justify-center mt-6 mb-4 space-x-2">
+    <a href="{% url 'alarm:alarm_list' %}">
+      <button class="home-and-back-button">
+        <i class="fa-solid fa-angles-left text-lg"></i>
+      </button>
+    </a>
+    <a href="{% url 'home' %}">
+      <button class="home-and-back-button">
+        <i class="fa-solid fa-home text-lg"></i>
+      </button>
+    </a>
+  </div>
+</div>
+{% endblock content %}

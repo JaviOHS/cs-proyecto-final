@@ -49,11 +49,8 @@
             {{ session.name }}
           </h2>
           <p class="description-module-cards">
-            {% if session.description %}
-              {{ session.description }}
-            {% else %}
-              Sin descripción
-            {% endif %}
+            {{ session.description }}<br><br>
+            Sesión creada el {{ session.start_time|date:"d/m/Y" }} a las {{ session.start_time|time:"H:i" }}
           </p>
           <div class="flex mt-3 space-x-2">
             <!-- Botón Editar -->

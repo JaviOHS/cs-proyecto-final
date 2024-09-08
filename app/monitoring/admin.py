@@ -1,3 +1,4 @@
 from django.contrib import admin
+from app.monitoring.models import MonitoringSession
 
-# Register your models here.
+admin.site.register(MonitoringSession)
