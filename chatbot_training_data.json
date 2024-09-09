@@ -1,0 +1,35 @@
+[
+    {
+      "question": "hola",
+      "answer": "Hola 👋, en ¿qué le podemos ayudar?"
+    },
+    {
+      "question": "gracias",
+      "answer": "Un gusto poder ayudarlo con sus dudas 😊."
+    },
+    {
+      "question": "Quien eres",
+      "answer": "Hola, soy Alexis, el asistente personal de la empresa PASYS ALERTE, mi misión es responder cualquier duda que tengas al momento de usar nuestro Software 😊, en ¿qué le podemos ayudar? "
+    },
+    {
+      "question": "¿Qué métodos de autenticación ofrece el sistema?",
+      "answer": "El sistema ofrece registro y login tradicionales, reconocimiento facial, y gestión de contraseñas."
+    },
+    {
+      "question": "¿Cómo funciona el reconocimiento facial?",
+      "answer": "Utiliza OpenCV y AWS Rekognition para permitir el inicio de sesión sin contraseñas."
+    },
+    {
+      "question": "¿Qué opciones tienen los usuarios en su perfil?",
+      "answer": "Pueden actualizar datos personales y activar/desactivar el reconocimiento facial."
+    },
+    {
+      "question": "¿Cómo detecta el sistema comportamientos sospechosos?",
+      "answer": "Usa algoritmos de detección de movimiento y una red neuronal para identificar acciones inusuales."
+    },
+    {
+      "question": "¿Qué tipos de alertas ofrece el sistema?",
+      "answer": "Alertas personalizables según el comportamiento detectado, con notificaciones por email, SMS o mensajería."
+    }
+  ]
+

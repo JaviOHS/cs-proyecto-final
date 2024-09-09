@@ -7,6 +7,7 @@ from app.core.views.recuperation_email import PasswordResetView
 from django.contrib.auth import views as auth_views  # Add this import
 from .views.recuperation_email import CustomPasswordResetConfirmView
 from app.core.views.scaner_face import FacialRecognitionView
+from app.core.views.chatbot import ChatbotView
 
 app_name = 'core'
 
@@ -19,4 +20,6 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('facial_recognition/', FacialRecognitionView.as_view(), name='facial_recognition'),
+    path('api/chatbot/', ChatbotView.as_view(), name='chatbot_response'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

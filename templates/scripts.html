@@ -304,3 +304,133 @@
     }
   });
 </script>
+
+<!-- Script y CSS del servicio de CHATBOT -->
+<style>
+  #chat-messages {
+    height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+  }
+
+  .message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 18px;
+    max-width: 80%;
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .user-message {
+    background-color: #e6f3ff; /* Claro */
+    align-self: flex-end;
+    margin-left: auto;
+  }
+
+  .bot-message {
+    background-color: #f1f0f0; /* Claro */
+    align-self: flex-start;
+  }
+
+  /* Adaptación para modo oscuro */
+  .dark .user-message {
+    background-color: #1e3a8a; /* Fondo azul oscuro para el usuario */
+    color: #f1f5f9; /* Texto claro */
+  }
+
+  .dark .bot-message {
+    background-color: #374151; /* Fondo gris oscuro para el bot */
+    color: #f3f4f6; /* Texto claro */
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+      const openChatBtn = document.getElementById('open-chat');
+      const closeChatBtn = document.getElementById('close-chat');
+      const chatbot = document.getElementById('chatbot');
+      const chatMessages = document.getElementById('chat-messages');
+      const chatInput = document.getElementById('chat-input');
+      const sendMessageBtn = document.getElementById('send-message');
+
+      openChatBtn.addEventListener('click', () => {
+          chatbot.classList.remove('hidden');
+          setTimeout(() => {
+              chatbot.classList.add('active');
+              chatbot.classList.remove('opacity-0', 'translate-y-5');
+          }, 50);
+          openChatBtn.style.display = 'none';
+      });
+
+      closeChatBtn.addEventListener('click', () => {
+          chatbot.classList.add('opacity-0', 'translate-y-5');
+          chatbot.classList.remove('active');
+          setTimeout(() => {
+              chatbot.classList.add('hidden');
+              openChatBtn.style.display = 'block';
+          }, 500);
+      });
+
+      function addMessage(message, sender) {
+          const messageElement = document.createElement('div');
+          messageElement.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+          messageElement.textContent = message;
+          chatMessages.appendChild(messageElement);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      async function sendMessage() {
+          const message = chatInput.value.trim();
+          if (message) {
+              addMessage(message, 'user');
+              chatInput.value = '';
+
+              try {
+                  const response = await fetch('/core/api/chatbot/', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRFToken': getCookie('csrftoken')
+                      },
+                      body: JSON.stringify({ message: message }),
+                  });
+                  if (!response.ok) {
+                      throw new Error(`HTTP error! status: ${response.status}`);
+                  }
+                  const data = await response.json();
+                  addMessage(data.response, 'bot');
+              } catch (error) {
+                  console.error('Error:', error);
+                  addMessage('Lo siento, ha ocurrido un error.', 'bot');
+              }
+          }
+      }
+
+      function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+
+      sendMessageBtn.addEventListener('click', sendMessage);
+      chatInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+              sendMessage();
+          }
+      });
+  });
+</script>
