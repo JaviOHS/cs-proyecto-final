@@ -1,6 +1,7 @@
 .venv/
 db.sqlite3
 node_modules/
-users/
 ent_blog/
 *.pyc
+media/users/*
+!media/users/default_user.jpg

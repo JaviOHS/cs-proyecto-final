@@ -30,6 +30,9 @@
             {{ model.name }}
           </h2>
           <p class="description-module-cards leading-5">
+            {% if user.is_superuser%}
+            ID: {{ model.id }}<br><br>
+            {% endif %}
             {{ model.description }}<br><br>
             Creación: <br>{{ model.created_at | date:"d/m/Y" }} a las {{ model.created_at | date:"H:i" }} horas. <br>
           </p>

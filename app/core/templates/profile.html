@@ -21,11 +21,7 @@
       <!-- Sección de perfil -->
       <div class="lg:w-2/3 flex flex-col lg:flex-row items-center lg:space-x-6">
         <div class="flex-shrink-0 text-center lg:text-left mb-4 lg:mb-0">
-          {% if user.image %}
           <img src="{{ user.image.url }}" alt="user-avatar-image" class="border-4 border-blue-700 dark:border-indigo-400 rounded-full w-24 h-24 object-cover">
-          {% else %}
-          <img src="{% static 'img/components/default_user.jpg' %}" alt="default-avatar-image" class="border-4 border-blue-700 dark:border-indigo-400 rounded-full w-24 h-24 object-cover">
-          {% endif %}
         </div>
         <div class="text-center lg:text-left">
           <h3 class="full-name"> {{ user.get_full_name }}</h3>

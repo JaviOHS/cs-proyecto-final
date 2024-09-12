@@ -14,7 +14,7 @@
     <div class="secondary-container-bg p-4 rounded-lg shadow-md">
       <div class="text-center py-4 flex items-center justify-center">
         <!-- Camara en tiempo real -->
-        <img src="{% url 'monitoring:video_feed' %}" alt="Cámara en tiempo real" class="rounded-2xl shadow-lg"/>
+        <img src="{% url 'monitoring:video_feed' session.id %}" alt="Cámara en tiempo real" class="w-[50%] rounded-2xl shadow-lg"/>
       </div>
     </div>
   </div>

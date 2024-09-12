@@ -36,11 +36,7 @@
             {% if user.is_authenticated %}
             <li class="relative">
               <button type="button" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
-                {% if user.image %}
                 <img src="{{ user.image.url }}" alt="profile" class="profile-picture">
-                {% else %}
-                <img src="{% static 'img/components/default_user.jpg' %}" alt="profile" class="profile-picture">
-                {% endif %}
               </button> 
               <!-- Dropdown menu -->
               <div class="primary-container-bg z-50 hidden my-4 list-none divide-y divide-gray-100 rounded-lg shadow" id="user-dropdown">

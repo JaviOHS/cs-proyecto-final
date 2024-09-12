@@ -14,8 +14,44 @@ function MostrarImagenSeleccionada() {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    selectedImg.src = e.target.result; 
-                }
+                    const img = new Image();
+                    img.src = e.target.result;
+
+                    img.onload = function() {
+                        // Creamos un canvas para recortar la imagen
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        // Definir las dimensiones del recorte (300x300)
+                        const cropWidth = 300;
+                        const cropHeight = 300;
+
+                        // Establecer las dimensiones del canvas
+                        canvas.width = cropWidth;
+                        canvas.height = cropHeight;
+
+                        // Obtener las proporciones de la imagen original
+                        const scaleX = img.width / cropWidth;
+                        const scaleY = img.height / cropHeight;
+
+                        // Determinar el tamaño del recorte de la imagen original
+                        const cropSize = Math.min(scaleX, scaleY);
+                        const cropX = (img.width - cropWidth * cropSize) / 2;
+                        const cropY = (img.height - cropHeight * cropSize) / 2;
+
+                        // Dibujar la imagen recortada en el canvas
+                        ctx.drawImage(
+                            img, 
+                            cropX, cropY, 
+                            cropWidth * cropSize, cropHeight * cropSize, 
+                            0, 0, 
+                            cropWidth, cropHeight
+                        );
+
+                        // Convertir el canvas a una URL de imagen y establecerla en el `img#selected-img`
+                        selectedImg.src = canvas.toDataURL('image/jpeg');
+                    };
+                };
                 reader.readAsDataURL(file);
             }
         });

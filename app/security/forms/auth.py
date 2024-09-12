@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from app.security.models import User
+from app.security.utils import validate_image, resize_image
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -19,4 +20,12 @@ class CustomUserCreationForm(UserCreationForm):
         email = self.cleaned_data['email']
         return email.lower()
     
+    def clean_image(self):
+        image = self.cleaned_data.get('image', None) 
+        
+        if image and hasattr(image, 'path'):
+            validate_image(image)
+            resize_image(image.path, (300, 300))
+        
+        return image
     
