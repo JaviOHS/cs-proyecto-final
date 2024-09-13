@@ -47,10 +47,11 @@ class VideoStreamView(View):
             messages.warning(request, f"Error al cargar el módulo de detección: {str(e)}. Se mostrará el video sin procesamiento.")
             return self.stream_without_detection(request, session_id)
 
-        return StreamingHttpResponse(self.gen_frames(detection_function), content_type="multipart/x-mixed-replace; boundary=frame")
+        return StreamingHttpResponse(self.gen_frames(detection_function, session), content_type="multipart/x-mixed-replace; boundary=frame")
 
     def stream_without_detection(self, request, session_id):
-        return StreamingHttpResponse(self.gen_frames(None), content_type="multipart/x-mixed-replace; boundary=frame")
+        session = get_object_or_404(MonitoringSession, id=session_id)
+        return StreamingHttpResponse(self.gen_frames(None, session), content_type="multipart/x-mixed-replace; boundary=frame")
 
     def load_detection_module(self, detection_id):
         detection_modules = {
@@ -71,17 +72,16 @@ class VideoStreamView(View):
 
         return detection_function
 
-    def gen_frames(self, detection_function):
+    def gen_frames(self, detection_function, session):
         camera = cv2.VideoCapture(0)
         while True:
             success, frame = camera.read()
             if not success:
                 break
             if detection_function:
-                frame = detection_function(frame)
+                frame = detection_function(frame, session)
             ret, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         camera.release()
-        
