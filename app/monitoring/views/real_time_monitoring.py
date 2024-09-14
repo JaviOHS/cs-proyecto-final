@@ -6,6 +6,9 @@ from app.monitoring.models import MonitoringSession
 import cv2
 from django.http import StreamingHttpResponse
 from django.contrib import messages
+from app.monitoring.models import MonitoringSession
+from app.monitoring.utils.detect_crowding import detect_crowding
+from app.monitoring.utils.detect_motion import detect_motion
 
 class RealTimeMonitoringView(View):
     def get(self, request, session_id):
@@ -40,10 +43,7 @@ class VideoStreamView(View):
 
         try:
             detection_function = self.load_detection_module(detection.id)
-        except ValueError as e:
-            messages.warning(request, f"Advertencia: {str(e)}. Se mostrará el video sin procesamiento.")
-            return self.stream_without_detection(request, session_id)
-        except ImportError as e:
+        except Exception as e:
             messages.warning(request, f"Error al cargar el módulo de detección: {str(e)}. Se mostrará el video sin procesamiento.")
             return self.stream_without_detection(request, session_id)
 
@@ -57,7 +57,7 @@ class VideoStreamView(View):
         detection_modules = {
             1: {'module': 'app.monitoring.utils.test', 'function': 'test_function'},
             2: {'module': 'app.monitoring.utils.test', 'function': 'test_function'},
-            3: {'module': 'app.monitoring.utils.test', 'function': 'test_function'},
+            3: {'module': 'app.monitoring.utils.detect_crowding', 'function': 'detect_crowding'},
             4: {'module': 'app.monitoring.utils.detect_motion', 'function': 'detect_motion'},
         }
 
@@ -65,10 +65,15 @@ class VideoStreamView(View):
         if selected_module is None:
             raise ValueError(f"No se encontró un módulo de detección para el ID '{detection_id}'")
 
-        detection_module = importlib.import_module(selected_module['module'])
-        detection_function = getattr(detection_module, selected_module['function'], None)
-        if not callable(detection_function):
-            raise ValueError(f"La función '{selected_module['function']}' no está presente en el módulo '{selected_module['module']}'")
+        try:
+            detection_module = importlib.import_module(selected_module['module'])
+            detection_function = getattr(detection_module, selected_module['function'])
+            if not callable(detection_function):
+                raise AttributeError(f"La función '{selected_module['function']}' no es callable")
+        except ImportError:
+            raise ImportError(f"No se pudo importar el módulo '{selected_module['module']}'")
+        except AttributeError as e:
+            raise AttributeError(f"Error al obtener la función de detección: {str(e)}")
 
         return detection_function
 
@@ -78,9 +83,13 @@ class VideoStreamView(View):
             success, frame = camera.read()
             if not success:
                 break
+            
             if detection_function:
-                frame = detection_function(frame, session)
-            ret, buffer = cv2.imencode('.jpg', frame)
+                processed_frame = detection_function(frame, session)
+            else:
+                processed_frame = frame
+            
+            ret, buffer = cv2.imencode('.jpg', processed_frame)
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')

@@ -32,14 +32,5 @@
   </div>
 </div>
 <audio id="alarmSound" src="{{ session.alarm.sound_file.url }}" preload="auto"></audio>
-<script>
-  function playAlarm() {
-      var alarmSound = document.getElementById("alarmSound");
-      alarmSound.play();
-  }
-
-  // Aquí puedes detectar el evento cuando se detecte movimiento y ejecutar playAlarm
-  // Por ejemplo, podrías usar WebSockets o polling para detectar cambios en el servidor
-</script>
 
 {% endblock content %}

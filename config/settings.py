@@ -125,3 +125,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'duranalexis879@gmail.com'
 EMAIL_HOST_PASSWORD = 'nqep rint ewqy rumb'
 
+
+
+# Configuración de AWS Recognition
+AWS_ACCESS_KEY_ID = 'AKIAVFIWI5XGM76EEK3K'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_REGION = 'us-east-2'

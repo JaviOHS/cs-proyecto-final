@@ -9,6 +9,12 @@ class MonitoringSession(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     detection_models = models.ManyToManyField(Detection, blank=True, verbose_name='Modelos de Detección')
+    crowding_threshold = models.IntegerField(
+        default=10,
+        verbose_name='Umbral de Aglomeración',
+        help_text='Número de personas a partir del cual se considera aglomeración'
+    )
+
 
     def save(self, *args, **kwargs):
         if not self.description:
