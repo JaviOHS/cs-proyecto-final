@@ -5,7 +5,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
-import time
+from datetime import datetime
 
 # Objeto de la clase BackgroundSubtractorMOG2
 fgbg = cv2.createBackgroundSubtractorMOG2()
@@ -46,17 +46,18 @@ def detect_motion(frame, session):
     if motion_detected:
         alarm = Alarm.objects.get(detection=session.detection_models.first(), is_active=True)
         alarm.activate()
-
+        
+        current_time = datetime.now()
+        
         # Verificar si ha pasado suficiente tiempo desde el último correo
-        current_time = time.time()
-        if current_time - last_email_time > EMAIL_COOLDOWN:
+        if current_time.timestamp() - last_email_time > EMAIL_COOLDOWN:
             # Convertir el frame actual a imagen JPEG
             _, buffer = cv2.imencode('.jpg', frame)
             image_content = buffer.tobytes()
 
-            # Enviar correo con la imagen y el contexto
-            send_motion_alert_email(session, image_content)
-            last_email_time = current_time
+            # Enviar correo con la imagen, el contexto y la hora de activación
+            send_motion_alert_email(session, image_content, current_time)
+            last_email_time = current_time.timestamp()
     else:
         Alarm.stop_alarm()
 
@@ -66,10 +67,11 @@ def detect_motion(frame, session):
 
     return frame
 
-def send_motion_alert_email(session, image_content):
+def send_motion_alert_email(session, image_content, activation_time):
     # Crear el contexto del correo
     context = {
         'session': session,
+        'activation_time': activation_time.strftime("%d/%m/%Y %H:%M:%S")
     }
     
     # Renderizar el contenido HTML del correo usando la plantilla
