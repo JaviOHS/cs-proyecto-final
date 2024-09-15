@@ -5,7 +5,15 @@
     },
     {
       "question": "gracias",
-      "answer": "Un gusto poder ayudarlo con sus dudas 😊."
+      "answer": "Un gusto poder ayudarte con sus dudas 😊."
+    },
+    {
+      "question": "Alexis",
+      "answer": "Hola 👋, en ¿qué le podemos ayudar?"
+    },
+    {
+      "question": "Alexis necesito de tu ayuda",
+      "answer": "Hola 👋, en ¿qué le podemos ayudar?"
     },
     {
       "question": "Quien eres",
@@ -30,6 +38,90 @@
     {
       "question": "¿Qué tipos de alertas ofrece el sistema?",
       "answer": "Alertas personalizables según el comportamiento detectado, con notificaciones por email, SMS o mensajería."
-    }
+    },
+    {
+      "question": "¿Tengo que usar contraseña siempre?",
+      "answer": "¡Para nada! Tenemos opciones súper cool. Puedes usar el clásico usuario y contraseña, pero también tenemos reconocimiento facial. ¡Imagínate entrar solo mostrando tu cara! 😎 Ah, y si se te olvida la contraseña, tranqui, tenemos un sistema para recuperarla."
+      },
+      {
+      "question": "Oye, ¿y si quiero cambiar mi foto de perfil?",
+      "answer": "Es súper fácil. Entra a tu perfil, dale click a 'Editar perfil' y ahí podrás subir una nueva foto. ¡Asegúrate de que sea una buena, eh! Sobre todo si vas a usar el reconocimiento facial para entrar. 📸"
+      },
+      {
+      "question": "Me da cosa eso de las amenazas. ¿Cómo sé si está pasando algo raro?",
+      "answer": "¡No te preocupes! Nuestro sistema es como un guardaespaldas digital. Está siempre alerta y si detecta algo sospechoso, te avisa al toque. Puedes personalizar qué tipos de amenazas quieres monitorear y cómo quieres que te avisemos. ¿Prefieres un mensajito, un mail o una alarma? ¡Tú eliges! 🚨"
+      },
+      {
+      "question": "¿Y si pasa algo cuando no estoy mirando?",
+      "answer": "¡Te cubrimos! El sistema guarda todo en reportes súper detallados. Puedes verlos cuando quieras y hasta exportarlos en PDF si necesitas compartirlos. Es como tener un diario de todo lo que pasa, pero automático. 📊"
+      },
+      {
+      "question": "Esto de la privacidad... ¿mis datos están seguros?",
+      "answer": "¡Totalmente! Somos muy estrictos con eso. Tus datos están más protegidos que oro en un banco. Usamos tecnología de AWS para guardar todo de forma segura y cumplimos con todas las leyes de protección de datos. Tu privacidad es nuestra prioridad número uno. 🔒"
+      },
+      {
+      "question": "¿Qué tan rápido funciona todo esto?",
+      "answer": "¡Como un rayo! ⚡ Hemos optimizado todo para que responda en menos de 3 segundos en la mayoría de los casos. Ya sea que estés viendo estadísticas, configurando alertas o lo que sea, la experiencia será súper fluida."
+      },
+      {
+      "question": "¿Puedo usar esto desde mi celular?",
+      "answer": "¡Por supuesto! Usamos Tailwind CSS, así que todo se ve genial en cualquier dispositivo. Ya sea en tu compu, tablet o celular, la experiencia será igual de buena. ¡Seguridad al alcance de tu mano, literalmente! 📱💻"
+      },
+      {
+      "question": "Me interesa eso de las estadísticas. ¿Qué tipo de info puedo ver?",
+      "answer": "¡Oh, tenemos datos para dar y regalar! Puedes ver cuántas alertas se han activado, qué días hubo más movimiento, qué tipos de amenazas son más comunes... Y lo mejor es que puedes filtrar todo esto por fechas, categorías y más. Es como ser un detective digital. 🕵️‍♂️📈"
+      },
+      {
+      "question": "¿Y si necesito ayuda con algo?",
+      "answer": "¡Para eso estoy yo! 🤖 Soy Alexis, tu asistente personal. Estoy disponible 24/7 para responder cualquier duda que tengas sobre el software. Si hay algo que no pueda resolver, te conectaré con un asesor del equipo. ¡Estamos aquí para hacer tu experiencia lo más fácil y segura posible!"
+      },
+      {
+        "question": "¿Qué pasa si me roban el celular? ¿Pueden entrar a mi cuenta?",
+        "answer": "¡Tranqui! 😌 Pensamos en todo. Si usas el reconocimiento facial, aunque tengan tu celular, no podrán entrar. Y si usas contraseña, tenemos verificación por correo electrónico. Además, puedes cerrar sesión remotamente desde otro dispositivo. ¡Tu cuenta está más protegida que un tesoro pirata! 🏴‍☠️🔒"
+        },
+        {
+        "question": "Eso de las amenazas suena intenso. ¿Qué tipo de cosas detecta el sistema?",
+        "answer": "¡Uf, detecta de todo! 🕵️‍♂️ Desde movimientos sospechosos hasta aglomeraciones inusuales. Imagina que es como tener un superhéroe vigilando: puede notar si alguien está en un lugar que no debería, si hay objetos abandonados, o incluso comportamientos raros. Y lo mejor es que puedes personalizar qué quieres que vigile. ¡Como tener tu propio sistema de seguridad a medida! 🦸‍♂️"
+        },
+        {
+        "question": "¿Puedo ver lo que está pasando en tiempo real?",
+        "answer": "¡Claro que sí! 🖥️ Tenemos un módulo de monitoreo súper chulo. Es como ser un agente secreto: puedes crear sesiones de monitoreo, elegir qué amenazas quieres vigilar y ver todo en tiempo real. ¡Incluso puedes conectar una cámara y ver lo que está pasando en vivo y en directo! 📹"
+        },
+        {
+        "question": "¿Y si quiero que me avise de algo específico?",
+        "answer": "¡Eso está chupado! 🍭 Puedes crear alertas personalizadas. Es como programar tu propio sistema de alarma. Eliges qué te preocupa, cómo quieres que te avise (¿un mensaje? ¿un correo? ¿una alarma ruidosa?) y listo. Incluso puedes subir tu propio sonido de alarma. ¿Qué tal el rugido de un león para asustar a los intrusos? 🦁"
+        },
+        {
+        "question": "Todo esto suena genial, pero ¿qué pasa si se va la luz?",
+        "answer": "¡Ni te preocupes! 💡 Usamos servicios de AWS, así que todo está en la nube. Aunque se vaya la luz en tu oficina, el sistema sigue funcionando. Es como tener un guardián incansable que nunca duerme. Y cuando vuelva la luz, todo seguirá ahí, listo para ti. ¡Es prácticamente a prueba de apocalipsis! 🧟‍♂️"
+        },
+        {
+        "question": "¿Puedo compartir los reportes con mi equipo?",
+        "answer": "¡Por supuesto! 📊 Puedes generar reportes súper completos con todos los datos y estadísticas. Y lo mejor es que puedes exportarlos en PDF. Es perfecto para reuniones, presentaciones o simplemente para tener todo documentado. ¡Serás la envidia de la oficina con esos informes tan profesionales! 😎"
+        },
+        {
+        "question": "¿Qué tan difícil es configurar todo esto?",
+        "answer": "¡Es pan comido! 🍞 Todo está diseñado para ser súper intuitivo. Desde el registro hasta la configuración de alertas, cada paso es fácil de seguir. Y si en algún momento te atoras, ¡aquí estoy yo para echarte una mano! Es como tener un asistente personal 24/7. ¿No es genial? 🤖✨"
+        },
+        {
+        "question": "¿Esto funciona solo para empresas grandes?",
+        "answer": "¡Para nada! 🏢🏠 Nuestro sistema es como esos trajes que se ajustan a cualquier cuerpo. Funciona igual de bien para una empresa grande que para un negocio pequeño o incluso para tu casa. Lo puedes adaptar a tus necesidades. ¡Es como tener un sistema de seguridad de superhéroe pero a tu medida! 🦸‍♀️"
+        },
+        {
+        "question": "¿Qué pasa con las actualizaciones? ¿Tengo que hacer algo?",
+        "answer": "¡Ni te preocupes por eso! 🔄 Las actualizaciones son automáticas y en la nube. Es como si el sistema se pusiera más inteligente mientras duermes. Un día te despiertas y ¡pum! Tienes nuevas funciones sin haber movido un dedo. ¿No es eso mágico? ✨"
+        },
+        {
+          "question": "¿Cómo creo una nueva sesión de monitoreo?",
+          "answer": "¡Es súper fácil! 😃 Sigue estos pasos:\n1. Entra al 'Módulo de Monitoreo'\n2. Dale click a 'Crear Sesión de Monitoreo'\n3. Ponle un nombre chulo a tu sesión\n4. Escribe una descripción si quieres (es opcional)\n5. Marca las amenazas que quieres vigilar\n6. ¡Y listo! Ya tienes tu sesión de monitoreo personalizada. Ahora puedes ver todo en tiempo real como un auténtico agente secreto. 🕵️‍♂️"
+        },
+        {
+        "question": "¿Cómo configuro una alerta personalizada?",
+        "answer": "¡Vamos a ello! 🚨 Es pan comido:\n1. Ve al 'Módulo de Alarmas'\n2. Haz click en icono de '+' para agregar la nueva alarma\n3. Elige la amenaza para la que quieres la alerta\n4. Escribe el mensaje que quieres que aparezca\n5. Si quieres, sube tu propio sonido de alarma (¿qué tal el rugido de un león? 🦁)\n6. Guarda los cambios y ¡Listo! Tu alerta personalizada está lista para rugir."
+        },
+        {
+        "question": "¿Cómo cambio mi contraseña?",
+        "answer": "¡Pan comido! 🍞 Sigue estos pasos:\n1. Ve a tu perfil (esta en la esquina superior derecha)\n2. Da click en 'Editar Perfil' y busca la opción 'Cambiar contraseña'\n3. Ingresa tu contraseña actual\n4. Escribe tu nueva contraseña (¡asegúrate de que sea fuerte!)\n5. Confirma la nueva contraseña\n6. Dale a 'Cambiar Contraseña' y ¡listo! Tu cuenta ahora tiene una nueva capa de seguridad. 🔐"
+        }        
   ]
 
