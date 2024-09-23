@@ -2,16 +2,6 @@ from django import forms
 from app.monitoring.models import MonitoringSession
 
 class MonitoringSessionForm(forms.ModelForm):
-    detection_models = forms.ModelMultipleChoiceField(
-        queryset=None,
-        widget=forms.CheckboxSelectMultiple(
-            attrs={
-                'class': 'checkbox custom-checkbox-class',
-            }
-        ),
-        error_messages={'required': 'Por favor, seleccione al menos un modelo.'}
-    )   
-
     class Meta:
         model = MonitoringSession
         fields = ['name', 'description', 'detection_models']
@@ -32,6 +22,10 @@ class MonitoringSessionForm(forms.ModelForm):
                 'rows': 2,
                 'placeholder': 'Descripción de la sesión'
             }),
+            'detection_models': forms.CheckboxSelectMultiple(attrs={
+                'class': 'checkbox custom-checkbox-class',
+                'id': 'id_detection_models'
+            })
         }
 
     def __init__(self, *args, **kwargs):

@@ -103,3 +103,4 @@ def send_crowding_alert_email(session, image_content, num_people):
 
     # Enviar el correo
     msg.send(fail_silently=False)
+    

@@ -18,13 +18,14 @@ class RealTimeMonitoringView(View):
             messages.error(request, 'No tienes permiso para acceder a esta sesión de monitoreo.')
             return render(request, 'monitoring_session.html', status=403)
 
-        detection = session.detection_models.first() # Obtener el primer modelo de detección de la sesión (Temporal)
+        detection = session.detection_models.all()
 
         context = {
             'session': session,
+            'detections': detection,
             'title1': 'Monitoreo en Tiempo Real',
             'title2': f'Sesión de Monitoreo: {session.id}',
-            'details': f'{session.name} - {detection} - {session.description}'
+            'details': f'{session.name} - {session.description}'
         }
         
         return render(request, 'real_time_monitoring.html', context)
@@ -55,7 +56,7 @@ class VideoStreamView(View):
 
     def load_detection_module(self, detection_id):
         detection_modules = {
-            1: {'module': 'app.monitoring.utils.test', 'function': 'test_function'},
+            1: {'module': 'app.monitoring.utils.detect_theft', 'function': 'detect_theft'},
             2: {'module': 'app.monitoring.utils.test', 'function': 'test_function'},
             3: {'module': 'app.monitoring.utils.detect_crowding', 'function': 'detect_crowding'},
             4: {'module': 'app.monitoring.utils.detect_motion', 'function': 'detect_motion'},
@@ -94,3 +95,4 @@ class VideoStreamView(View):
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         camera.release()
+        

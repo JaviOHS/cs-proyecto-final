@@ -9,12 +9,27 @@
     </span>
   </div>
   <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
-  <p class="description-font text-center">{{ details }}</p>
+  <p class="description-font text-center">{{ details }}<br>
+    <span class="text-green-500 dark:text-green-300 font-bold text-center">
+    {% for detection in detections %}
+      {{ detection.name }}
+    {% endfor %}
+    </span>
+  </p>
   <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center">
     <div class="secondary-container-bg p-4 rounded-lg shadow-md">
-      <div class="text-center py-4 flex items-center justify-center">
+      <div class="text-center py-4 space-y-6 flex flex-col items-center justify-center">
         <!-- Camara en tiempo real -->
         <img src="{% url 'monitoring:video_feed' session.id %}" alt="Cámara en tiempo real" class="w-[50%] rounded-2xl shadow-lg"/>
+        {% for detection in detections %}
+          {% if detection.id == 1 %}
+            <a href="{% url 'monitoring:theft_evidence' session.id %}">
+              <button class="aditional-button">
+                Listado de Robos <i class="fa-solid fa-user-ninja text-lg"></i>
+              </button>
+            </a>
+          {% endif %}
+        {% endfor %}
       </div>
     </div>
   </div>

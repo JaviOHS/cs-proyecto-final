@@ -15,8 +15,6 @@ class Alarm(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='Activo')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Usuario')
     last_activated = models.DateTimeField(null=True, blank=True, verbose_name='Última activación')
-
-    # Variable estática para indicar si la alarma está sonando
     alarm_sound_playing = False
 
     def clean(self):
@@ -24,10 +22,22 @@ class Alarm(models.Model):
             validate_sound_file(self.sound_file)
 
     def save(self, *args, **kwargs):
-        if not self.sound_file:
-            self.sound_file = 'alarms/default_alarm.mp3'
+        if self.pk:
+            old_alarm = Alarm.objects.get(pk=self.pk)
+            if old_alarm.sound_file and old_alarm.sound_file != self.sound_file:
+                if Alarm.alarm_sound_playing:
+                    self.stop_alarm()
+                if old_alarm.sound_file != 'alarms/default_alarm.mp3':
+                    old_sound_file_path = os.path.join(settings.MEDIA_ROOT, old_alarm.sound_file.name)
+                    if os.path.exists(old_sound_file_path):
+                        try:
+                            os.remove(old_sound_file_path)
+                        except PermissionError as e:
+                            raise
+                        
         if not self.notification_message:
-            self.notification_message = f"Se ha detectado una amenaza de tipo {self.detection.name}."
+            self.notification_message = f"Se ha detectado una amenaza de {self.detection.name}."
+
         self.clean()
         super().save(*args, **kwargs)
 
@@ -37,22 +47,22 @@ class Alarm(models.Model):
     def activate(self):
         self.last_activated = timezone.now()
         self.save()
-        # Iniciar pygame mixer solo si el sonido no está ya en reproducción
+
         if not Alarm.alarm_sound_playing:
             if self.sound_file:
                 sound_file_path = os.path.join(settings.MEDIA_ROOT, self.sound_file.name)
                 pygame.mixer.init()
                 pygame.mixer.music.load(sound_file_path)
-                pygame.mixer.music.play(loops=-1)  # Reproducir en bucle
+                pygame.mixer.music.play(-1)
                 Alarm.alarm_sound_playing = True
+                pygame.mixer.music.set_endevent(pygame.USEREVENT)
 
     @staticmethod
     def stop_alarm():
-        # Detener la alarma si está en reproducción
         if Alarm.alarm_sound_playing:
             pygame.mixer.music.stop()
             Alarm.alarm_sound_playing = False
-
+            
     class Meta:
         verbose_name = "Alarma"
         verbose_name_plural = "Alarmas"
