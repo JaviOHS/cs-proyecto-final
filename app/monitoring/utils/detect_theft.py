@@ -10,13 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from app.alarm.models import Alarm
 from django.core.files.base import ContentFile
 from app.monitoring.models import VideoEvidence
-
-reset_color = "\033[0m"
-red_color = "\033[91m"
-green_color = "\033[92m"
-yellow_color = "\033[93m"
-blue_color = "\033[96m"
-grey_color = "\033[90m"
+from config.utils import RED_COLOR, GREEN_COLOR, YELLOW_COLOR, RESET_COLOR, BLUE_COLOR, GREY_COLOR
 
 THEFT_DETECTION_TIME = 1
 FPS = 24
@@ -135,14 +129,14 @@ def detect_theft(frame, session):
         if suspicious_score > 0:
             if state['suspicious_start_time'] is None:
                 state['suspicious_start_time'] = current_time
-                print(yellow_color + f"Acción sospechosa detectada en el frame {state['frame_count']}. Puntuación: {suspicious_score}" + reset_color)
+                print(YELLOW_COLOR + f"Acción sospechosa detectada en el frame {state['frame_count']}. Puntuación: {suspicious_score}" + RESET_COLOR)
             
             state['cumulative_score'] += suspicious_score
 
             if (current_time - state['suspicious_start_time']).total_seconds() >= THEFT_DETECTION_TIME and not state['theft_detected']:
                 if state['cumulative_score'] >= THEFT_THRESHOLD:
-                    print(red_color + f"Posible robo detectado! Puntuación acumulada: {state['cumulative_score']}")
-                    print(red_color + f"Robo confirmado en el frame {state['frame_count']}." + reset_color)
+                    print(RED_COLOR + f"Posible robo detectado! Puntuación acumulada: {state['cumulative_score']}")
+                    print(RED_COLOR + f"Robo confirmado en el frame {state['frame_count']}." + RESET_COLOR)
 
                     state['theft_detected'] = True
                     state['post_theft_frame_count'] = FRAMES_TO_SAVE
@@ -150,10 +144,22 @@ def detect_theft(frame, session):
 
                     executor.submit(save_theft_event, session, list(state['frame_buffer']), current_time, state['theft_number'])
                     
-                    alarm = Alarm.objects.get(detection=session.detection_models.first(), is_active=True)
-                    alarm.activate()
+                    alarm = Alarm.objects.filter(
+                        detection=session.detection_models.first(),
+                        user=session.user,
+                        is_active=True
+                    ).first() 
+                    
+                    if alarm:
+                        print(GREEN_COLOR + f"Alarma activada para el modelo de detección {alarm.detection.name}" + RESET_COLOR)
+                        alarm.activate()
+                    else:
+                        print(YELLOW_COLOR + "No se encontró una alarma personalizada para el modelo de detección. Se ha activado la alarma por defecto." + RESET_COLOR)
+                        default_alarm = Alarm()
+                        default_alarm.play_default_alarm()
+                    
                 else:
-                    print(blue_color + f"Acción sospechosa descartada en el frame {state['frame_count']}. Puntuación final: {state['cumulative_score']}" + reset_color)
+                    print(BLUE_COLOR + f"Acción sospechosa descartada en el frame {state['frame_count']}. Puntuación final: {state['cumulative_score']}" + RESET_COLOR)
                 state['suspicious_start_time'] = None
                 state['cumulative_score'] = 0
 
@@ -181,45 +187,38 @@ def save_theft_frames(frame_buffer, session):
         filename = f"frame_{i:04d}_{timestamp.strftime('%Y%m%d_%H%M%S_%f')}.jpg"
         file_path = os.path.join(theft_folder, filename)
         cv2.imwrite(file_path, frame)
-        print(grey_color + f"Frame de robo guardado: {filename}" + reset_color)
+        print(GREY_COLOR + f"Frame de robo guardado: {filename}" + RESET_COLOR)
     return theft_folder
 
 def save_theft_event(session, frame_buffer, theft_time, theft_number):
     try:
-        # Guardar los frames como imágenes
         theft_folder = save_theft_frames(frame_buffer, session)
-        timestamp = theft_time.strftime('%Y%m%d_%H%M%S')
-        
-        video_filename = f'video_robo_{theft_number}_{timestamp}.mp4'
+        video_filename = f'theft_video_{theft_number}.mp4'
         video_path = os.path.join(theft_folder, video_filename)
         
-        # Crear el video a partir de las imágenes
         create_video_from_frames(frame_folder=theft_folder, output_video_path=video_path, fps=FPS, delete_frames=True)
 
         if not os.path.exists(video_path):
             raise FileNotFoundError(f"El archivo de video no existe en la ruta: {video_path}")
         
-        # Crear la instancia de VideoEvidence y guardarla directamente
         video_evidence = VideoEvidence(session=session)
         
         with open(video_path, 'rb') as file:
             video_evidence.video_file.save(video_filename, File(file), save=True)
 
-        print(green_color + f"Evento de robo guardado exitosamente" + reset_color)
-        
-        # Limpiar el archivo de video temporal
+        print(GREEN_COLOR + f"Evento de robo guardado exitosamente" + RESET_COLOR)
         os.remove(video_path)
 
         Alarm.stop_alarm()
 
     except Exception as e:
-        print(red_color + f"Error al guardar el evento de robo: {str(e)}" + reset_color)
+        print(RED_COLOR + f"Error al guardar el evento de robo: {str(e)}" + RESET_COLOR)
         Alarm.stop_alarm()
 
 def create_video_from_frames(frame_folder, output_video_path, fps, delete_frames=False):
     images = [img for img in os.listdir(frame_folder) if img.endswith(".jpg")]
     if not images:
-        print(yellow_color + "No se encontraron imágenes para crear el video." + reset_color)
+        print(YELLOW_COLOR + "No se encontraron imágenes para crear el video." + RESET_COLOR)
         return
 
     frame = cv2.imread(os.path.join(frame_folder, images[0]))
@@ -231,13 +230,13 @@ def create_video_from_frames(frame_folder, output_video_path, fps, delete_frames
     for image in sorted(images):
         video.write(cv2.imread(os.path.join(frame_folder, image)))
 
-    print(green_color + f"Video creado exitosamente: {output_video_path}" + reset_color)
+    print(GREEN_COLOR + f"Video creado exitosamente." + RESET_COLOR)
 
     if delete_frames:
         for filename in sorted(os.listdir(frame_folder)):
             if filename.endswith('.jpg'):
                 os.remove(os.path.join(frame_folder, filename))
-        print(green_color + "Frames borrados exitosamente." + reset_color)
+        print(GREEN_COLOR + "Frames borrados exitosamente." + RESET_COLOR)
 
     video.release()
 

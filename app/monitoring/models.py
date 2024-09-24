@@ -1,3 +1,4 @@
+
 import os
 from django.conf import settings
 from django.db import models
@@ -35,11 +36,10 @@ class VideoEvidence(models.Model):
     session = models.ForeignKey(MonitoringSession, on_delete=models.CASCADE, related_name='video_evidences')
     video_file = models.FileField(upload_to=get_upload_path, null=True, blank=True, verbose_name='Evidencia de Video')
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
     class Meta:
         verbose_name = "Evidencia de Video"
         verbose_name_plural = "Evidencias de Video"
 
     def __str__(self):
         return f"Video {self.id} - Session {self.session.id}"
-

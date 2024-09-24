@@ -44,8 +44,12 @@ def detect_motion(frame, session):
 
     # Activar la alarma si se detecta movimiento
     if motion_detected:
-        alarm = Alarm.objects.get(detection=session.detection_models.first(), is_active=True)
-        alarm.activate()
+        alarm = Alarm.objects.filter(detection=session.detection_models.first(), user=session.user, is_active=True).first() 
+        if alarm:
+            alarm.activate()
+        else:
+            default_alarm = Alarm()
+            default_alarm.play_default_alarm()
         
         current_time = datetime.now()
         
@@ -93,3 +97,5 @@ def send_motion_alert_email(session, image_content, activation_time):
 
     # Enviar el correo
     msg.send(fail_silently=False)
+    
+    

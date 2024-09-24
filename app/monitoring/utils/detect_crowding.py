@@ -57,10 +57,15 @@ def detect_crowding(frame, session):
 
     # Activar o detener la alarma según se detecte o no aglomeración
     try:
-        alarm = Alarm.objects.get(detection=session.detection_models.first(), is_active=True)
         if crowding_detected:
-            alarm.activate()
-            
+            alarm = Alarm.objects.filter(detection=session.detection_models.first(), user=session.user, is_active=True).first() 
+                    
+            if alarm:
+                alarm.activate()
+            else:
+                default_alarm = Alarm()
+                default_alarm.play_default_alarm()
+
             # Verificar si ha pasado suficiente tiempo desde el último correo
             current_time = time.time()
             if current_time - last_email_time > EMAIL_COOLDOWN:

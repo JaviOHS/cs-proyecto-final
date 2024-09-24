@@ -7,7 +7,7 @@ from app.alarm.utils import validate_sound_file
 from app.threat_management.models import Detection
 
 class Alarm(models.Model):
-    detection = models.OneToOneField(Detection, on_delete=models.CASCADE, verbose_name='Amenaza a Detectar')
+    detection = models.ForeignKey(Detection, on_delete=models.CASCADE, verbose_name='Amenaza a Detectar')
     sound_file = models.FileField(upload_to='alarms/', verbose_name='Archivo de Alarma', blank=True, null=True)
     notification_message = models.TextField(max_length=200, verbose_name='Mensaje de Notificación', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de Creación')
@@ -62,6 +62,19 @@ class Alarm(models.Model):
         if Alarm.alarm_sound_playing:
             pygame.mixer.music.stop()
             Alarm.alarm_sound_playing = False
+            
+    def play_default_alarm(self):
+        default_sound_file_path = os.path.join(settings.MEDIA_ROOT, 'alarms/default_alarm.mp3')
+
+        if not os.path.exists(default_sound_file_path):
+            raise FileNotFoundError("El archivo de sonido de alarma por defecto no se encuentra.")
+
+        if not Alarm.alarm_sound_playing:
+            pygame.mixer.init()
+            pygame.mixer.music.load(default_sound_file_path)
+            pygame.mixer.music.play(-1)
+            Alarm.alarm_sound_playing = True
+            pygame.mixer.music.set_endevent(pygame.USEREVENT)
             
     class Meta:
         verbose_name = "Alarma"

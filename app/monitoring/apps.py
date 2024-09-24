@@ -7,3 +7,4 @@ class MonitoringConfig(AppConfig):
     
     def ready(self):
         import app.monitoring.signals
+        
