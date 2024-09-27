@@ -4,7 +4,7 @@
 {% block title %}{{ title1 }}{% endblock title %}
 {% block content %}
 
-<div class="py-24 lg:py-14"></div>
+<div class="py-12 lg:py-14"></div>
 <section class="primary-container-bg">
   <div class="container mx-auto px-4" data-aos="fade-up" data-aos-delay="300">
     <!-- Encabezado -->
@@ -14,20 +14,20 @@
           {{ title1 }}
         </span>
       </div>
-      <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
+      <h1 class="title-font text-3xl lg:text-4xl mt-4">{{ title2 }}</h1>
       <p class="description-font text-center">{% trans 'Visualice su información personal.' %}</p>
     </div>
-    <div class="flex flex-col lg:flex-row items-start justify-between mb-10 space-y-4 lg:space-y-0 lg:space-x-6">
+    <div class="flex flex-col lg:flex-row items-center lg:items-start justify-between mb-10 space-y-4 lg:space-y-0 lg:space-x-6">
       <!-- Sección de perfil -->
-      <div class="lg:w-2/3 flex flex-col lg:flex-row items-center lg:space-x-6">
+      <div class="lg:w-2/3 flex flex-col lg:flex-row items-center lg:items-start lg:space-x-6">
         <div class="flex-shrink-0 text-center lg:text-left mb-4 lg:mb-0">
           <img src="{{ user.image.url }}" alt="user-avatar-image" class="border-4 border-blue-700 dark:border-indigo-400 rounded-full w-24 h-24 object-cover">
         </div>
         <div class="text-center lg:text-left">
-          <h3 class="full-name"> {{ user.get_full_name }}</h3>
+          <h3 class="full-name text-xl lg:text-2xl">{{ user.get_full_name }}</h3>
           <p class="description-font">{{ user.email|default:"Correo no registrado" }}</p>
           <a href="{% url 'core:profile_update' %}">
-            <button class="aditional-button pt-4">
+            <button class="aditional-button mt-4">
               {% trans 'Editar Perfil' %}
             </button>
           </a>
@@ -37,7 +37,7 @@
       <!-- Botón de usuario/administrador -->
       <div class="lg:w-1/3 flex justify-center lg:justify-end">
         <div class="">
-          <span class="role hover:underline">
+          <span class="role text-lg hover:underline">
             {% if user.is_superuser %}
             {% trans 'Administrador' %}
             {% else %}
@@ -49,9 +49,9 @@
     </div>
 
     <!-- Sección de información -->
-    <div class="secondary-container-bg rounded-lg shadow-md p-6 mb-8 space-y-2">
-      <h2 class="title-font text-2xl text-center">{% trans 'Información' %}</h2>
-      <ul class="flex flex-wrap gap-6">
+    <div class="secondary-container-bg rounded-lg shadow-md p-6 mb-8 space-y-4">
+      <h2 class="title-font text-2xl lg:text-3xl text-center">{% trans 'Información' %}</h2>
+      <ul class="flex flex-wrap gap-6 justify-center">
         <li class="primary-container-bg rounded-lg p-4 flex-1 min-w-[150px] text-center">
           <span class="title-font">{% trans 'Cédula' %}</span><br>
           <span class="description-font">
