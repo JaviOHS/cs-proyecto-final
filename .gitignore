@@ -10,6 +10,7 @@ media/users/*
 __pycache__/
 media/alarms/*
 !media/alarms/default_alarm.mp3
-media/theft_evidence/
+media/theft_evidence/*
 app/*/migrations/*
 !app/*/migrations/__init__.py
+media/violent_events/*

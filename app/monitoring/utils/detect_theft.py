@@ -223,7 +223,7 @@ def create_video_from_frames(frame_folder, output_video_path, fps, delete_frames
 
     frame = cv2.imread(os.path.join(frame_folder, images[0]))
     height, width, layers = frame.shape
-
+    
     fourcc = cv2.VideoWriter_fourcc(*'avc1')
     video = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
 

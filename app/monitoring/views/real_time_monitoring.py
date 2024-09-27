@@ -60,6 +60,7 @@ class VideoStreamView(View):
             2: {'module': 'app.monitoring.utils.detect_loss', 'function': 'detect_loss'},
             3: {'module': 'app.monitoring.utils.detect_crowding', 'function': 'detect_crowding'},
             4: {'module': 'app.monitoring.utils.detect_motion', 'function': 'detect_motion'},
+            5: {'module': 'app.monitoring.utils.detect_aggression', 'function': 'detect_aggression'}
         }
 
         selected_module = detection_modules.get(detection_id)
@@ -67,14 +68,16 @@ class VideoStreamView(View):
             raise ValueError(f"No se encontró un módulo de detección para el ID '{detection_id}'")
 
         try:
+            print(f"Intentando importar el módulo: {selected_module['module']}")
             detection_module = importlib.import_module(selected_module['module'])
+            print(f"Módulo importado correctamente: {detection_module}")
             detection_function = getattr(detection_module, selected_module['function'])
-            if not callable(detection_function):
-                raise AttributeError(f"La función '{selected_module['function']}' no es callable")
-        except ImportError:
-            raise ImportError(f"No se pudo importar el módulo '{selected_module['module']}'")
+            print(f"Función de detección encontrada: {detection_function}")
+        except ImportError as e:
+            raise ImportError(f"Error en la importación del módulo '{selected_module['module']}': {str(e)}")
         except AttributeError as e:
             raise AttributeError(f"Error al obtener la función de detección: {str(e)}")
+
 
         return detection_function
 
