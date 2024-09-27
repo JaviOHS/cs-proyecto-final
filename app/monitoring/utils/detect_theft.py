@@ -8,9 +8,9 @@ import os
 from django.conf import settings
 from concurrent.futures import ThreadPoolExecutor
 from app.alarm.models import Alarm
-from django.core.files.base import ContentFile
 from app.monitoring.models import VideoEvidence
 from config.utils import RED_COLOR, GREEN_COLOR, YELLOW_COLOR, RESET_COLOR, BLUE_COLOR, GREY_COLOR
+from app.monitoring.utils.send_email import send_alert_email_video
 
 THEFT_DETECTION_TIME = 1
 FPS = 24
@@ -156,8 +156,7 @@ def detect_theft(frame, session):
                     else:
                         print(YELLOW_COLOR + "No se encontró una alarma personalizada para el modelo de detección. Se ha activado la alarma por defecto." + RESET_COLOR)
                         default_alarm = Alarm()
-                        default_alarm.play_default_alarm()
-                    
+                        default_alarm.play_default_alarm()                    
                 else:
                     print(BLUE_COLOR + f"Acción sospechosa descartada en el frame {state['frame_count']}. Puntuación final: {state['cumulative_score']}" + RESET_COLOR)
                 state['suspicious_start_time'] = None
@@ -207,6 +206,26 @@ def save_theft_event(session, frame_buffer, theft_time, theft_number):
             video_evidence.video_file.save(video_filename, File(file), save=True)
 
         print(GREEN_COLOR + f"Evento de robo guardado exitosamente" + RESET_COLOR)
+        
+        is_theft = True
+        recipient_email = session.user.email
+        current_time = datetime.now()
+        context = {
+            'session': session,
+            'activation_time': current_time.strftime("%d/%m/%Y %H:%M:%S"),
+            'theft_time': theft_time.strftime("%d/%m/%Y %H:%M:%S"),
+            'theft_number': theft_number,
+            'is_theft': is_theft
+        }
+        send_alert_email_video(
+            subject="Alerta de Robo Detectado",
+            template_name="email_content.html",
+            context=context,
+            recipient_list=[recipient_email],
+            attachment_path=video_path,
+            attachment_name=video_filename
+        )
+        
         os.remove(video_path)
 
         Alarm.stop_alarm()

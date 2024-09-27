@@ -1,11 +1,9 @@
 import cv2
 import numpy as np
 from app.alarm.models import Alarm
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.conf import settings
 import time
+from app.monitoring.utils.send_email import send_alert_email
+
 
 # Cargamos el modelo YOLO preentrenado
 net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
@@ -92,38 +90,25 @@ def detect_dropped_item(frame, session):
             # Convertir el frame actual a imagen JPEG
             _, buffer = cv2.imencode('.jpg', frame)
             image_content = buffer.tobytes()
-
-            # Enviar correo con la imagen, el contexto y el objeto detectado
-            send_dropped_item_alert_email(session, image_content, dropped_items)
+            
+            recipient_email = session.user.email
+            is_dropped_item = True
+            context = {
+                'session': session,
+                'activation_time': time.strftime("%d/%m/%Y %H:%M:%S", time.localtime(current_time)),
+                'dropped_items': dropped_items,
+                'is_dropped_item': is_dropped_item
+            }
+            send_alert_email(
+                subject=f'Alerta de objeto caído en la sesión {session.id}',
+                template_name='email_content.html',
+                context=context,
+                image_content=image_content,
+                image_name='objeto_caido_detectado.jpg',
+                recipient_list=[recipient_email]
+            )
             last_email_time = current_time
     else:
         Alarm.stop_alarm()
 
     return frame
-
-def send_dropped_item_alert_email(session, image_content, dropped_items):
-    # Crear el contexto del correo
-    context = {
-        'session': session,
-        'dropped_items': dropped_items,
-    }
-    
-    # Renderizar el contenido HTML del correo usando la plantilla
-    html_content = render_to_string('emails/dropped_item_alert.html', context)
-    
-    # Crear una versión de texto plano del contenido HTML
-    text_content = strip_tags(html_content)
-
-    # Crear el mensaje de correo
-    subject = f'Alerta de objeto caído en la sesión {session.id}'
-    from_email = settings.EMAIL_HOST_USER
-    to = ['duranalexis879@gmail.com']  # Cambia esto por el correo de destino
-    
-    msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-    msg.attach_alternative(html_content, "text/html")
-
-    # Adjuntar la imagen capturada
-    msg.attach('objeto_caido_detectado.jpg', image_content, 'image/jpeg')
-
-    # Enviar el correo
-    msg.send(fail_silently=False)

@@ -3,27 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alerta de Aglomeración Detectada - PASYS ALERT</title>
+    <title>Alertas - PASYS ALERT</title>
 </head>
 <body style="font-family: 'Roboto', Arial, sans-serif; line-height: 1.6; color: #333333; background-color: #f6f9fc; margin: 0; padding: 0;">
     <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
         <div style="background: linear-gradient(135deg, #0056b3, #00a0e9); color: #ffffff; text-align: center; padding: 40px 20px;">
-            <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcShcy1kdTpTBXxMA-0XfsTqZP95UMFiRR3HgsK8yRa5NtBknor2" alt="PASYS ALERT Logo" style="width: 100px; height: auto; margin-bottom: 20px;">
+            <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcShcy1kdTpTBXxMA-0XfsTqZP95UMFiRR3HgsK8yRa5NtBknor2" alt="PASYS ALERT Logo" style="width: 100px; height: auto; margin-bottom: 20px;border-radius: 8px;">
             <h1 style="font-size: 32px; font-weight: 700; letter-spacing: 1px; margin: 0;">PASYS ALERT</h1>
         </div>
         <div style="padding: 40px 30px;">
-            <h2 style="color: #0056b3; font-size: 24px; margin-top: 0; margin-bottom: 20px; text-align: center;">¡Alerta de Aglomeración Detectada!</h2>
-            <p>Estimado usuario,</p>
-            <p>Se ha detectado una aglomeración en la sesión de monitoreo <strong>{{ session.id }}</strong>.</p>
+            <h2 style="color: #0056b3; font-size: 24px; margin-top: 0; margin-bottom: 20px; text-align: center;">¡Alerta de Amenaza Detectada! </h2>
+            <p>Estimado {{ session.user.get_full_name }},</p>
+            <p>Se ha detectado una amenaza en la sesión de monitoreo <strong>{{ session.id }}</strong>.</p>
+            <p><strong>Fecha y hora de la detección:</strong> {{ activation_time }}</p>
             <p>Detalles del monitoreo:</p>
             <ul>
                 <li><strong>Nombre de la sesión:</strong> {{ session.name }}</li>
                 <li><strong>Modelo de detección:</strong> {{ session.detection_models.first }}</li>
                 <li><strong>Descripción:</strong> {{ session.description }}</li>
-                <li><strong>Número de personas detectadas:</strong> {{ num_people }}</li>
+                {% if is_crowding %}
+                <li><strong>Número de personas:</strong> {{ num_people }}</li>
                 <li><strong>Umbral de aglomeración:</strong> {{ threshold }}</li>
+                {% endif %}
+                {% if is_theft %}
+                <li><strong>Número de robo:</strong> {{ theft_number }}</li>
+                <li><strong>Hora de robo:</strong> {{ theft_time }}</li>
+                {% endif %}
+                {% if is_dropped_item %}
+                <li><strong>Objetos caídos:</strong> {{ dropped_items }}</li>
+                {% endif %}
+                {% if is_aggression %}
+                <li><strong>Número de Evento de Agresión:</strong> {{ event_id }}</li>
+                {% endif %}
             </ul>
-            <p>Por favor, revise la imagen capturada adjunta y tome las medidas necesarias.</p>
+            <p>Por favor, revise los archivos adjuntos y tome las medidas necesarias.</p>
         </div>
         <div style="background-color: #f8f8f8; text-align: center; padding: 30px 20px; font-size: 14px; color: #666666;">
             <p>Este es un correo automático, por favor no responda a esta dirección.</p>

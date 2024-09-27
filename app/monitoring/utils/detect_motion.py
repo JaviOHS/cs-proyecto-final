@@ -1,11 +1,7 @@
 import cv2
-import numpy as np
 from app.alarm.models import Alarm
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.conf import settings
 from datetime import datetime
+from app.monitoring.utils.send_email import send_alert_email
 
 # Objeto de la clase BackgroundSubtractorMOG2
 fgbg = cv2.createBackgroundSubtractorMOG2()
@@ -59,8 +55,19 @@ def detect_motion(frame, session):
             _, buffer = cv2.imencode('.jpg', frame)
             image_content = buffer.tobytes()
 
-            # Enviar correo con la imagen, el contexto y la hora de activación
-            send_motion_alert_email(session, image_content, current_time)
+            recipient_email = session.user.email
+            context = {
+                'session': session,
+                'activation_time': current_time.strftime("%d/%m/%Y %H:%M:%S")
+            }
+            send_alert_email(
+                subject=f'Alerta de movimiento en la sesión {session.id}',
+                template_name='email_content.html',
+                context=context,
+                image_content=image_content,
+                image_name='movimiento_detectado.jpg',
+                recipient_list=[recipient_email]
+            )
             last_email_time = current_time.timestamp()
     else:
         Alarm.stop_alarm()
@@ -70,32 +77,4 @@ def detect_motion(frame, session):
     cv2.putText(frame, texto_estado, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
     return frame
-
-def send_motion_alert_email(session, image_content, activation_time):
-    # Crear el contexto del correo
-    context = {
-        'session': session,
-        'activation_time': activation_time.strftime("%d/%m/%Y %H:%M:%S")
-    }
-    
-    # Renderizar el contenido HTML del correo usando la plantilla
-    html_content = render_to_string('emails/motion_alert.html', context)
-    
-    # Crear una versión de texto plano del contenido HTML
-    text_content = strip_tags(html_content)
-
-    # Crear el mensaje de correo
-    subject = f'Alerta de movimiento en la sesión {session.id}'
-    from_email = settings.EMAIL_HOST_USER
-    to = ['duranalexis879@gmail.com']  # Cambia esto por el correo de destino
-    
-    msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-    msg.attach_alternative(html_content, "text/html")
-
-    # Adjuntar la imagen capturada
-    msg.attach('movimiento_detectado.jpg', image_content, 'image/jpeg')
-
-    # Enviar el correo
-    msg.send(fail_silently=False)
-    
     

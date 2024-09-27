@@ -3,10 +3,8 @@ import cv2
 from botocore.exceptions import ClientError
 from django.conf import settings
 from app.alarm.models import Alarm
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 import time
+from app.monitoring.utils.send_email import send_alert_email
 
 rekognition = boto3.client('rekognition',
                            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
@@ -66,11 +64,24 @@ def detect_crowding(frame, session):
                 default_alarm = Alarm()
                 default_alarm.play_default_alarm()
 
-            # Verificar si ha pasado suficiente tiempo desde el último correo
             current_time = time.time()
+            is_crowding = True
             if current_time - last_email_time > EMAIL_COOLDOWN:
-                # Enviar correo con la imagen y el contexto
-                send_crowding_alert_email(session, frame_bytes, num_people)
+                recipient_email = session.user.email
+                context = {
+                    'session': session,
+                    'num_people': num_people,
+                    'threshold': session.crowding_threshold,
+                    'is_crowding': is_crowding,
+                }
+                send_alert_email(
+                    subject=f'Alerta de aglomeración en la sesión {session.id}',
+                    template_name='email_content.html',
+                    context=context,
+                    image_content=frame_bytes,
+                    image_name='aglomeracion_detectada.jpg',
+                    recipient_list=[recipient_email]
+                )
                 last_email_time = current_time
         else:
             Alarm.stop_alarm()
@@ -80,32 +91,3 @@ def detect_crowding(frame, session):
         print(f"Error al manejar la alarma: {e}")
 
     return frame
-
-def send_crowding_alert_email(session, image_content, num_people):
-    # Crear el contexto del correo
-    context = {
-        'session': session,
-        'num_people': num_people,
-        'threshold': session.crowding_threshold
-    }
-    
-    # Renderizar el contenido HTML del correo usando la plantilla
-    html_content = render_to_string('emails/motion_crowding.html', context)
-    
-    # Crear una versión de texto plano del contenido HTML
-    text_content = strip_tags(html_content)
-
-    # Crear el mensaje de correo
-    subject = f'Alerta de aglomeración en la sesión {session.id}'
-    from_email = settings.EMAIL_HOST_USER
-    to = ['duranalexis879@gmail.com']  # Cambia esto por el correo de destino
-    
-    msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-    msg.attach_alternative(html_content, "text/html")
-
-    # Adjuntar la imagen capturada
-    msg.attach('aglomeracion_detectada.jpg', image_content, 'image/jpeg')
-
-    # Enviar el correo
-    msg.send(fail_silently=False)
-    

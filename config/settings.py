@@ -122,10 +122,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'duranalexis879@gmail.com'
-EMAIL_HOST_PASSWORD = 'nqep rint ewqy rumb'
-
-
+EMAIL_HOST_USER = 'pasysalert@gmail.com'
+EMAIL_HOST_PASSWORD = 'lvin mgql hwbm gdes'
 
 # Configuración de AWS Recognition
 AWS_ACCESS_KEY_ID = 'AKIAVFIWI5XGM76EEK3K'

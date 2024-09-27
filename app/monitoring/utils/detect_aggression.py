@@ -1,3 +1,4 @@
+from datetime import datetime
 import cv2
 import numpy as np
 import joblib
@@ -6,7 +7,9 @@ from concurrent.futures import ThreadPoolExecutor
 from collections import deque
 from app.alarm.models import Alarm
 from django.conf import settings
+from app.monitoring.utils.send_email import send_alert_email_video
 from config.utils import RED_COLOR, GREEN_COLOR, RESET_COLOR, YELLOW_COLOR
+
 
 current_directory = os.path.dirname(__file__)
 model_path = os.path.join(current_directory, 'aggression_detection_model.joblib')
@@ -138,7 +141,25 @@ class AggressionDetector:
         video.release()
         
         print(GREEN_COLOR + f"Vídeo del evento de agresión guardado en {video_path}" + RESET_COLOR)
-
+        
+        recipient_email = session.user.email
+        current_time = datetime.now()
+        is_aggression = True
+        context = {
+            'session': session,
+            'activation_time': current_time.strftime("%d/%m/%Y %H:%M:%S"),
+            'event_id': event_id,
+            'is_aggression': is_aggression,
+        }
+        send_alert_email_video(
+            subject=f"Evento de agresión detectado en la sesión {session.id}",
+            template_name='email_content.html',
+            context=context,
+            recipient_list=[recipient_email],
+            attachment_path=video_path,
+            attachment_name=f"event_{next_event_num}.mp4"
+        )
+                
 detector = AggressionDetector()
 
 def detect_aggression(frame, session):
