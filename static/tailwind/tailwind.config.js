@@ -2,6 +2,7 @@ module.exports = {
   content: [
     '../../templates/**/*.html', 
     '../../**/templates/**/*.html', 
+    '../../**/*.html',
     '../css/tailwind.css',
   ],
   darkMode: 'class',
