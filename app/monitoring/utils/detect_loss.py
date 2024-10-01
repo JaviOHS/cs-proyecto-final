@@ -7,15 +7,11 @@ from django.utils.html import strip_tags
 from django.conf import settings
 import time
 
-# Cargamos el modelo YOLO preentrenado
-net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
-layer_names = net.getLayerNames()
-output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+# Cargar el modelo preentrenado MobileNet SSD solo una vez
+net = cv2.dnn.readNetFromCaffe('deploy.prototxt', 'mobilenet_ssd.caffemodel')
 
 # Clases de objetos que puede detectar el modelo
-classes = []
-with open("coco.names", "r") as f:
-    classes = [line.strip() for line in f.readlines()]
+classes = ["background", "cell phone", "laptop", "glasses", "handbag"]  # Clases específicas que queremos detectar
 
 # Variable para rastrear el tiempo del último correo enviado
 last_email_time = 0
@@ -24,58 +20,50 @@ EMAIL_COOLDOWN = 10  # Enviar correos cada 10 segundos
 def detect_dropped_item(frame, session):
     global last_email_time
 
-    height, width, _ = frame.shape
-
-    # Preparar la imagen para YOLO
-    blob = cv2.dnn.blobFromImage(frame, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+    height, width = frame.shape[:2]
+    
+    # Preparar la imagen para el modelo MobileNet SSD
+    blob = cv2.dnn.blobFromImage(frame, 0.007843, (300, 300), 127.5, False)
     net.setInput(blob)
-    outs = net.forward(output_layers)
+    detections = net.forward()
 
-    # Inicializamos variables para guardar las detecciones
     people = []
     objects = []
     dropped_items = []
 
     # Procesamos las detecciones
-    for out in outs:
-        for detection in out:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
+    for i in range(detections.shape[2]):
+        confidence = detections[0, 0, i, 2]
+        if confidence > 0.5:  # Umbral de confianza
+            class_id = int(detections[0, 0, i, 1])
+            obj_class = classes[class_id]
 
-            if confidence > 0.5:  # Umbral de confianza
-                center_x = int(detection[0] * width)
-                center_y = int(detection[1] * height)
-                w = int(detection[2] * width)
-                h = int(detection[3] * height)
+            # Obtener las coordenadas de la caja delimitadora
+            box = detections[0, 0, i, 3:7] * np.array([width, height, width, height])
+            (x, y, x2, y2) = box.astype("int")
+            
+            # Clasificamos las detecciones como personas u objetos específicos
+            if obj_class == "person":
+                people.append((x, y, x2, y2))
+            elif obj_class in ["cell phone", "laptop", "glasses", "handbag"]:  # Solo los objetos deseados
+                objects.append((x, y, x2, y2, obj_class))
 
-                # Obtener las coordenadas de la caja
-                x = int(center_x - w / 2)
-                y = int(center_y - h / 2)
-
-                # Clasificamos las detecciones como personas o objetos
-                if classes[class_id] == "person":
-                    people.append((x, y, w, h))  # Guardar las coordenadas de las personas
-                elif classes[class_id] in ["handbag", "suitcase", "backpack", "cell phone", "book", "laptop"]:  # Objetos que podrían caerse
-                    objects.append((x, y, w, h, classes[class_id]))  # Guardar las coordenadas y el tipo de objeto
-
-    # Revisamos si hay objetos que se han "caído"
-    for (x, y, w, h, obj_class) in objects:
-        # Si el objeto está en el suelo y no está cerca de ninguna persona, consideramos que se ha caído
-        if y > height // 2:  # Consideramos objetos en la mitad inferior de la imagen como caídos
+    # Detectamos si hay objetos caídos
+    for (x, y, x2, y2, obj_class) in objects:
+        if y > height // 2:  # Consideramos caído si está en la mitad inferior de la imagen
             is_near_person = False
-            for (px, py, pw, ph) in people:
+            for (px, py, px2, py2) in people:
                 if abs(px - x) < 50 and abs(py - y) < 50:  # Si está muy cerca de una persona, no lo consideramos caído
                     is_near_person = True
                     break
-            
+
             if not is_near_person:
-                dropped_items.append((x, y, w, h, obj_class))
+                dropped_items.append((x, y, x2, y2, obj_class))
 
     # Activar alarma y enviar correo si se detecta un objeto caído
     if dropped_items:
-        for (x, y, w, h, obj_class) in dropped_items:
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        for (x, y, x2, y2, obj_class) in dropped_items:
+            cv2.rectangle(frame, (x, y), (x2, y2), (0, 0, 255), 2)
             cv2.putText(frame, f'Objeto caído: {obj_class}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
         alarm = Alarm.objects.filter(detection=session.detection_models.first(), user=session.user, is_active=True).first() 
@@ -89,7 +77,6 @@ def detect_dropped_item(frame, session):
 
         # Verificar si ha pasado suficiente tiempo desde el último correo
         if current_time - last_email_time > EMAIL_COOLDOWN:
-            # Convertir el frame actual a imagen JPEG
             _, buffer = cv2.imencode('.jpg', frame)
             image_content = buffer.tobytes()
 
@@ -107,22 +94,16 @@ def send_dropped_item_alert_email(session, image_content, dropped_items):
         'session': session,
         'dropped_items': dropped_items,
     }
-    
-    # Renderizar el contenido HTML del correo usando la plantilla
+
     html_content = render_to_string('emails/dropped_item_alert.html', context)
-    
-    # Crear una versión de texto plano del contenido HTML
     text_content = strip_tags(html_content)
 
-    # Crear el mensaje de correo
     subject = f'Alerta de objeto caído en la sesión {session.id}'
     from_email = settings.EMAIL_HOST_USER
-    to = ['duranalexis879@gmail.com']  # Cambia esto por el correo de destino
+    to = ['duranalexis879@gmail.com']
     
     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
     msg.attach_alternative(html_content, "text/html")
-
-    # Adjuntar la imagen capturada
     msg.attach('objeto_caido_detectado.jpg', image_content, 'image/jpeg')
 
     # Enviar el correo
