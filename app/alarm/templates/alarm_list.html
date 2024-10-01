@@ -49,7 +49,9 @@
             </div>
           </div>
           <!-- Elemento de audio oculto -->
+          {% if model.sound_file %}
           <audio id="audio-{{ model.id }}" src="{{ model.sound_file.url }}"></audio>
+          {% endif %}
         </div>
         {% endfor %}
       </div>

@@ -1,5 +1,5 @@
 from django.urls import path
-from app.monitoring.views import monitoring_session, real_time_monitoring, theft_evidence
+from app.monitoring.views import monitoring_session, real_time_monitoring, theft_evidence, notifications
 
 app_name = 'monitoring'
 
@@ -10,5 +10,6 @@ urlpatterns = [
     path('update_session/<int:pk>', monitoring_session.UpdateMonitoringSessionView.as_view(), name='update_session'),
     path('delete_session/<int:pk>', monitoring_session.DeleteMonitoringSessionView.as_view(), name='delete_session'),
     path('video_feed/<int:session_id>', real_time_monitoring.VideoStreamView.as_view(), name='video_feed'),
-    path('theft_evidence/<int:pk>', theft_evidence.TheftEvidenceList.as_view(), name='theft_evidence')
+    path('theft_evidence/<int:pk>', theft_evidence.TheftEvidenceList.as_view(), name='theft_evidence'),
+    path('get_notifications/<int:session_id>/', notifications.get_notifications, name='get_notifications'),
 ]

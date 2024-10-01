@@ -271,50 +271,51 @@
 <!-- Efecto de luz -->
 <style>
   .py-10 {
-      position: relative;
-      overflow: hidden;
-      padding: 2.5rem 0;
+    position: relative;
+    overflow: hidden;
+    padding: 2.5rem 0;
   }
+
   .secondary-container-bg {
-      position: relative;
-      padding: 2.5rem;
-      border-radius: 1rem;
+    position: relative;
+    padding: 2.5rem;
+    border-radius: 1rem;
   }
+
   #light-effect {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(99,102,241,0) 70%);
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-      opacity: 0;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0) 70%);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 0;
   }
 </style>
 
-<script>
+<!-- <script>
   document.addEventListener('DOMContentLoaded', () => {
-      const container = document.querySelector('.secondary-container-bg');
-      const lightEffect = document.getElementById('light-effect');
+    const container = document.querySelector('.secondary-container-bg');
+    const lightEffect = document.getElementById('light-effect');
 
-      container.addEventListener('mousemove', (e) => {
-          const rect = container.getBoundingClientRect();
-          const x = e.clientX - rect.left - (lightEffect.offsetWidth / 2);
-          const y = e.clientY - rect.top - (lightEffect.offsetHeight / 2);
+    container.addEventListener('mousemove', (e) => {
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left - (lightEffect.offsetWidth / 2);
+      const y = e.clientY - rect.top - (lightEffect.offsetHeight / 2);
 
-          lightEffect.style.transform = `translate(${x}px, ${y}px)`;
-          lightEffect.style.opacity = '1';
-      });
+      lightEffect.style.transform = `translate(${x}px, ${y}px)`;
+      lightEffect.style.opacity = '1';
+    });
 
-      container.addEventListener('mouseleave', () => {
-          lightEffect.style.opacity = '0';
-      });
+    container.addEventListener('mouseleave', () => {
+      lightEffect.style.opacity = '0';
+    });
   });
-9</script>
+</script> -->
 
 <!-- Script y CSS del servicio de CHATBOT -->
 <style>
-
   .message {
     margin-bottom: 10px;
     padding: 10px;
@@ -324,148 +325,161 @@
   }
 
   .user-message {
-    background-color: #e6f3ff; /* Claro */
+    background-color: #e6f3ff;
+    /* Claro */
     align-self: flex-end;
     margin-left: auto;
   }
 
   .bot-message {
-    background-color: #f1f0f0; /* Claro */
+    background-color: #f1f0f0;
+    /* Claro */
     align-self: flex-start;
   }
 
   /* Adaptación para modo oscuro */
   .dark .user-message {
-    background-color: #1e3a8a; /* Fondo azul oscuro para el usuario */
-    color: #f1f5f9; /* Texto claro */
+    background-color: #1e3a8a;
+    /* Fondo azul oscuro para el usuario */
+    color: #f1f5f9;
+    /* Texto claro */
   }
 
   .dark .bot-message {
-    background-color: #374151; /* Fondo gris oscuro para el bot */
-    color: #f3f4f6; /* Texto claro */
+    background-color: #374151;
+    /* Fondo gris oscuro para el bot */
+    color: #f3f4f6;
+    /* Texto claro */
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
-      const openChatBtn = document.getElementById('open-chat');
-      const closeChatBtn = document.getElementById('close-chat');
-      const chatbot = document.getElementById('chatbot');
-      const chatMessages = document.getElementById('chat-messages');
-      const chatInput = document.getElementById('chat-input');
-      const sendMessageBtn = document.getElementById('send-message');
+    const openChatBtn = document.getElementById('open-chat');
+    const closeChatBtn = document.getElementById('close-chat');
+    const chatbot = document.getElementById('chatbot');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const sendMessageBtn = document.getElementById('send-message');
 
-      openChatBtn.addEventListener('click', () => {
-          chatbot.classList.remove('hidden');
-          setTimeout(() => {
-              chatbot.classList.add('active');
-              chatbot.classList.remove('opacity-0', 'translate-y-5');
-          }, 50);
-          openChatBtn.style.display = 'none';
-      });
+    openChatBtn.addEventListener('click', () => {
+      chatbot.classList.remove('hidden');
+      setTimeout(() => {
+        chatbot.classList.add('active');
+        chatbot.classList.remove('opacity-0', 'translate-y-5');
+      }, 50);
+      openChatBtn.style.display = 'none';
+    });
 
-      closeChatBtn.addEventListener('click', () => {
-          chatbot.classList.add('opacity-0', 'translate-y-5');
-          chatbot.classList.remove('active');
-          setTimeout(() => {
-              chatbot.classList.add('hidden');
-              openChatBtn.style.display = 'block';
-          }, 500);
-      });
+    closeChatBtn.addEventListener('click', () => {
+      chatbot.classList.add('opacity-0', 'translate-y-5');
+      chatbot.classList.remove('active');
+      setTimeout(() => {
+        chatbot.classList.add('hidden');
+        openChatBtn.style.display = 'block';
+      }, 500);
+    });
 
-      function addMessage(message, sender) {
-          const messageElement = document.createElement('div');
-          messageElement.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
-          messageElement.textContent = message;
-          chatMessages.appendChild(messageElement);
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
+    function addMessage(message, sender) {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+      messageElement.textContent = message;
+      chatMessages.appendChild(messageElement);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
-      async function sendMessage() {
-          const message = chatInput.value.trim();
-          if (message) {
-              addMessage(message, 'user');
-              chatInput.value = '';
+    async function sendMessage() {
+      const message = chatInput.value.trim();
+      if (message) {
+        addMessage(message, 'user');
+        chatInput.value = '';
 
-              try {
-                  const response = await fetch('/core/api/chatbot/', {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'X-CSRFToken': getCookie('csrftoken')
-                      },
-                      body: JSON.stringify({ message: message }),
-                  });
-                  if (!response.ok) {
-                      throw new Error(`HTTP error! status: ${response.status}`);
-                  }
-                  const data = await response.json();
-                  addMessage(data.response, 'bot');
-              } catch (error) {
-                  console.error('Error:', error);
-                  addMessage('Lo siento, ha ocurrido un error.', 'bot');
-              }
+        try {
+          const response = await fetch('/core/api/chatbot/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ message: message }),
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
+          const data = await response.json();
+          addMessage(data.response, 'bot');
+        } catch (error) {
+          console.error('Error:', error);
+          addMessage('Lo siento, ha ocurrido un error.', 'bot');
+        }
       }
+    }
 
-      function getCookie(name) {
-          let cookieValue = null;
-          if (document.cookie && document.cookie !== '') {
-              const cookies = document.cookie.split(';');
-              for (let i = 0; i < cookies.length; i++) {
-                  const cookie = cookies[i].trim();
-                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                      break;
-                  }
-              }
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
           }
-          return cookieValue;
+        }
       }
+      return cookieValue;
+    }
 
-      sendMessageBtn.addEventListener('click', sendMessage);
-      chatInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-              sendMessage();
-          }
-      });
+    sendMessageBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
   });
 </script>
 
-    <!-- Script para la barra de progreso -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          let progressBar = document.getElementById('progress-bar');
-          let totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-  
-          window.addEventListener('scroll', function() {
-              let progress = (window.pageYOffset / totalHeight) * 100;
-              progressBar.style.width = progress + '%';
-          });
-  
-          window.addEventListener('resize', function() {
-              totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-          });
-      });
-  </script>
+<!-- Script para la barra de progreso -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let progressBar = document.getElementById('progress-bar');
+    let totalHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-    <!-- Script para cerrar la sesión -->
-  <script>
-    document.addEventListener('keydown', function(event) {
-      // Detecta Ctrl + Espacio como combinación de teclas para cerrar sesión
-      if (event.ctrlKey && event.code === 'Space') {
-          // Acción de cierre de sesión
-          logoutUser();
-      }
+    window.addEventListener('scroll', function () {
+      let progress = (window.pageYOffset / totalHeight) * 100;
+      progressBar.style.width = progress + '%';
+    });
+
+    window.addEventListener('resize', function () {
+      totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    });
   });
-  
+</script>
+
+<!-- Script para cerrar la sesión -->
+<script>
+  document.addEventListener('keydown', function (event) {
+    // Detecta Ctrl + Espacio como combinación de teclas para cerrar sesión
+    if (event.ctrlKey && event.code === 'Space') {
+      // Acción de cierre de sesión
+      logoutUser();
+    }
+  });
+
   function logoutUser() {
-      // Redirige al usuario a la URL de cierre de sesión
-      window.location.href = "{% url 'security:signout' %}";
+    // Redirige al usuario a la URL de cierre de sesión
+    window.location.href = "{% url 'security:signout' %}";
   }
-  </script>
+</script>

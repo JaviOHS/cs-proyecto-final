@@ -21,6 +21,7 @@ class RealTimeMonitoringView(View):
         detection = session.detection_models.all()
 
         context = {
+            'session_id': session_id,
             'session': session,
             'detections': detection,
             'title1': 'Monitoreo en Tiempo Real',

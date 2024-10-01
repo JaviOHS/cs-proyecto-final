@@ -37,6 +37,9 @@ class Alarm(models.Model):
                         
         if not self.notification_message:
             self.notification_message = f"Se ha detectado una amenaza de {self.detection.name}."
+            
+        if not self.sound_file:
+            self.sound_file = 'alarms/default_alarm.mp3'
 
         self.clean()
         super().save(*args, **kwargs)
