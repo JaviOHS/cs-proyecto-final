@@ -58,10 +58,11 @@ class VideoStreamView(View):
     def load_detection_module(self, detection_id):
         detection_modules = {
             1: {'module': 'app.monitoring.utils.detect_theft', 'function': 'detect_theft'},
-            2: {'module': 'app.monitoring.utils.detect_loss', 'function': 'detect_loss'},
+            2: {'module': 'app.monitoring.utils.detect_loss', 'function': 'detect_dropped_item'},
             3: {'module': 'app.monitoring.utils.detect_crowding', 'function': 'detect_crowding'},
             4: {'module': 'app.monitoring.utils.detect_motion', 'function': 'detect_motion'},
-            5: {'module': 'app.monitoring.utils.detect_aggression', 'function': 'detect_aggression'}
+            5: {'module': 'app.monitoring.utils.detect_aggression', 'function': 'detect_aggression'},
+            6: {'module': 'app.monitoring.utils.detect_bus_robbery', 'function': 'detect_suspicious_behavior'}
         }
 
         selected_module = detection_modules.get(detection_id)

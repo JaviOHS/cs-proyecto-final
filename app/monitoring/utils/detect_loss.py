@@ -4,76 +4,54 @@ from app.alarm.models import Alarm
 import time
 from app.monitoring.utils.send_email import send_alert_email
 
+net = cv2.dnn.readNetFromCaffe('deploy.prototxt', 'mobilenet_ssd.caffemodel')
 
-# Cargamos el modelo YOLO preentrenado
-net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
-layer_names = net.getLayerNames()
-output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+classes = ["background", "cell phone", "laptop", "glasses", "handbag"]
 
-# Clases de objetos que puede detectar el modelo
-classes = []
-with open("coco.names", "r") as f:
-    classes = [line.strip() for line in f.readlines()]
-
-# Variable para rastrear el tiempo del último correo enviado
 last_email_time = 0
-EMAIL_COOLDOWN = 10  # Enviar correos cada 10 segundos
+EMAIL_COOLDOWN = 10
 
 def detect_dropped_item(frame, session):
     global last_email_time
 
-    height, width, _ = frame.shape
-
-    # Preparar la imagen para YOLO
-    blob = cv2.dnn.blobFromImage(frame, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+    height, width = frame.shape[:2]
+    
+    blob = cv2.dnn.blobFromImage(frame, 0.007843, (300, 300), 127.5, False)
     net.setInput(blob)
-    outs = net.forward(output_layers)
+    detections = net.forward()
 
-    # Inicializamos variables para guardar las detecciones
     people = []
     objects = []
     dropped_items = []
 
-    # Procesamos las detecciones
-    for out in outs:
-        for detection in out:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
+    for i in range(detections.shape[2]):
+        confidence = detections[0, 0, i, 2]
+        if confidence > 0.5:
+            class_id = int(detections[0, 0, i, 1])
+            obj_class = classes[class_id]
 
-            if confidence > 0.5:  # Umbral de confianza
-                center_x = int(detection[0] * width)
-                center_y = int(detection[1] * height)
-                w = int(detection[2] * width)
-                h = int(detection[3] * height)
+            box = detections[0, 0, i, 3:7] * np.array([width, height, width, height])
+            (x, y, x2, y2) = box.astype("int")
+            
+            if obj_class == "person":
+                people.append((x, y, x2, y2))
+            elif obj_class in ["cell phone", "laptop", "glasses", "handbag"]:
+                objects.append((x, y, x2, y2, obj_class))
 
-                # Obtener las coordenadas de la caja
-                x = int(center_x - w / 2)
-                y = int(center_y - h / 2)
-
-                # Clasificamos las detecciones como personas o objetos
-                if classes[class_id] == "person":
-                    people.append((x, y, w, h))  # Guardar las coordenadas de las personas
-                elif classes[class_id] in ["handbag", "suitcase", "backpack", "cell phone", "book", "laptop"]:  # Objetos que podrían caerse
-                    objects.append((x, y, w, h, classes[class_id]))  # Guardar las coordenadas y el tipo de objeto
-
-    # Revisamos si hay objetos que se han "caído"
-    for (x, y, w, h, obj_class) in objects:
-        # Si el objeto está en el suelo y no está cerca de ninguna persona, consideramos que se ha caído
-        if y > height // 2:  # Consideramos objetos en la mitad inferior de la imagen como caídos
+    for (x, y, x2, y2, obj_class) in objects:
+        if y > height // 2:
             is_near_person = False
-            for (px, py, pw, ph) in people:
-                if abs(px - x) < 50 and abs(py - y) < 50:  # Si está muy cerca de una persona, no lo consideramos caído
+            for (px, py, px2, py2) in people:
+                if abs(px - x) < 50 and abs(py - y) < 50:
                     is_near_person = True
                     break
-            
-            if not is_near_person:
-                dropped_items.append((x, y, w, h, obj_class))
 
-    # Activar alarma y enviar correo si se detecta un objeto caído
+            if not is_near_person:
+                dropped_items.append((x, y, x2, y2, obj_class))
+
     if dropped_items:
-        for (x, y, w, h, obj_class) in dropped_items:
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        for (x, y, x2, y2, obj_class) in dropped_items:
+            cv2.rectangle(frame, (x, y), (x2, y2), (0, 0, 255), 2)
             cv2.putText(frame, f'Objeto caído: {obj_class}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
         alarm = Alarm.objects.filter(detection=session.detection_models.first(), user=session.user, is_active=True).first() 
@@ -85,12 +63,10 @@ def detect_dropped_item(frame, session):
 
         current_time = time.time()
 
-        # Verificar si ha pasado suficiente tiempo desde el último correo
         if current_time - last_email_time > EMAIL_COOLDOWN:
-            # Convertir el frame actual a imagen JPEG
             _, buffer = cv2.imencode('.jpg', frame)
             image_content = buffer.tobytes()
-            
+
             recipient_email = session.user.email
             is_dropped_item = True
             context = {
