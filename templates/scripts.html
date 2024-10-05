@@ -314,143 +314,6 @@
   });
 </script> -->
 
-<!-- Script y CSS del servicio de CHATBOT -->
-<style>
-  .message {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 18px;
-    max-width: 80%;
-    animation: fadeIn 0.5s ease-out;
-  }
-
-  .user-message {
-    background-color: #e6f3ff;
-    /* Claro */
-    align-self: flex-end;
-    margin-left: auto;
-  }
-
-  .bot-message {
-    background-color: #f1f0f0;
-    /* Claro */
-    align-self: flex-start;
-  }
-
-  /* Adaptación para modo oscuro */
-  .dark .user-message {
-    background-color: #1e3a8a;
-    /* Fondo azul oscuro para el usuario */
-    color: #f1f5f9;
-    /* Texto claro */
-  }
-
-  .dark .bot-message {
-    background-color: #374151;
-    /* Fondo gris oscuro para el bot */
-    color: #f3f4f6;
-    /* Texto claro */
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', (event) => {
-    const openChatBtn = document.getElementById('open-chat');
-    const closeChatBtn = document.getElementById('close-chat');
-    const chatbot = document.getElementById('chatbot');
-    const chatMessages = document.getElementById('chat-messages');
-    const chatInput = document.getElementById('chat-input');
-    const sendMessageBtn = document.getElementById('send-message');
-
-    openChatBtn.addEventListener('click', () => {
-      chatbot.classList.remove('hidden');
-      setTimeout(() => {
-        chatbot.classList.add('active');
-        chatbot.classList.remove('opacity-0', 'translate-y-5');
-      }, 50);
-      openChatBtn.style.display = 'none';
-    });
-
-    closeChatBtn.addEventListener('click', () => {
-      chatbot.classList.add('opacity-0', 'translate-y-5');
-      chatbot.classList.remove('active');
-      setTimeout(() => {
-        chatbot.classList.add('hidden');
-        openChatBtn.style.display = 'block';
-      }, 500);
-    });
-
-    function addMessage(message, sender) {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
-      messageElement.textContent = message;
-      chatMessages.appendChild(messageElement);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    async function sendMessage() {
-      const message = chatInput.value.trim();
-      if (message) {
-        addMessage(message, 'user');
-        chatInput.value = '';
-
-        try {
-          const response = await fetch('/core/api/chatbot/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({ message: message }),
-          });
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data = await response.json();
-          addMessage(data.response, 'bot');
-        } catch (error) {
-          console.error('Error:', error);
-          addMessage('Lo siento, ha ocurrido un error.', 'bot');
-        }
-      }
-    }
-
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
-        }
-      }
-      return cookieValue;
-    }
-
-    sendMessageBtn.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
-    });
-  });
-</script>
-
 <!-- Script para la barra de progreso -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -482,4 +345,262 @@
     // Redirige al usuario a la URL de cierre de sesión
     window.location.href = "{% url 'security:signout' %}";
   }
+</script>
+
+<!-- Script ChatBot WebLLM -->
+<script type="module">
+  import { CreateWebWorkerMLCEngine } from "https://esm.run/@mlc-ai/web-llm"
+
+  const $ = el => document.querySelector(el)
+  const $openChat = $('#open-chat')
+  const $closeChat = $('#close-chat')
+  const $chatbot = $('#chatbot')
+  const $chatMessages = $('#chat-messages')
+  const $chatInput = $('#chat-input')
+  const $sendMessage = $('#send-message')
+
+  let messages = []
+  let engine = null
+  let jsonData = []
+  let isEngineInitializing = false
+
+  const SELECTED_MODEL = 'Llama-3.2-1B-Instruct-q4f32_1-MLC'
+
+  // Cargar los datos del JSON
+  async function loadJSONData() {
+    if (jsonData.length === 0) {
+      try {
+        const response = await fetch('/static/chatbot_training_data.json');
+        jsonData = await response.json();
+      } catch (error) {
+        console.error('Error loading JSON data:', error);
+      }
+    }
+  }
+
+  // Buscar una respuesta en el JSON
+  function findAnswerInJSON(question) {
+    const lowerQuestion = question.toLowerCase();
+    const match = jsonData.find(item =>
+      lowerQuestion.includes(item.question.toLowerCase())
+    );
+    return match ? match.answer : null;
+  }
+
+  // Inicializar el chatbot y cargar el modelo
+  async function initializeChatbot() {
+    await loadJSONData();
+    enableChat();
+  }
+
+  // Inicializar el engine de forma perezosa
+  async function initializeEngine() {
+    if (engine) return engine;
+    if (isEngineInitializing) {
+      while (isEngineInitializing) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      return engine;
+    }
+
+    isEngineInitializing = true;
+    showLoadingIndicator();
+
+    try {
+      const modelLoadedTime = localStorage.getItem('modelLoadedTime');
+      const currentTime = new Date().getTime();
+
+      if (modelLoadedTime && (currentTime - parseInt(modelLoadedTime)) < 24 * 60 * 60 * 1000) {
+        console.log("Usando instancia existente del modelo.");
+        engine = await CreateWebWorkerMLCEngine(
+          new Worker('/static/js/worker.js', { type: 'module' }),
+          SELECTED_MODEL
+        );
+      } else {
+        engine = await CreateWebWorkerMLCEngine(
+          new Worker('/static/js/worker.js', { type: 'module' }),
+          SELECTED_MODEL,
+          {
+            initProgressCallback: (info) => {
+              console.log('Init progress:', info);
+              updateLoadingIndicator(info.text);
+            }
+          }
+        );
+        localStorage.setItem('modelLoadedTime', new Date().getTime());
+      }
+    } catch (error) {
+      console.error('Error initializing engine:', error);
+      addMessage("Lo siento, ha ocurrido un error al inicializar el chatbot. Por favor, intenta recargar la página.", 'bot');
+    } finally {
+      isEngineInitializing = false;
+      hideLoadingIndicator();
+    }
+
+    return engine;
+  }
+
+  // Funciones para manejar el indicador de carga
+  function showLoadingIndicator() {
+    // Implementa esto según tu UI
+    console.log("Cargando...");
+  }
+
+  function updateLoadingIndicator(text) {
+    console.log(text);
+  }
+
+  function hideLoadingIndicator() {
+    console.log("Carga completada");
+  }
+
+  // Habilitar el chat cuando el modelo esté listo
+  function enableChat() {
+    addMessage("¡Hola! Soy Alexis, tu ChatBot personal. ¿En qué puedo ayudarte hoy?", 'bot');
+    $chatInput.removeAttribute('disabled');
+    $sendMessage.removeAttribute('disabled');
+  }
+
+  function addMessage(text, sender) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('mb-4', 'p-3', 'rounded-lg', 'flex', 'flex-col');
+
+    if (sender === 'user') {
+      messageElement.classList.add(
+        'bg-blue-700',
+        'dark:bg-indigo-700',
+        'text-white',
+        'ml-auto',
+        'inline-block',
+        'px-4',
+        'py-2',
+        'rounded-lg',
+        'max-w-[60%]',
+        'text-left',
+        'font-semibold'
+      );
+      // Agregar el mensaje del usuario sin animación
+      messageElement.innerHTML = `<p class="text-sm">${text}</p>`;
+    } else {
+      messageElement.classList.add(
+        'bg-gray-100',
+        'dark:bg-[#0f1e41]',
+        'mr-auto',
+        'px-4',
+        'py-2',
+        'rounded-lg',
+        'w-full',
+        'max-w-[80%]',
+        'font-semibold'
+      );
+
+      // Aquí mostramos el mensaje vacío inicialmente
+      const botTextElement = document.createElement('p');
+      botTextElement.classList.add('text-sm');
+      messageElement.appendChild(botTextElement);
+
+      $chatMessages.appendChild(messageElement);
+      $chatMessages.scrollTop = $chatMessages.scrollHeight;
+
+      // Aquí llamamos a la función para mostrar el texto letra por letra
+      typeMessage(botTextElement, text);
+    }
+
+    $chatMessages.appendChild(messageElement);
+  }
+
+  // Función para animar el texto letra por letra
+  function typeMessage(element, text, delay = 50) {
+    let index = 0;
+
+    function typeNextLetter() {
+      if (index < text.length) {
+        element.textContent += text.charAt(index);
+        index++;
+        setTimeout(typeNextLetter, delay);
+      }
+    }
+
+    typeNextLetter();
+  }
+
+  // Enviar el mensaje del usuario
+  async function sendMessage() {
+    const messageText = $chatInput.value.trim();
+    if (messageText === '') return;
+
+    $chatInput.value = '';
+    addMessage(messageText, 'user'); // Mensaje del usuario
+    $chatInput.setAttribute('disabled', '');
+    $sendMessage.setAttribute('disabled', '');
+
+    const userMessage = { role: 'user', content: messageText };
+    messages.push(userMessage);
+
+    try {
+      let reply = findAnswerInJSON(messageText);
+
+      if (reply) {
+        // Si hay una respuesta en el JSON, la mostramos con animación
+        addMessage(reply, 'bot');
+      } else {
+        engine = await initializeEngine();
+
+        const chunks = await engine.chat.completions.create({
+          messages,
+          stream: true
+        });
+
+        reply = ''; // Inicializar la respuesta acumulada
+
+        // Crear el elemento del mensaje del bot sin contenido
+        const botMessageElement = document.createElement('div');
+        botMessageElement.classList.add('mb-4', 'p-3', 'rounded-lg', 'flex', 'flex-col', 'bg-gray-100', 'dark:bg-[#0f1e41]', 'mr-auto', 'px-4', 'py-2', 'rounded-lg', 'w-full', 'max-w-[80%]', 'font-semibold');
+        const botTextElement = document.createElement('p');
+        botTextElement.classList.add('text-sm');
+        botMessageElement.appendChild(botTextElement);
+        $chatMessages.appendChild(botMessageElement);
+        $chatMessages.scrollTop = $chatMessages.scrollHeight;
+
+        // Recibir los chunks y acumular el texto
+        for await (const chunk of chunks) {
+          const content = chunk.choices[0]?.delta?.content ?? '';
+          reply += content; // Acumula el contenido en una variable temporal
+        }
+
+        // Aquí llamamos a la función para animar el texto letra por letra una vez que hemos acumulado todo el texto
+        typeMessage(botTextElement, reply); // Usar la función de animación
+
+        messages.push({ role: 'assistant', content: reply });
+      }
+    } catch (error) {
+      console.error('Error generating response:', error);
+      addMessage("Lo siento, ha ocurrido un error al generar la respuesta. Por favor, intenta de nuevo.", 'bot');
+    }
+
+    $chatInput.removeAttribute('disabled');
+    $sendMessage.removeAttribute('disabled');
+    $chatInput.focus();
+  }
+
+  // Evento para abrir el chat e inicializar el modelo
+  $openChat.addEventListener('click', () => {
+    $chatbot.classList.remove('hidden', 'opacity-0', 'translate-y-5');
+    $openChat.classList.add('hidden');
+    initializeChatbot();
+  });
+
+  // Evento para cerrar el chat y limpiar los mensajes
+  $closeChat.addEventListener('click', () => {
+    $chatbot.classList.add('hidden', 'opacity-0', 'translate-y-5');
+    $openChat.classList.remove('hidden');
+    $chatMessages.innerHTML = '';  // Limpiar los mensajes cuando se cierra el chat
+    messages = [];  // Vaciar el array de mensajes
+  });
+
+  // Eventos para enviar el mensaje
+  $sendMessage.addEventListener('click', sendMessage);
+  $chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage();
+  });
 </script>

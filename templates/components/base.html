@@ -95,7 +95,7 @@
   </header>
   
   <!-- Barra de progreso -->
-  <div id="progress-bar" class="h-1 bg-blue-500 fixed top-0 left-0 z-50 transition-all duration-300 ease-linear" style="width: 0;"></div>
+  <div id="progress-bar" class="h-1 bg-blue-500 dark:bg-indigo-500 fixed top-0 left-0 z-50 transition-all duration-300 ease-linear" style="width: 0;"></div>
   
   {% endblock navbar %}
 
@@ -270,79 +270,42 @@
     </div>
   </div>
 
-  <!-- Icono de ChatBot -->
+  {% if user.is_authenticated %}
+  <!-- Icono de ChatBot -->  
   <div id="chatbot-container" class="fixed bottom-5 left-8 z-50">
-    <button id="open-chat" class="w-14 h-14 flex items-center justify-center shadow-lg round-button rounded-full">
-        <i class="fas fa-message text-xl"></i>
+    <!-- Icono -->
+    <button id="open-chat" class="bg-blue-700 hover:bg-blue-800 dark:bg-indigo-700 dark:hover:bg-indigo-800 w-14 h-14 text-white rounded-full">
+      <i class="fas fa-message text-xl"></i>
     </button>
+    <!-- Contenido -->
     <div id="chatbot" class="hidden opacity-0 translate-y-5 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden transition-all duration-300 ease-out">
-        <div class="bg-gradient-to-l from-blue-700 to-blue-400 text-white p-4 flex items-center justify-between">
-            <div class="flex items-center">
-                <img src="{% static 'img/components/icon.png' %}" alt="ChatBot Profile" class="w-10 h-10 rounded-full mr-3">
-                <span class="font-semibold">ChatBot - Alexis</span>
-                <span class="ml-2 w-2 h-2 bg-green-500 rounded-full"></span>
-            </div>
-            <button id="close-chat" class="text-white hover:text-gray-200 focus:outline-none">
-                <i class="fas fa-times"></i>
-            </button>
+      <!-- Encabezado -->
+      <div class="bg-gradient-to-l from-blue-700 to-blue-400 dark:from-indigo-700 dark:to-indigo-500 text-white p-4 flex items-center justify-between">
+        <div class="flex items-center">
+          <img src="{% static 'img/components/icon.png' %}" alt="ChatBot Profile" class="w-10 h-10 rounded-full mr-3">
+          <span class="font-semibold">ChatBot - Alexis</span>
+          <span class="ml-2 w-2 h-2 bg-green-500 rounded-full"></span>
         </div>
-
-        <svg width="100%" height="100%" id="svg" viewBox="0 0 1440 490" xmlns="http://www.w3.org/2000/svg"
-        class="rotate-180 mt-0 transition duration-300 ease-in-out delay-150">
-        <style>
-          .path-0 {
-            animation: pathAnim-0 4s;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-          }
-        
-          @keyframes pathAnim-0 {
-            0% {
-              d: path("M 0,500 C 0,500 0,166 0,166 C 107.2153110047847,190.9665071770335 214.4306220095694,215.93301435406698 317,210 C 419.5693779904306,204.06698564593302 517.4928229665072,167.23444976076556 606,157 C 694.5071770334928,146.76555023923444 773.598086124402,163.12918660287082 866,164 C 958.401913875598,164.87081339712918 1064.1148325358852,150.2488038277512 1162,148 C 1259.8851674641148,145.7511961722488 1349.9425837320573,155.8755980861244 1440,166 C 1440,166 1440,500 1440,500 Z");
-            }
-        
-            25% {
-              d: path("M 0,500 C 0,500 0,166 0,166 C 96.3732057416268,163.07177033492823 192.7464114832536,160.14354066985646 289,171 C 385.2535885167464,181.85645933014354 481.38755980861254,206.4976076555024 570,219 C 658.6124401913875,231.5023923444976 739.7033492822965,231.86602870813397 840,204 C 940.2966507177035,176.13397129186603 1059.799043062201,120.03827751196172 1163,109 C 1266.200956937799,97.96172248803828 1353.1004784688994,131.98086124401914 1440,166 C 1440,166 1440,500 1440,500 Z");
-            }
-        
-            50% {
-              d: path("M 0,500 C 0,500 0,166 0,166 C 101.93301435406698,175.21531100478467 203.86602870813397,184.43062200956936 305,186 C 406.13397129186603,187.56937799043064 506.46889952153117,181.4928229665072 611,194 C 715.5311004784688,206.5071770334928 824.2583732057416,237.59808612440193 911,226 C 997.7416267942584,214.40191387559807 1062.4976076555024,160.11483253588517 1147,143 C 1231.5023923444976,125.88516746411484 1335.751196172249,145.94258373205741 1440,166 C 1440,166 1440,500 1440,500 Z");
-            }
-        
-            75% {
-              d: path("M 0,500 C 0,500 0,166 0,166 C 109.39712918660285,193.55023923444975 218.7942583732057,221.10047846889952 300,202 C 381.2057416267943,182.89952153110048 434.22009569377997,117.14832535885166 537,108 C 639.77990430622,98.85167464114834 792.3253588516748,146.30622009569382 899,163 C 1005.6746411483252,179.69377990430618 1066.4784688995217,165.6267942583732 1149,161 C 1231.5215311004783,156.3732057416268 1335.7607655502393,161.1866028708134 1440,166 C 1440,166 1440,500 1440,500 Z");
-            }
-        
-            100% {
-              d: path("M 0,500 C 0,500 0,166 0,166 C 107.2153110047847,190.9665071770335 214.4306220095694,215.93301435406698 317,210 C 419.5693779904306,204.06698564593302 517.4928229665072,167.23444976076556 606,157 C 694.5071770334928,146.76555023923444 773.598086124402,163.12918660287082 866,164 C 958.401913875598,164.87081339712918 1064.1148325358852,150.2488038277512 1162,148 C 1259.8851674641148,145.7511961722488 1349.9425837320573,155.8755980861244 1440,166 C 1440,166 1440,500 1440,500 Z");
-            }
-          }
-        </style>
-        <defs>
-          <linearGradient id="gradient_chat" x1="0%" y1="50%" x2="100%" y2="50%">
-            <stop offset="5%" stop-color="#1d4ed8"></stop>
-            <stop offset="95%" stop-color="#60a5fa"></stop>
-          </linearGradient>
-        </defs>
-        <path
-          d="M 0,500 C 0,500 0,333 0,333 C 77.34928229665073,329.6794258373206 154.69856459330146,326.3588516746412 247,319 C 339.30143540669854,311.6411483253588 446.555023923445,300.24401913875596 540,316 C 633.444976076555,331.75598086124404 713.0813397129187,374.6650717703349 820,394 C 926.9186602870813,413.3349282296651 1061.1196172248804,409.0956937799043 1169,395 C 1276.8803827751196,380.9043062200957 1358.44019138756,356.95215311004785 1440,333 C 1440,333 1440,500 1440,500 Z"
-          stroke="none" stroke-width="0" fill="url(#gradient_chat)" fill-opacity="1"
-          class="transition-all duration-300 ease-in-out delay-150 path-1"></path>
-        </svg>
-      
-        <div id="chat-messages" class="h-80 overflow-y-auto p-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"></div>
-        <div class="bg-gray-100 dark:bg-gray-700 p-4 flex items-center">
-            <input id="chat-input" type="text" class="flex-grow mr-3 px-3 py-2 border rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 transition-all duration-300 dark:bg-gray-700 dark:text-gray-100" placeholder="Escribe tu mensaje...">
-            <button id="send-message" class="ml-3 w-10 h-10 bg-gradient-to-r from-blue-700 to-blue-400 text-white rounded-full flex items-center justify-center hover:bg-blue-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-        <div class="bg-gray-100 dark:bg-gray-700 p-2 flex justify-center items-center">
-            <span class="text-sm text-gray-500 dark:text-gray-400">Las respuestas del ChatBot son confiables</span>
-        </div>
+        <button id="close-chat" class="text-white focus:outline-none">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <!-- Cuerpo -->
+      <div id="chat-messages" class="h-80 overflow-y-auto p-4 bg-white dark:bg-[#223769] text-gray-900 dark:text-gray-100"></div>
+      <div id="loading-indicator" class="hidden">
+        <div class="loader">Cargando Modelo...</div>
+      </div>
+      <!-- Pie -->
+      <div class="bg-slate-50 dark:bg-[#122247] p-4 flex items-center">
+        <input id="chat-input" type="text" class="flex-grow mr-3 px-3 py-2 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-indigo-600 transition-all duration-300 dark:bg-[#0f172a] dark:text-gray-100 font-semibold" 
+        placeholder="Escribe tu mensaje" disabled>
+        <button id="send-message" class="ml-3 w-10 h-10 bg-gradient-to-r from-blue-700 to-blue-400 hover:bg-blue-800 dark:from-indigo-600 dark:to-indigo-400 dark:hover:bg-indigo-800 text-white rounded-full flex items-center justify-center transition-all duration-300 focus:outline-none focus:ring-4" disabled>
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
     </div>
   </div>
-
+  {% endif %}
 
   <!-- Scripts -->
   {% block scripts %}
