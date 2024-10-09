@@ -1,110 +1,159 @@
+import os
+import pandas as pd
 import cv2
-import numpy as np
+from datetime import datetime
+from dotenv import load_dotenv
+from AWSrekonection.src.main import ImageProcessor
+from AWSrekonection.src.reconocimiento import RekognitionService
 from app.alarm.models import Alarm
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
 import time
+from dash import Dash, dcc, html, Input, Output
+import plotly.express as px
 
-# Cargar el modelo preentrenado MobileNet SSD solo una vez
-net = cv2.dnn.readNetFromCaffe('deploy.prototxt', 'mobilenet_ssd.caffemodel')
 
-# Clases de objetos que puede detectar el modelo
-classes = ["background", "cell phone", "laptop", "glasses", "handbag"]  # Clases específicas que queremos detectar
+
+# Cargar las variables de entorno
+load_dotenv()
+
+# Inicializar el servicio de Rekognition
+rekognition_service = RekognitionService()
+image_processor = ImageProcessor()
+
+# Inicializa la captura de video
+cap = cv2.VideoCapture(0)
+
+# Clases de amenazas a detectar
+detected_classes = ['Firearm', 'Mobile Phone', 'Laptop', 'Glasses', 'Handbag', 'Person']
+log_file = 'detections.csv'
+
+# Asegúrate de que el archivo de registro existe
+if not os.path.isfile(log_file):
+    with open(log_file, 'w') as f:
+        f.write('timestamp,class,confidence\n')  # Encabezados del CSV
 
 # Variable para rastrear el tiempo del último correo enviado
 last_email_time = 0
 EMAIL_COOLDOWN = 10  # Enviar correos cada 10 segundos
 
-def detect_dropped_item(frame, session):
+app = Dash(_name_)
+
+app.layout = html.Div([
+    html.H1("Detección de Amenazas"),
+    dcc.Graph(id='graph'),
+    dcc.Dropdown(
+        id='timeframe-dropdown',
+        options=[
+            {'label': 'Diario', 'value': 'D'},
+            {'label': 'Semanal', 'value': 'W'},
+            {'label': 'Mensual', 'value': 'M'}
+        ],
+        value='M',  # Valor predeterminado
+        clearable=False
+    ),
+    html.Button('Iniciar Detección', id='start-button', n_clicks=0),
+    html.Div(id='output-container', style={'margin-top': '20px'})
+])
+
+@app.callback(
+    Output('graph', 'figure'),
+    Output('output-container', 'children'),
+    Input('timeframe-dropdown', 'value'),
+    Input('start-button', 'n_clicks')
+)
+def update_graph(timeframe, n_clicks):
     global last_email_time
 
-    height, width = frame.shape[:2]
-    
-    # Preparar la imagen para el modelo MobileNet SSD
-    blob = cv2.dnn.blobFromImage(frame, 0.007843, (300, 300), 127.5, False)
-    net.setInput(blob)
-    detections = net.forward()
+    if n_clicks > 0:
+        # Registra la detección de objetos en tiempo real
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
 
-    people = []
-    objects = []
-    dropped_items = []
-
-    # Procesamos las detecciones
-    for i in range(detections.shape[2]):
-        confidence = detections[0, 0, i, 2]
-        if confidence > 0.5:  # Umbral de confianza
-            class_id = int(detections[0, 0, i, 1])
-            obj_class = classes[class_id]
-
-            # Obtener las coordenadas de la caja delimitadora
-            box = detections[0, 0, i, 3:7] * np.array([width, height, width, height])
-            (x, y, x2, y2) = box.astype("int")
-            
-            # Clasificamos las detecciones como personas u objetos específicos
-            if obj_class == "person":
-                people.append((x, y, x2, y2))
-            elif obj_class in ["cell phone", "laptop", "glasses", "handbag"]:  # Solo los objetos deseados
-                objects.append((x, y, x2, y2, obj_class))
-
-    # Detectamos si hay objetos caídos
-    for (x, y, x2, y2, obj_class) in objects:
-        if y > height // 2:  # Consideramos caído si está en la mitad inferior de la imagen
-            is_near_person = False
-            for (px, py, px2, py2) in people:
-                if abs(px - x) < 50 and abs(py - y) < 50:  # Si está muy cerca de una persona, no lo consideramos caído
-                    is_near_person = True
-                    break
-
-            if not is_near_person:
-                dropped_items.append((x, y, x2, y2, obj_class))
-
-    # Activar alarma y enviar correo si se detecta un objeto caído
-    if dropped_items:
-        for (x, y, x2, y2, obj_class) in dropped_items:
-            cv2.rectangle(frame, (x, y), (x2, y2), (0, 0, 255), 2)
-            cv2.putText(frame, f'Objeto caído: {obj_class}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-
-        alarm = Alarm.objects.filter(detection=session.detection_models.first(), user=session.user, is_active=True).first() 
-        if alarm:
-            alarm.activate()
-        else:
-            default_alarm = Alarm()
-            default_alarm.play_default_alarm()
-
-        current_time = time.time()
-
-        # Verificar si ha pasado suficiente tiempo desde el último correo
-        if current_time - last_email_time > EMAIL_COOLDOWN:
+            # Convierte el frame a bytes
             _, buffer = cv2.imencode('.jpg', frame)
-            image_content = buffer.tobytes()
+            image_bytes = buffer.tobytes()
 
-            # Enviar correo con la imagen, el contexto y el objeto detectado
-            send_dropped_item_alert_email(session, image_content, dropped_items)
-            last_email_time = current_time
-    else:
-        Alarm.stop_alarm()
+            # Detecta objetos en el frame
+            labels = image_processor.detect_objects(image_bytes)
 
-    return frame
+            # Filtra y muestra las etiquetas relevantes
+            results = image_processor.filter_detected_classes(labels, detected_classes)
 
-def send_dropped_item_alert_email(session, image_content, dropped_items):
-    # Crear el contexto del correo
+            # Registra las detecciones y dibuja las etiquetas en el video
+            for name, confidence in results:
+                timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                with open(log_file, 'a') as f:
+                    f.write(f'{timestamp},{name},{confidence:.2f}\n')  # Registra la detección
+                
+                # Si se detecta un objeto sospechoso, activar alarma y enviar correo
+                if confidence > 0.5:  # Cambiar por tu umbral
+                    alarm = Alarm.objects.filter(is_active=True).first()
+                    if alarm:
+                        alarm.activate()
+                    else:
+                        default_alarm = Alarm()
+                        default_alarm.play_default_alarm()
+
+                    current_time = time.time()
+                    if current_time - last_email_time > EMAIL_COOLDOWN:
+                        send_alert_email(frame)
+                        last_email_time = current_time
+            
+            # Muestra el frame (descomentar para ver la cámara)
+            cv2.imshow('Detección de Objetos', frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        # Análisis de los datos registrados
+        data = pd.read_csv(log_file, parse_dates=['timestamp'])
+        data['date'] = data['timestamp'].dt.date  # Extrae la fecha
+
+        # Cuenta las detecciones según el intervalo de tiempo seleccionado
+        if timeframe == 'D':
+            counts = data.groupby(['date', 'class']).size().reset_index(name='counts')
+        elif timeframe == 'W':
+            counts = data.groupby([data['timestamp'].dt.to_period('W'), 'class']).size().reset_index(name='counts')
+            counts['date'] = counts['timestamp'].dt.to_timestamp()
+        else:  # 'M'
+            counts = data.groupby([data['timestamp'].dt.to_period('M'), 'class']).size().reset_index(name='counts')
+            counts['date'] = counts['timestamp'].dt.to_timestamp()
+
+        # Gráfico de las detecciones
+        fig = px.bar(counts, x='date', y='counts', color='class', title='Detecciones de Amenazas')
+        return fig, "Detecciones registradas. Presione 'Iniciar Detección' para continuar."
+
+    return {}, "Presione 'Iniciar Detección' para empezar."
+
+def send_alert_email(frame):
     context = {
-        'session': session,
-        'dropped_items': dropped_items,
+        'alert': 'Se ha detectado un comportamiento sospechoso.',
     }
 
-    html_content = render_to_string('emails/dropped_item_alert.html', context)
+    html_content = render_to_string('emails/suspicious_behavior_alert.html', context)
     text_content = strip_tags(html_content)
 
-    subject = f'Alerta de objeto caído en la sesión {session.id}'
+    subject = f'Alerta de seguridad'
     from_email = settings.EMAIL_HOST_USER
     to = ['duranalexis879@gmail.com']
-    
+
+    _, buffer = cv2.imencode('.jpg', frame)
+    image_content = buffer.tobytes()
+
     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
     msg.attach_alternative(html_content, "text/html")
-    msg.attach('objeto_caido_detectado.jpg', image_content, 'image/jpeg')
+    msg.attach('sospechoso_detectado.jpg', image_content, 'image/jpeg')
 
-    # Enviar el correo
     msg.send(fail_silently=False)
+
+
+if _name_ == '_main_':
+    app.run_server(debug=True)
+
+# Libera la captura y cierra las ventanas al final
+cap.release()
+cv2.destroyAllWindows()
