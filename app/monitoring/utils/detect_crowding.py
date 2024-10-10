@@ -5,6 +5,7 @@ from django.conf import settings
 from app.alarm.models import Alarm
 import time
 from app.monitoring.utils.send_email import send_alert_email
+from app.threat_management.models import DetectionCounter
 
 rekognition = boto3.client('rekognition',
                            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
@@ -56,6 +57,14 @@ def detect_crowding(frame, session):
     # Activar o detener la alarma según se detecte o no aglomeración
     try:
         if crowding_detected:
+            detection = session.detection_models.first()
+            
+            detection_counter, created = DetectionCounter.objects.get_or_create(
+                detection=detection,
+                user=session.user
+            )
+            detection_counter.increment()
+            
             alarm = Alarm.objects.filter(detection=session.detection_models.first(), user=session.user, is_active=True).first() 
                     
             if alarm:

@@ -9,7 +9,7 @@ from app.alarm.models import Alarm
 from django.conf import settings
 from app.monitoring.utils.send_email import send_alert_email_video
 from config.utils import RED_COLOR, GREEN_COLOR, RESET_COLOR, YELLOW_COLOR
-
+from app.threat_management.models import DetectionCounter
 
 current_directory = os.path.dirname(__file__)
 model_path = os.path.join(current_directory, 'aggression_detection_model.joblib')
@@ -79,6 +79,14 @@ class AggressionDetector:
         self.aggression_event_active = True
         self.current_event_id = f"event_{session.id}_{self.frame_count}"
         print(RED_COLOR + f"Se inició el evento de agresión. ID: {self.current_event_id}" + RESET_COLOR)
+        
+        detection = session.detection_models.first()
+            
+        detection_counter, created = DetectionCounter.objects.get_or_create(
+            detection=detection,
+            user=session.user
+        )
+        detection_counter.increment()
         
         alarm = Alarm.objects.filter(
             detection=session.detection_models.first(),

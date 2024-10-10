@@ -11,6 +11,7 @@ from app.alarm.models import Alarm
 from app.monitoring.models import VideoEvidence
 from config.utils import RED_COLOR, GREEN_COLOR, YELLOW_COLOR, RESET_COLOR, BLUE_COLOR, GREY_COLOR
 from app.monitoring.utils.send_email import send_alert_email_video
+from app.threat_management.models import DetectionCounter
 
 THEFT_DETECTION_TIME = 1
 FPS = 24
@@ -143,6 +144,14 @@ def detect_theft(frame, session):
                     state['theft_number'] += 1
 
                     executor.submit(save_theft_event, session, list(state['frame_buffer']), current_time, state['theft_number'])
+                    
+                    detection = session.detection_models.first()
+            
+                    detection_counter, created = DetectionCounter.objects.get_or_create(
+                        detection=detection,
+                        user=session.user
+                    )
+                    detection_counter.increment()
                     
                     alarm = Alarm.objects.filter(
                         detection=session.detection_models.first(),

@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 class Detection(models.Model):
     name = models.CharField(max_length=100, verbose_name='Nombre de Amenaza', unique=True)
@@ -21,3 +22,20 @@ class Detection(models.Model):
         if not self.description:
             self.description = 'No se ha proporcionado una descripción.'
         super().save(*args, **kwargs)
+        
+class DetectionCounter(models.Model):
+    detection = models.ForeignKey('Detection', on_delete=models.CASCADE, verbose_name='Amenaza Detectada')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Usuario')
+    count = models.PositiveIntegerField(default=0, verbose_name='Cantidad de Detecciones')
+
+    class Meta:
+        unique_together = ('detection', 'user')
+        verbose_name = 'Contador de Detecciones'
+        verbose_name_plural = 'Contadores de Detecciones'
+
+    def increment(self):
+        self.count += 1
+        self.save()
+
+    def __str__(self):
+        return f"{self.detection.name} - {self.user.username} - {self.count} detecciones"
