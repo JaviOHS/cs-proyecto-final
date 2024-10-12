@@ -63,7 +63,7 @@
                 <img src="{% static 'img/components/python_logo.PNG' %}" alt="Python Logo" class="h-16 rounded-lg">
               </a>
             </div>
-            <span class="description-font text-center block lg:text-left">{% trans "Python" %}</span>
+            <span class="description-font text-center block lg:text-left">Python</span>
           </div>
           <div class="block">
             <div class="font-manrope font-bold text-4xl text-indigo-600 mb-3 text-center lg:text-left">
@@ -71,7 +71,7 @@
                 <img src="{% static 'img/components/Django_logo.PNG' %}" alt="Django Logo" class="h-16 rounded-lg">
               </a>
             </div>
-            <span class="description-font text-center block lg:text-left">{% trans "Django" %}</span>
+            <span class="description-font text-center block lg:text-left">Django</span>
           </div>
           <div class="block">
             <div class="font-manrope font-bold text-4xl text-indigo-600 mb-3 text-center lg:text-left">
@@ -79,7 +79,7 @@
                 <img src="{% static 'img/components/AWS_logo.PNG' %}" alt="AWS Logo" class="h-16 rounded-lg">
               </a>
             </div>
-            <span class="description-font text-center block lg:text-left">{% trans "Amazon Web Services" %}</span>
+            <span class="description-font text-center block lg:text-left">Amazon Web Services</span>
           </div>
           <div class="block">
             <div class="font-manrope font-bold text-4xl text-indigo-600 mb-3 text-center lg:text-left">
@@ -87,7 +87,7 @@
                 <img src="{% static 'img/components/opencv_logo.PNG' %}" alt="OpenCV Logo" class="h-16 rounded-lg">
               </a>
             </div>
-            <span class="description-font text-center block lg:text-left">{% trans "OpenCV" %}</span>
+            <span class="description-font text-center block lg:text-left">OpenCV</span>
           </div>
         </div>
       </div>
@@ -123,7 +123,7 @@
           </p>
           {% if user.is_authenticated %}
           <a href="{% url 'monitoring:monitoring_session' %}" class="button-module-cards bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-[50%]">
-            Empezar
+            {% trans 'Empezar' %}
           </a> {% endif %}
         </div>
         <!-- Módulo de Alertas -->

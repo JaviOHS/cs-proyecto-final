@@ -8,13 +8,14 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from app.core.forms.profile_view import UserProfileForm, UserProfilePasswordForm
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _ # Para traducir las variables dinámicas
 
 User = get_user_model()
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'profile.html'
-    title1 = 'Perfil'
-    title2 = 'Tu Perfil'
+    title1 = _('Perfil')
+    title2 = _('Tu Perfil')
     login_url = reverse_lazy('login')
 
     def dispatch(self, request, *args, **kwargs):
@@ -74,6 +75,6 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['user_profile'] = self.get_object()
         context['password_form'] = UserProfilePasswordForm(self.request.user)
-        context['title1'] = 'Actualizar Perfil'
-        context['title2'] = 'Actualiza tu información'
+        context['title1'] = _('Actualizar Perfil')
+        context['title2'] = _('Actualiza tu información')
         return context

@@ -9,6 +9,7 @@ from django.contrib import messages
 from app.monitoring.models import MonitoringSession
 from app.monitoring.utils.detect_crowding import detect_crowding
 from app.monitoring.utils.detect_motion import detect_motion
+from django.utils.translation import gettext_lazy as _  # Para traducir las variables dinámicas
 
 class RealTimeMonitoringView(View):
     def get(self, request, session_id):
@@ -24,8 +25,8 @@ class RealTimeMonitoringView(View):
             'session_id': session_id,
             'session': session,
             'detections': detection,
-            'title1': 'Monitoreo en Tiempo Real',
-            'title2': f'Sesión de Monitoreo: {session.id}',
+            'title1': _('Real-Time Monitoring'),
+            'title2': _('Monitoring Session: ') + f'{session.id}',
             'details': f'{session.name} - {session.description}'
         }
         

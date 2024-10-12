@@ -7,6 +7,7 @@ from django.contrib import messages
 from app.core.views.confirm_delete import ConfirmDeleteView
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _  # Para traducir las variables dinámicas
 
 class DetectionListView(LoginRequiredMixin, ListView):
     model = Detection
@@ -18,8 +19,8 @@ class DetectionListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Gestión de Amenazas"
-        context["title2"] = "Modelos de Detección de Amenazas"
+        context["title1"] = _("Gestión de Amenazas")
+        context["title2"] = _("Modelos de Detección de Amenazas")
         return context
     
 class DetectionCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -38,8 +39,8 @@ class DetectionCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Crear Registros"
-        context["title2"] = "Crear Modelo de Detección de Amenaza"
+        context["title1"] = _("Crear Registros")
+        context["title2"] = _("Crear Modelo de Detección de Amenaza")
         context["back_url"] = self.success_url
         return context
 
@@ -74,8 +75,8 @@ class DetectionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Actualizar Registros"
-        context["title2"] = "Actualizar Modelo de Detección de Amenaza"
+        context["title1"] = _("Actualizar Registros")
+        context["title2"] = _("Actualizar Modelo de Detección de Amenaza")
         context["back_url"] = self.success_url
         return context
     

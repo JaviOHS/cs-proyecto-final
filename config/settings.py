@@ -36,6 +36,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'livereload.middleware.LiveReloadScript',
+    'django.middleware.locale.LocaleMiddleware', # Para las traducciones
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -51,6 +52,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n', # Para las traducciones
             ],
         },
     },
@@ -130,3 +132,13 @@ AWS_ACCESS_KEY_ID = 'AKIAVFIWI5XGM76EEK3K'
 AWS_SECRET_ACCESS_KEY = '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'
 AWS_REGION = 'us-east-2'
 
+# Configuracion para las traducciones
+USE_I18N = True
+LANGUAGES = [
+    ('es', 'Spanish'),
+    ('en', 'English'),
+]
+LANGUAGE_CODE = 'es'
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]

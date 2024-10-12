@@ -8,6 +8,7 @@ from django.contrib import messages
 from app.core.views.confirm_delete import ConfirmDeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _ # Para traducir las variables dinámicas
 
 class AlarmListView(LoginRequiredMixin, ListView):
     model = Alarm
@@ -19,8 +20,8 @@ class AlarmListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Gestión de Alarmas"
-        context["title2"] = "Modelos de Alarmas"
+        context["title1"] = _("Gestión de Alarmas")
+        context["title2"] = _("Modelos de Alarmas")
         return context
     
 class AlarmCreateView(LoginRequiredMixin, CreateView):
@@ -35,8 +36,8 @@ class AlarmCreateView(LoginRequiredMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Crear Registros"
-        context["title2"] = "Crear Alarmas Personalizadas"
+        context["title1"] = _("Crear Registros")
+        context["title2"] = _("Crear Alarmas Personalizadas")
         context["back_url"] = self.success_url
         return context
 
@@ -76,8 +77,8 @@ class AlarmUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Actualizar Registros"
-        context["title2"] = "Actualizar Alarmas Personalizadas"
+        context["title1"] = _("Actualizar Registros")
+        context["title2"] = _("Actualizar Alarmas Personalizadas")
         context["back_url"] = self.success_url
         return context
     

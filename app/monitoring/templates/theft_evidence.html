@@ -1,8 +1,9 @@
 {% extends 'components/base.html' %}
 {% load static %}
-<title>{% block title %}Listado de Videos de Robos{% endblock title %}</title>
+{% load i18n %}
+<title>{% block title %}{% trans "Listado de Videos de Robos" %}{% endblock title %}</title>
 {% block content %}
-<div class="sm:py-14 lg:py-14"></div>
+<div class="py-12 lg:py-14"></div>
 <div class="container px-6 mx-auto" data-aos="fade-up">
   <div class="flex flex-col items-center justify-center">
     <span class="information">
@@ -11,9 +12,9 @@
   </div>
   <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
   <p class="description-font text-center">
-    Evidencias de video de robos detectados en la sesión de monitoreo.<br>
+    {% trans "Evidencias de video de robos detectados en la sesión de monitoreo." %}<br>
     <span class="text-red-500 dark:text-red-300 font-bold text-center">
-      Los videos se eliminan automáticamente después de 15 minutos.
+      {% trans "Los videos se eliminan automáticamente después de 15 minutos." %}
     </span>
   </p>
   <div class="flex flex-wrap gap-4 mt-4 items-center justify-center">
@@ -21,7 +22,7 @@
     <div class="secondary-container-bg p-4 rounded-lg shadow-md flex flex-col items-center">
         <video width="320" height="240" controls class="rounded-2xl mb-2">
             <source src="{{ evidence.video_file.url }}" type="video/mp4">
-            Tu navegador no soporta el elemento de video.
+            {% trans "Tu navegador no soporta el elemento de video." %}
         </video>
         <p class="description-module-cards text-center leading-5">
             {{ evidence.created_at }}
@@ -30,7 +31,7 @@
     {% empty %}
     <div class="secondary-container-bg p-4 rounded-lg shadow-md">
         <p class="description-module-cards text-center leading-5">
-            No hay evidencias de video disponibles.<span class="text-green-300 font-bold"> Enhorabuena.</span>
+            {% trans "No hay evidencias de video disponibles." %}<span class="text-green-300 font-bold"> {% trans "Enhorabuena." %}</span>
         </p>
     </div>
     {% endfor %}

@@ -1,8 +1,9 @@
 {% extends 'components/base.html' %}
 {% load static %}
+{% load i18n %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %}
-<div class="sm:py-14 lg:py-14"></div>
+<div class="py-12 lg:py-14"></div>
 <div id="notifications-container" class="fixed top-16 right-4 z-50 w-96 max-w-full" data-aos="fade-left"></div>
 <div class="container px-6 mx-auto" data-aos="fade-up">
   <div class="flex flex-col items-center justify-center">
@@ -28,7 +29,7 @@
         {% if detection.id == 1 %}
         <a href="{% url 'monitoring:theft_evidence' session.id %}">
           <button class="aditional-button">
-            Listado de Robos <i class="fa-solid fa-user-ninja text-lg"></i>
+            {% trans 'Listado de Robos' %} <i class="fa-solid fa-user-ninja text-lg"></i>
           </button>
         </a>
         {% endif %}

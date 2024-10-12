@@ -1,7 +1,8 @@
 {% extends 'components/base.html' %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
+{% load i18n %}
 {% block content %}
-<div class="sm:py-14 lg:py-14"></div>
+<div class="py-12 lg:py-14"></div>
 <div class="container px-6 mx-auto" data-aos="fade-up">
   <div class="flex flex-col items-center justify-center">
     <span class="information">
@@ -10,8 +11,9 @@
   </div>
   <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
   <p class="description-font text-center">
-    Gestione los tonos de alarma para detectar amenazas. 
+    {% trans 'Gestione los tonos de alarma para detectar amenazas.' %} 
   </p>
+  
   <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center">
     <!-- Tonos disponibles -->
     <div class="secondary-container-bg p-4 rounded-lg shadow-md">
@@ -27,25 +29,42 @@
           </h2>
           <p class="description-module-cards leading-5">
             {{ model.notification_message }}<br><br>
-            Creación: <br>{{ model.created_at | date:"d/m/Y" }} a las {{ model.created_at | date:"H:i" }} horas. <br><br>
-            Última actualización: <br>{{ model.updated_at | date:"d/m/Y" }} a las {{ model.updated_at | date:"H:i" }} horas.
+            {% trans "Creación:" %} <br>{{ model.created_at | date:"d/m/Y" }} {% trans "a las" %} {{ model.created_at | date:"H:i" }} {% trans "horas" %}. <br><br>
+            {% trans "Última actualización:" %} <br>{{ model.updated_at | date:"d/m/Y" }} {% trans "a las" %} {{ model.updated_at | date:"H:i" }} {% trans "horas" %}.
           </p>
           <div class="flex mt-3 space-x-2">
             <!-- Botón Reproducir -->
-            <button onclick="document.getElementById('audio-{{ model.id }}').play()" class="bg-white dark:bg-orange-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+            <button onclick="document.getElementById('audio-{{ model.id }}').play()" class="bg-white dark:bg-orange-700 rounded-full flex justify-center items-center mb-3 w-10 h-10" data-tooltip-target="tooltip-play-{{ model.id }}">
               <i class="fa-solid fa-play text-lg text-green-600 hover:text-green-800 dark:text-gray-100"></i>
             </button>
+            <div id="tooltip-play-{{ model.id }}" role="tooltip"
+              class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+              Reproducir tono
+              <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+
             <!-- Botón Editar -->
             <div class="bg-white dark:bg-orange-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
-              <a href="{% url 'alarm:alarm_update' model.id %}">
+              <a href="{% url 'alarm:alarm_update' model.id %}" data-tooltip-target="tooltip-edit-{{ model.id }}">
                 <i class="fa-solid fa-edit text-lg text-cyan-600 hover:text-cyan-800 dark:text-gray-100"></i>
               </a>
             </div>
+            <div id="tooltip-edit-{{ model.id }}" role="tooltip"
+              class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+              Editar tono
+              <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+
             <!-- Botón Eliminar -->
             <div class="bg-white dark:bg-orange-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
-              <a href="{% url 'alarm:alarm_delete' model.id %}">
+              <a href="{% url 'alarm:alarm_delete' model.id %}" data-tooltip-target="tooltip-delete-{{ model.id }}">
                 <i class="fa-solid fa-trash text-lg text-red-600 hover:text-red-800 dark:text-gray-100"></i>
               </a>
+            </div>
+            <div id="tooltip-delete-{{ model.id }}" role="tooltip"
+              class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+              Eliminar tono
+              <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
           </div>
           <!-- Elemento de audio oculto -->
@@ -62,22 +81,45 @@
       {% endif %}
     </div>
   </div>
+
+  <!-- Botones con Tooltips -->
   <div class="flex justify-center mt-6 mb-4 space-x-2">
+    <!-- Botón Crear Alarma con Tooltip -->
     <a href="{% url 'alarm:alarm_create' %}">
-      <button class="add-threat-button">
+      <button class="add-threat-button" data-tooltip-target="tooltip-create">
         <i class="fa-solid fa-plus"></i>
       </button>
     </a>
+    <div id="tooltip-create" role="tooltip"
+      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      Crear nueva alarma
+      <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
+
+    <!-- Botón Monitoreo con Tooltip -->
     <a href="{% url 'monitoring:monitoring_session' %}">
-      <button class="monitoring-video-button">
+      <button class="monitoring-video-button" data-tooltip-target="tooltip-monitoring">
         <i class="fa-solid fa-video"></i>
       </button>
     </a>
+    <div id="tooltip-monitoring" role="tooltip"
+      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      Ver sesiones de monitoreo
+      <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
+
+    <!-- Botón Volver al Inicio con Tooltip -->
     <a href="{% url 'home' %}">
-      <button class="home-and-back-button">
+      <button class="home-and-back-button" data-tooltip-target="tooltip-home">
         <i class="fa-solid fa-home"></i>
       </button>
     </a>
+    <div id="tooltip-home" role="tooltip"
+      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      Volver al Inicio
+      <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
   </div>
 </div>
-{% endblock %}
+
+{% endblock content %}

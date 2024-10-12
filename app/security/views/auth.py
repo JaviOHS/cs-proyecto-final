@@ -6,6 +6,7 @@ from django.views.generic import FormView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from app.security.forms.auth import CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
+from django.utils.translation import gettext_lazy as _  # Para traducir las variables dinámicas
 
 class SignoutView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -17,7 +18,7 @@ class SignupView(FormView):
     form_class = CustomUserCreationForm
     template_name = "signup.html"
     success_url = reverse_lazy("security:signin")
-    extra_context = {"title1": "Registro", "title2": "Registro de Usuarios"}
+    extra_context = {"title1": _("Registro"), "title2": _("Registro de Usuarios")}
     
     def form_valid(self, form):
         user = form.save()
@@ -37,7 +38,7 @@ class SignupView(FormView):
 class SigninView(FormView):
     form_class = AuthenticationForm
     template_name = "signin.html"
-    extra_context = {"title1": "Login", "title2": "Inicio de Sesión"}
+    extra_context = {"title1": "Login", "title2": _("Inicio de Sesión")}
 
     def form_valid(self, form):
         username = form.cleaned_data.get('username')
