@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -80,6 +79,45 @@ DATABASES = {
 #     }
 # }
 
+AWS_REGION = 'us-east-2'
+
+# Configuración de AWS S3
+AWS_ACCESS_KEY_ID = 'AKIAVFIWI5XGD62N765E'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'proyecto-final-imagenes'
+AWS_S3_REGION_NAME = 'us-east-2'
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_QUERYSTRING_AUTH = False
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "access_key": AWS_ACCESS_KEY_ID,
+            "secret_key": AWS_SECRET_ACCESS_KEY,
+            "bucket_name": AWS_STORAGE_BUCKET_NAME,
+            "region_name": AWS_S3_REGION_NAME,
+            "default_acl": None,
+            "querystring_auth": False,
+            "custom_domain": AWS_S3_CUSTOM_DOMAIN,
+            "signature_version": "s3v4",
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+# Configuración de archivos media
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Configuración de archivos estáticos locales
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -114,7 +152,6 @@ SESSION_COOKIE_AGE = 1800  # 30 minutos en segundos
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-
 # SECCIÓN DE CORREOS
 # Configuración de correo
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -123,10 +160,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'pasysalert@gmail.com'
 EMAIL_HOST_PASSWORD = 'lvin mgql hwbm gdes'
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-
 
 # Configuracion para las traducciones
 USE_I18N = True
@@ -138,15 +171,3 @@ LANGUAGE_CODE = 'es'
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
 ]
-
-
-# Configuración de AWS Recognition
-AWS_ACCESS_KEY_ID = 'AKIAVFIWI5XGM76EEK3K'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_REGION = 'us-east-1'
-
-# Configuración de AWS S3
-AWS_STORAGE_BUCKET_NAME = 'proyecto-final-software'
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'

@@ -25,6 +25,7 @@ class SignupView(FormView):
         username = form.cleaned_data.get('username')
         messages.success(self.request, f"Bienvenido {username}, tu cuenta ha sido creada exitosamente. Inicia sesión para continuar.")
         return super().form_valid(form)
+
     
     def form_invalid(self, form):
         messages.error(self.request, "Revise los campos.")

@@ -27,33 +27,32 @@ class Alarm(models.Model):
             if old_alarm.sound_file and old_alarm.sound_file != self.sound_file:
                 if Alarm.alarm_sound_playing:
                     self.stop_alarm()
-                if old_alarm.sound_file != 'alarms/default_alarm.mp3':
-                    old_sound_file_path = os.path.join(settings.MEDIA_ROOT, old_alarm.sound_file.name)
-                    if os.path.exists(old_sound_file_path):
-                        try:
-                            os.remove(old_sound_file_path)
-                        except PermissionError as e:
-                            raise
-                        
+                if old_alarm.sound_file.name != 'alarms/alarma_defecto.mp3':
+                    old_alarm.sound_file.delete(save=False)
+                    
         if not self.notification_message:
             self.notification_message = f"Se ha detectado una amenaza de {self.detection.name}."
             
         if not self.sound_file:
-            self.sound_file = 'alarms/default_alarm.mp3'
+            self.sound_file = 'alarms/alarma_defecto.mp3'
 
         self.clean()
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Alarma para {self.detection.name}"
+    
+    def get_sound_file(self):
+        if self.sound_file:
+            return self.sound_file.url
+        return 'alarms/alarma_defecto.mp3'
 
     def activate(self):
         self.last_activated = timezone.now()
         self.save()
-
         if not Alarm.alarm_sound_playing:
             if self.sound_file:
-                sound_file_path = os.path.join(settings.MEDIA_ROOT, self.sound_file.name)
+                sound_file_path = self.get_sound_file()
                 pygame.mixer.init()
                 pygame.mixer.music.load(sound_file_path)
                 pygame.mixer.music.play(-1)
@@ -67,10 +66,7 @@ class Alarm(models.Model):
             Alarm.alarm_sound_playing = False
             
     def play_default_alarm(self):
-        default_sound_file_path = os.path.join(settings.MEDIA_ROOT, 'alarms/default_alarm.mp3')
-
-        if not os.path.exists(default_sound_file_path):
-            raise FileNotFoundError("El archivo de sonido de alarma por defecto no se encuentra.")
+        default_sound_file_path = 'alarms/alarma_defecto.mp3'
 
         if not Alarm.alarm_sound_playing:
             pygame.mixer.init()

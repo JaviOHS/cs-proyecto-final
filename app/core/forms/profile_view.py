@@ -52,20 +52,7 @@ class UserProfileForm(forms.ModelForm):
     
     def clean_email(self):
         email = self.cleaned_data['email']
-        return email.lower()
-    
-    # def save(self, commit=True):
-    #     user = super().save(commit=False)
-    #     if 'image' in self.changed_data:
-    #         if commit:
-    #             if user.image:
-    #                 user.save()
-    #                 image_path = user.image.path
-    #                 resize_image(image_path, (300, 300))  # Ajusta el tamaño según tus necesidades
-    #     if commit:
-    #         user.save()
-    #     return user
-    
+        return email.lower()    
 
 class UserProfilePasswordForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):

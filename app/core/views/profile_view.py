@@ -41,9 +41,11 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        
+        # Aquí es donde pasamos request.FILES
         form = self.get_form()
         password_form = UserProfilePasswordForm(request.user, request.POST)
-        
+
         if 'password_change' in request.POST:
             if password_form.is_valid():
                 password_form.save()
@@ -52,19 +54,25 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
                 return redirect('security:signin')
             else:
                 return self.render_to_response(self.get_context_data(form=form, password_form=password_form))
+
         elif 'profile_update' in request.POST:
+            # Pasa request.FILES al formulario
+            form = self.form_class(request.POST, request.FILES, instance=self.object)  # Actualizado aquí
             if form.is_valid():
                 return self.form_valid(form)
             else:
                 return self.form_invalid(form)
-        
+
         return self.render_to_response(self.get_context_data(form=form, password_form=password_form))
-        
+
     def form_valid(self, form):
+        if 'image' in self.request.FILES:
+            form.instance.image = self.request.FILES['image']
+            print(f"Archivo subido: {form.instance.image}")
         response = super().form_valid(form)
-        messages.success(self.request, 'Perfil actualizado con éxito.')
         return response
-    
+
+
     def form_invalid(self, form):
         response = super().form_invalid(form)
         for field in form.errors:

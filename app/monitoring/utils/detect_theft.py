@@ -8,7 +8,6 @@ import os
 from django.conf import settings
 from concurrent.futures import ThreadPoolExecutor
 from app.alarm.models import Alarm
-from app.monitoring.models import VideoEvidence
 from config.utils import RED_COLOR, GREEN_COLOR, YELLOW_COLOR, RESET_COLOR, BLUE_COLOR, GREY_COLOR
 from app.monitoring.utils.send_email import send_alert_email_video
 from app.threat_management.models import DetectionCounter
@@ -19,7 +18,6 @@ FRAMES_BEFORE_AFTER = int(FPS * 0.2)
 FRAMES_TO_SAVE = int(FPS * 4)
 BUFFER_SIZE = int(FPS * 4)
 THEFT_THRESHOLD = 55 # Diagonal (35 - 45); Frontal (60 o mas)
-STOLEN_DIR = 'robberies_frames' 
 
 mp_holistic = mp.solutions.holistic
 holistic = mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5)
@@ -208,13 +206,8 @@ def save_theft_event(session, frame_buffer, theft_time, theft_number):
 
         if not os.path.exists(video_path):
             raise FileNotFoundError(f"El archivo de video no existe en la ruta: {video_path}")
-        
-        video_evidence = VideoEvidence(session=session)
-        
-        with open(video_path, 'rb') as file:
-            video_evidence.video_file.save(video_filename, File(file), save=True)
 
-        print(GREEN_COLOR + f"Evento de robo guardado exitosamente" + RESET_COLOR)
+        print(GREEN_COLOR + f"Evento de robo enviado al correo." + RESET_COLOR)
         
         is_theft = True
         recipient_email = session.user.email
