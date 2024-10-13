@@ -1,5 +1,6 @@
 {% extends 'components/base.html' %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
+{% load i18n %}
 {% block content %}
 <div class="py-12 lg:py-14"></div>
 <div class="container px-6 mx-auto" data-aos="fade-up">
@@ -10,12 +11,13 @@
   </div>
   <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
   <p class="description-font text-center">
-    {% if user.is_superuser%}
-    Gestione las amenazas disponibles en el sistema.
+    {% if user.is_superuser %}
+    {% trans "Gestione las amenazas disponibles en el sistema." %}
     {% else %}
-    Consulte las amenazas disponibles en el sistema.
+    {% trans "Consulte las amenazas disponibles en el sistema." %}
     {% endif %}
   </p>
+
   <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center">
     <!-- Amenazas disponibles -->
     <div class="secondary-container-bg p-4 rounded-lg shadow-md">
@@ -26,29 +28,39 @@
           <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
             <i class="{{ model.icon }} text-lg text-red-500 dark:text-white text-center"></i>
           </div>
-          <h2 class="title-module-cards">
-            {{ model.name }}
-          </h2>
+          <h2 class="title-module-cards">{{ model.name }}</h2>
           <p class="description-module-cards leading-5">
-            {% if user.is_superuser%}
+            {% if user.is_superuser %}
             ID: {{ model.id }}<br><br>
             {% endif %}
             {{ model.description }}<br><br>
-            Creación: <br>{{ model.created_at | date:"d/m/Y" }} a las {{ model.created_at | date:"H:i" }} horas. <br>
+            {% trans "Creación:" %} <br>{{ model.created_at | date:"d/m/Y" }} {% trans "a las" %} {{ model.created_at | date:"H:i" }} {% trans "horas." %} <br>
           </p>
+
           {% if user.is_superuser %}
           <div class="flex mt-3 space-x-2">
-            <!-- Botón Editar -->
+            <!-- Botón Editar con Tooltip -->
             <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
-              <a href="{% url 'detection:detection_update' model.id %}">
+              <a href="{% url 'detection:detection_update' model.id %}" data-tooltip-target="tooltip-edit-{{ model.id }}">
                 <i class="fa-solid fa-edit text-lg text-red-500 dark:text-white"></i>
               </a>
             </div>
-            <!-- Botón Eliminar -->
+            <div id="tooltip-edit-{{ model.id }}" role="tooltip"
+              class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+              Editar amenaza
+              <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+
+            <!-- Botón Eliminar con Tooltip -->
             <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
-              <a href="{% url 'detection:detection_delete' model.id %}">
+              <a href="{% url 'detection:detection_delete' model.id %}" data-tooltip-target="tooltip-delete-{{ model.id }}">
                 <i class="fa-solid fa-trash text-lg text-red-500 dark:text-white"></i>
               </a>
+            </div>
+            <div id="tooltip-delete-{{ model.id }}" role="tooltip"
+              class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+              Eliminar amenaza
+              <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
           </div>
           {% endif %}
@@ -57,29 +69,51 @@
       </div>
       {% else %}
       <p class="description-module-cards leading-5">
-        No hay amenazas disponibles. <span class="text-green-300 font-bold">Wussup admins?</span>
+        {% trans "No hay amenazas disponibles." %} <span class="text-green-300 font-bold">{% trans "Qué onda, administradores" %}</span>
       </p>
       {% endif %}
     </div>
   </div>
+
+  <!-- Botones con Tooltips -->
   <div class="flex justify-center mt-6 mb-4 space-x-2">
     {% if user.is_superuser %}
+    <!-- Botón Añadir Amenaza con Tooltip -->
     <a href="{% url 'detection:detection_create' %}">
-      <button class="add-threat-button">
+      <button data-tooltip-target="tooltip-add-threat" class="add-threat-button">
         <i class="fa-solid fa-plus"></i>
       </button>
     </a>
+    <div id="tooltip-add-threat" role="tooltip"
+      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      Añadir amenaza
+      <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
     {% endif %}
+
+    <!-- Botón Video de Monitoreo con Tooltip -->
     <a href="{% url 'monitoring:monitoring_session' %}">
-      <button class="monitoring-video-button">
+      <button data-tooltip-target="tooltip-video" class="monitoring-video-button">
         <i class="fa-solid fa-video"></i>
       </button>
     </a>
+    <div id="tooltip-video" role="tooltip"
+      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      Monitoreo en vivo
+      <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
+
+    <!-- Botón Volver al Inicio con Tooltip -->
     <a href="{% url 'home' %}">
-      <button class="home-and-back-button">
+      <button data-tooltip-target="tooltip-home" class="home-and-back-button">
         <i class="fa-solid fa-home"></i>
       </button>
     </a>
+    <div id="tooltip-home" role="tooltip"
+      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      Volver al Inicio
+      <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -38,6 +38,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'livereload.middleware.LiveReloadScript',
+    'django.middleware.locale.LocaleMiddleware', # Para las traducciones
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -53,6 +54,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n', # Para las traducciones
             ],
         },
     },
@@ -124,6 +126,19 @@ EMAIL_HOST_PASSWORD = 'lvin mgql hwbm gdes'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+
+# Configuracion para las traducciones
+USE_I18N = True
+LANGUAGES = [
+    ('es', 'Spanish'),
+    ('en', 'English'),
+]
+LANGUAGE_CODE = 'es'
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
 
 # Configuración de AWS Recognition
 AWS_ACCESS_KEY_ID = 'AKIAVFIWI5XGM76EEK3K'

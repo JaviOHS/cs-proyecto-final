@@ -1,12 +1,13 @@
 from django.views.generic import TemplateView
 from app.monitoring.models import MonitoringSession
+from django.utils.translation import gettext_lazy as _ # Para traducir las variables dinámicas
 
 class HomeTemplateView(TemplateView):
     template_name = 'home.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Inicio"
+        context["title1"] = _("Inicio")
         if self.request.user.is_authenticated:
             monitoring_sessions = self.get_monitoring_sessions()
             if monitoring_sessions.exists():

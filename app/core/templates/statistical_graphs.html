@@ -1,7 +1,8 @@
 {% extends 'components/base.html' %}
 {% load static %}
 {% block content %}
-
+{% block title %}{{ title1 }}{% endblock title %}
+{% load i18n %}
 <div class="py-12 lg:py-14"></div>
 <div class="container px-6 mx-auto" data-aos="fade-up">
   <div class="flex flex-col items-center justify-center">
@@ -21,12 +22,12 @@
       </div>
 
       <a href="">
-        <button class="aditional-button">Exportar Estadísticas</button>
+        <button class="aditional-button">{% trans "Exportar Estadísticas" %}</button>
       </a>
       {% else %}
       <!-- Mensaje si no hay datos -->
       <p class="description-module-cards text-center leading-5">
-        No hay datos por mostrar. <span class="text-green-300 font-bold">¿Por qué no generar nuevos datos?</span>
+        {% trans "No hay datos por mostrar." %} <span class="text-green-300 font-bold">{% trans "¿Por qué no generar nuevos datos?" %}</span>
       </p>
       {% endif %}
     </div>

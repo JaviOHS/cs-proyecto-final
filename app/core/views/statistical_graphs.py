@@ -8,6 +8,7 @@ from app.core.views.confirm_delete import ConfirmDeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _ # Para traducir las variables dinámicas
 
 class StatisticalGraphsTemplate(TemplateView):
     template_name = 'statistical_graphs.html'
@@ -17,9 +18,10 @@ class StatisticalGraphsTemplate(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Estadísticas"
-        context["title2"] = "Gráficos Estadísticos"
-        context["details"] = "Visualización de datos estadísticos de detección de amenazas."
+        context["title1"] = _("Estadísticas")
+        context["title1"] = _("Estadísticas")
+        context["title2"] = _("Gráficos Estadísticos")
+        context["details"] = _("Visualización de datos estadísticos de detección de amenazas.")
 
         # ---> Gráfico de Barras de Detecciones
         detection_data = (

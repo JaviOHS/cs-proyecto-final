@@ -10,9 +10,15 @@ from app.core.views.scaner_face import FacialRecognitionView
 from app.core.views.chatbot import ChatbotView
 from app.core.views.statistical_graphs import StatisticalGraphsTemplate 
 
+from django.conf.urls.i18n import i18n_patterns
+from django.utils.translation import gettext_lazy as _
+from django.views.i18n import set_language
+
 app_name = 'core'
 
 urlpatterns = [
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('set_language/', set_language, name='set_language'),
     path('',HomeTemplateView.as_view(), name='home'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('profile/update/', UserProfileUpdateView.as_view(), name='profile_update'),
@@ -23,4 +29,5 @@ urlpatterns = [
     path('facial_recognition/', FacialRecognitionView.as_view(), name='facial_recognition'),
     path('api/chatbot/', ChatbotView.as_view(), name='chatbot_response'),
     path('statistics/', StatisticalGraphsTemplate.as_view(), name='statistics'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -8,6 +8,7 @@ from app.core.views.confirm_delete import ConfirmDeleteView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _  # Para traducir las variables dinámicas
 
 class MonitoringSessionView(ListView, LoginRequiredMixin):
     model = MonitoringSession
@@ -19,8 +20,8 @@ class MonitoringSessionView(ListView, LoginRequiredMixin):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Monitoreo"
-        context["title2"] = "Sesiones de Monitoreo"
+        context["title1"] = _("Monitoreo")  # Traducido dinámicamente
+        context["title2"] = _("Sesiones de Monitoreo")  # Traducido dinámicamente
         return context
 
 class CreateMonitoringSessionView(CreateView):
@@ -36,8 +37,8 @@ class CreateMonitoringSessionView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Crear Registros"
-        context["title2"] = "Crear Sesión de Monitoreo"
+        context["title1"] = _("Crear Registros")  # Traducido dinámicamente
+        context["title2"] = _("Crear Sesión de Monitoreo")  # Traducido dinámicamente
         context["back_url"] = self.success_url
         return context
 
@@ -85,8 +86,8 @@ class UpdateMonitoringSessionView(LoginRequiredMixin, UserPassesTestMixin, Updat
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title1"] = "Actualizar Registros"
-        context["title2"] = "Actualizar Sesión de Monitoreo"
+        context["title1"] = _("Actualizar Registros")  # Traducido dinámicamente
+        context["title2"] = _("Actualizar Sesión de Monitoreo")  # Traducido dinámicamente
         context["back_url"] = self.success_url
         return context
 

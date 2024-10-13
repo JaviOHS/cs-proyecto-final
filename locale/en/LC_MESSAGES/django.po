@@ -1,0 +1,467 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-07-06 00:59-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+# TRADUCCIOÓN DE base.html -------------------------------------------------------------------------------
+
+msgid "Inicio"
+msgstr "Home"
+
+msgid "Sobre Nosotros"
+msgstr "About us"
+
+msgid "Perfil"
+msgstr "Profile"
+
+msgid "Temas"
+msgstr "Themes"
+
+msgid "Cerrar Sesión"
+msgstr "Sign out"
+
+msgid "Registrarse"
+msgstr "Register"
+
+msgid "Iniciar Sesión"
+msgstr "Login"
+
+msgid "Sección de Temas"
+msgstr "Themes Section"
+
+msgid "Seleccione el tema que desea aplicar en la aplicación para trabajar cómodamente."
+msgstr "Select the theme you want to apply in the application to work comfortably."
+
+msgid "Claro"
+msgstr "Wight"
+
+msgid "Oscuro"
+msgstr "Dark"
+
+msgid "Naranja"
+msgstr "Orange"
+
+msgid "Azul"
+msgstr "Blue"
+
+msgid "Todos los derechos reservados."
+msgstr "All rights reserved"
+
+
+
+
+# TRADUCCIOÓN DE home.html -------------------------------------------------------------------------------
+
+msgid "Una solución para tu negocio."
+msgstr "A solution for your business."
+
+msgid "Bienvenido,"
+msgstr "Welcome,"
+
+msgid "Bienvenido, usuario anónimo."
+msgstr "Welcome, anonymous user."
+
+msgid "¡Explora nuestro increíble sistema!"
+msgstr "Explore our amazing system!"
+
+msgid "Te invitamos a descubrir un mundo de múltiples posibilidades y beneficios, con el objetivo de optimizar tu emprendimiento al siguiente nivel."
+msgstr "We invite you to discover a world of multiple possibilities and benefits, with the aim of optimizing your business to the next level."
+
+msgid "Explorar"
+msgstr "Explore"
+
+msgid "Tecnologías Empleadas"
+msgstr "Technologies Used"
+
+msgid "Hecha un vistazo a las tecnologías usadas en este proyecto"
+msgstr "Take a look at the technologies used in this project"
+
+msgid "Módulos"
+msgstr "Modules"
+
+msgid "Módulos Disponibles"
+msgstr "Available Modules"
+
+msgid "Como administrador, puedes gestionar los módulos de tu sistema."
+msgstr "As an administrator, you can manage the modules of your system."
+
+msgid "Módulo de Monitoreo"
+msgstr "Monitoring Module"
+
+msgid "Configuración de comportamientos predefinidos para detección."
+msgstr "Configuration of predefined behaviors for detection."
+
+msgid "Empezar"
+msgstr "Start"
+
+msgid "Módulo de Alertas"
+msgstr "Alerts Module"
+
+msgid "Configuración de alertas personalizadas para diferentes situaciones."
+msgstr "Custom alert configuration for different situations."
+
+msgid "Módulo de Amenazas"
+msgstr "Threats Module"
+
+msgid "Implementación de funcionalidades para agregar nuevas amenazas."
+msgstr "Implementation of functionalities to add new threats."
+
+msgid "Módulo de Estadísticas"
+msgstr "Statistics Module"
+
+
+
+
+# TRADUCCIOÓN DE profile.html -------------------------------------------------------------------------------
+
+msgid "Tu Perfil"
+msgstr "Your Profile"
+
+msgid "Visualice su información personal."
+msgstr "View your personal information."
+
+msgid "Editar Perfil"
+msgstr "Edit Profile"
+
+msgid "Administrador"
+msgstr "Administrator"
+
+msgid "Usuario"
+msgstr "User"
+
+msgid "Información"
+msgstr "Información"
+
+msgid "Cédula"
+msgstr "identity card"
+
+msgid "Celular"
+msgstr "Phone"
+
+msgid "Correo Electrónico"
+msgstr "Email"
+
+
+
+
+# TRADUCCIOÓN DE profile_update.html -------------------------------------------------------------------------------
+
+msgid "Actualizar Perfil"
+msgstr "Update Profile"
+
+msgid "Actualiza tu información"
+msgstr "Update your information"
+
+msgid "Actualice su información y contraseña."
+msgstr "Update your information and password."
+
+msgid "Imagen de perfil"
+msgstr "Profile picture"
+
+msgid "Haz clic en la imagen para cambiarla"
+msgstr "Click on the image to change it"
+
+msgid "Cambiar Contraseña"
+msgstr "Change Password"
+
+
+
+
+# TRADUCCIOÓN DE alarm_list.html -------------------------------------------------------------------------------
+
+msgid "Gestión de Alarmas"
+msgstr "Alarm Management"
+
+msgid "Modelos de Alarmas"
+msgstr "Alarm Models"
+
+msgid "Gestione los tonos de alarma para detectar amenazas."
+msgstr "Manage alarm tones to detect threats."
+
+msgid "Crear Registros"
+msgstr "Create Records"
+
+msgid "Crear Alarmas Personalizadas"
+msgstr "Create Custom Alarms"
+
+msgid "Actualizar Registros"
+msgstr "Update Records"
+
+msgid "Actualizar Alarmas Personalizadas"
+msgstr "Update Custom Alarms"
+
+msgid "Creación:"
+msgstr "Created:"
+
+msgid "a las"
+msgstr "at"
+
+msgid "horas"
+msgstr "hours"
+
+msgid "Última actualización:"
+msgstr "Last updated:"
+
+
+
+
+# TRADUCCIOÓN DE alarm_form.html -------------------------------------------------------------------------------
+
+msgid "Complete el formulario."
+msgstr "Complete the form."
+
+msgid "Click para subir tono de alarma"
+msgstr "Click to upload alarm tone"
+
+msgid "Formato Mp3"
+msgstr "Mp3 Format"
+
+msgid "Tamaño Máximo: 10Mb"
+msgstr "Maximum Size: 10Mb"
+
+msgid "Duración Máxima: 20s"
+msgstr "Maximum Duration: 20s"
+
+msgid "Guardar Cambios"
+msgstr "Save Changes"
+
+
+
+
+# TRADUCCIOÓN DE password_reset_confirm.html -------------------------------------------------------------------------------
+
+msgid "¡Por favor ingrese su nueva contraseña!"
+msgstr "Please enter your new password!"
+
+msgid "Asegúrese de elegir una contraseña segura que no haya utilizado en otros sitios."
+msgstr "Make sure to choose a secure password that you have not used on other sites."
+
+
+
+
+# TRADUCCIOÓN DE password_reset.html -------------------------------------------------------------------------------
+
+msgid "¡Por favor ingrese su correo para recuperar su contraseña!"
+msgstr "Please enter your email to recover your password!"
+
+msgid "Validar Correo"
+msgstr "Validate Email"
+
+msgid "¿Ya tienes una cuenta?"
+msgstr "Already have an account?"
+
+msgid "Asegurese de ingresar un correo válido con el cual creó su cuenta por primera vez."
+msgstr "Make sure to enter a valid email that you used to create your account the first time."
+
+msgid "Inicia Sesión"
+msgstr "Login"
+
+msgid "Recuperar Contraseña"
+msgstr "Recover Password"
+
+msgid "Restablecer Contraseña"
+msgstr "Reset Password"
+
+
+
+
+# TRADUCCIOÓN DE confirm_deletet.html -------------------------------------------------------------------------------
+
+msgid "¿Está seguro de esta decisión?"
+msgstr "Are you sure about this decision?"
+
+msgid "Una vez eliminado, no podrás recuperar los datos."
+msgstr "Once deleted, you won't be able to recover the data."
+
+msgid "Sí, eliminar"
+msgstr "Yes, delete"
+
+msgid "Cancelar"
+msgstr "Cancel"
+
+msgid "Eliminar Registros"
+msgstr "Delete Records"
+
+
+
+
+# TRADUCCIOÓN DE form_session.html -------------------------------------------------------------------------------
+
+msgid "Modelos de Detección"
+msgstr "Detection Models"
+
+msgid "Sesiones de Monitoreo"
+msgstr "Monitoring Sessions"
+
+msgid "Crear Sesión de Monitoreo"
+msgstr "Create Monitoring Session"
+
+msgid "Actualizar Sesión de Monitoreo"
+msgstr "Update Monitoring Session"
+
+msgid "Monitoreo"
+msgstr "Monitoring"
+
+
+
+
+# TRADUCCIOÓN DE monitoring_session.html -------------------------------------------------------------------------------
+
+msgid "Gestionar Sesiones de Monitoreo."
+msgstr "Manage Monitoring Sessions."
+
+
+
+
+# TRADUCCIOÓN DE real_time_monitoring.html -------------------------------------------------------------------------------
+
+msgid "Monitoreo en Tiempo Real"
+msgstr "Real-Time Monitoring"
+
+msgid "Sesión de Monitoreo: "
+msgstr "Monitoring Session: "
+
+msgid "%(session_name)s - %(session_description)s"
+msgstr "%(session_name)s - %(session_description)s"
+
+msgid "Listado de Robos"
+msgstr "Theft List"
+
+
+
+# TRADUCCIOÓN DE theft_evidence.html -------------------------------------------------------------------------------
+
+msgid "Listado de Videos de Robos"
+msgstr "Robbery Video List"
+
+msgid "Evidencias de video de robos detectados en la sesión de monitoreo."
+msgstr "Video evidence of robberies detected during the monitoring session."
+
+msgid "Los videos se eliminan automáticamente después de 15 minutos."
+msgstr "The videos are automatically deleted after 15 minutes."
+
+msgid "Tu navegador no soporta el elemento de video."
+msgstr "Your browser does not support the video element."
+
+msgid "No hay evidencias de video disponibles."
+msgstr "No video evidence available."
+
+msgid "Enhorabuena."
+msgstr "Congratulations."
+
+msgid "Evidencia de Robo"
+msgstr "Evidence of Theft"
+
+
+
+
+# TRADUCCIOÓN DE signin.html -------------------------------------------------------------------------------
+
+msgid "¡Bienvenido de vuelta! Completa el formulario para ingresar a nuestro sistema"
+msgstr "Welcome back! Complete the form to log in to our system"
+
+msgid "¿No tienes una cuenta?"
+msgstr "Don't have an account?"
+
+msgid "Regístrate"
+msgstr "Sign Up"
+
+msgid "¿Has olvidado tu contraseña?"
+msgstr "Forgot your password?"
+
+msgid "Recupérala aquí"
+msgstr "Recover it here"
+
+msgid "Métodos alternativos"
+msgstr "Alternative Methods"
+
+msgid "Reconocimiento Facial"
+msgstr "Facial Recognition"
+
+msgid "Capturar"
+msgstr "Capture"
+
+msgid "Inicio de Sesión"
+msgstr "Login"
+
+
+
+
+# TRADUCCIOÓN DE signup.html -------------------------------------------------------------------------------
+
+msgid "¡Por favor completa el siguiente formulario para registrarte en nuestro sistema!"
+msgstr "Please complete the following form to register in our system!"
+
+msgid "Registro de Usuarios"
+msgstr "User Registration"
+
+msgid "Registro"
+msgstr "Register"
+
+
+
+
+# TRADUCCIOÓN DE detection_list.html -------------------------------------------------------------------------------
+
+msgid "Gestione las amenazas disponibles en el sistema."
+msgstr "Manage the available threats in the system."
+
+msgid "Consulte las amenazas disponibles en el sistema."
+msgstr "View the available threats in the system."
+
+msgid "No hay amenazas disponibles."
+msgstr "No threats available."
+
+msgid "Qué onda, administradores"
+msgstr "Wussup admins?"
+
+msgid "Gestión de Amenazas"
+msgstr "Threat Management"
+
+msgid "Modelos de Detección de Amenazas"
+msgstr "Threat Detection Models"
+
+msgid "Crear Modelo de Detección de Amenaza"
+msgstr "Create Threat Detection Model"
+
+msgid "Actualizar Modelo de Detección de Amenaza"
+msgstr "Update Threat Detection Model"
+
+
+
+
+# TRADUCCIOÓN DE statistical_graphs.html -------------------------------------------------------------------------------
+
+msgid "Exportar Estadísticas"
+msgstr "Export Statistics"
+
+msgid "No hay datos por mostrar."
+msgstr "There are no data to display."
+
+msgid "¿Por qué no generar nuevos datos?"
+msgstr "Why not generate new data?"
+
+msgid "Estadísticas"
+msgstr "Statistics"
+
+msgid "Gráficos Estadísticos"
+msgstr "Statistical Charts"
+
+msgid "Visualización de datos estadísticos de detección de amenazas.s"
+msgstr "Viewing statistical threat detection data."

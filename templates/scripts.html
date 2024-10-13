@@ -294,7 +294,7 @@
   }
 </style>
 
-<!-- <script>
+<script>
   document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.secondary-container-bg');
     const lightEffect = document.getElementById('light-effect');
@@ -312,7 +312,7 @@
       lightEffect.style.opacity = '0';
     });
   });
-</script> -->
+</script>
 
 <!-- Script para la barra de progreso -->
 <script>
@@ -442,21 +442,27 @@
 
   // Funciones para manejar el indicador de carga
   function showLoadingIndicator() {
-    // Implementa esto según tu UI
-    console.log("Cargando...");
+    const progressText = $('#init-progress-text');
+    progressText.textContent = "Cargando el modelo, por favor espera...";
+    progressText.classList.remove('hidden');
   }
 
   function updateLoadingIndicator(text) {
-    console.log(text);
+    const progressText = $('#init-progress-text');
+    progressText.textContent = text;
   }
 
   function hideLoadingIndicator() {
-    console.log("Carga completada");
+    const progressText = $('#init-progress-text');
+    progressText.textContent = "Carga completada";
+    setTimeout(() => {
+      progressText.classList.add('hidden');
+    }, 3000); // Oculta el mensaje después de 3 segundos
   }
 
   // Habilitar el chat cuando el modelo esté listo
   function enableChat() {
-    addMessage("¡Hola! Soy Alexis, tu ChatBot personal. ¿En qué puedo ayudarte hoy?", 'bot');
+    addMessage("¡Hola 👋! Soy Alexis, tu ChatBot personal. ¿En qué puedo ayudarte hoy?", 'bot');
     $chatInput.removeAttribute('disabled');
     $sendMessage.removeAttribute('disabled');
   }
@@ -603,4 +609,55 @@
   $chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage();
   });
+</script>
+
+<!-- Script para el sidebar de los temas -->
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+      const sidebar = document.getElementById('drawer-navigation');
+      const overlay = document.getElementById('sidebar-overlay');
+      const openButton = document.querySelector('[data-drawer-target="drawer-navigation"]');
+      const closeButton = document.querySelector('[data-drawer-hide="drawer-navigation"]');
+
+      function openSidebar() {
+          sidebar.classList.remove('-translate-x-full');
+          overlay.classList.remove('hidden');
+          document.body.classList.add('overflow-hidden');
+      }
+
+      function closeSidebar() {
+          sidebar.classList.add('-translate-x-full');
+          overlay.classList.add('hidden');
+          document.body.classList.remove('overflow-hidden');
+      }
+
+      openButton.addEventListener('click', openSidebar);
+      closeButton.addEventListener('click', closeSidebar);
+      overlay.addEventListener('click', closeSidebar);
+  });
+</script>
+
+<!-- Script para cambiar el idiomas -->
+{% load i18n %}
+<script>
+  function changeLanguage(lang) {
+      document.getElementById('selected-language').value = lang;
+      document.getElementById('language-form').submit();
+  }
+  const flagSVG = {
+      'en': '<g fill-rule="evenodd"><g stroke-width="1pt"><path fill="#bd3d44" d="M0 0h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)" /><path fill="#fff" d="M0 10h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)" /></g><path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)" /><path fill="#fff" d="M8.2 3l1 2.8H12L9.7 7.5l.9 2.7-2.4-1.7L6 10.2l.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9z" transform="scale(3.9385)" /></g>',
+      'es': '<path fill="#ffce00" d="M0 128h512v256H0z" /><path fill="#dd0000" d="M0 0h512v128H0zm0 384h512v128H0z" />'
+  };
+  function updateFlag(lang) {
+      const flagSvg = document.getElementById('language-flag');
+      flagSvg.innerHTML = flagSVG[lang];
+      document.getElementById('language-text').textContent = lang === 'en' ? 'English' : 'Español';
+  }
+  function changeLanguage(lang) {
+      document.getElementById('selected-language').value = lang;
+      updateFlag(lang);
+      document.getElementById('language-form').submit();
+  }
+  // Inicializar la bandera con el idioma actual
+  updateFlag('{{ LANGUAGE_CODE }}');
 </script>

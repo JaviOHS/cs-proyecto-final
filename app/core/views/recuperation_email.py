@@ -11,12 +11,13 @@ from django.contrib.auth.tokens import default_token_generator
 from django.views import View
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _ # Para traducir las variables dinámicas
 
 User = get_user_model()
 
 class PasswordResetView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'password_reset.html', {'title1': 'Recuperar Contraseña'})
+        return render(request, 'password_reset.html', {'title1': _('Recuperar Contraseña')})
     
     def post(self, request, *args, **kwargs):
         email = request.POST['email']
@@ -228,11 +229,11 @@ class PasswordResetView(View):
             error_message = 'El correo no se encuentra registrado.'
             messages.error(request, error_message)
         
-        return render(request, 'password_reset.html', {'title1': 'Recuperar Contraseña'})
+        return render(request, 'password_reset.html', {'title1': _('Recuperar Contraseña')})
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title1'] = 'Recuperar Contraseña'
+        context['title1'] = _('Recuperar Contraseña')
         return context
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
@@ -251,5 +252,5 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title1'] = 'Restablecer Contraseña'
+        context['title1'] = _('Restablecer Contraseña')
         return context
