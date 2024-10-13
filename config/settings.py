@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,6 +24,7 @@ INSTALLED_APPS = [
     'app.alarm.apps.AlarmConfig',
     'livereload',
     'widget_tweaks',
+    'storages',
 ]
 
 NPM_BIN_PATH = r'C:\Program Files\nodejs\npm.cmd'
@@ -100,11 +102,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/' # url de archivos estaticos
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)#carpeta fisica de archivos estaticos
-MEDIA_ROOT = os.path.join(BASE_DIR,'media') # carpeta fisica de archivos de Imagenes
-MEDIA_URL = '/media/' # url de imagenes
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'security.User'
@@ -125,8 +122,16 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'pasysalert@gmail.com'
 EMAIL_HOST_PASSWORD = 'lvin mgql hwbm gdes'
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
 # Configuración de AWS Recognition
 AWS_ACCESS_KEY_ID = 'AKIAVFIWI5XGM76EEK3K'
 AWS_SECRET_ACCESS_KEY = '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'
-AWS_REGION = 'us-east-2'
+AWS_REGION = 'us-east-1'
 
+# Configuración de AWS S3
+AWS_STORAGE_BUCKET_NAME = 'proyecto-final-software'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'

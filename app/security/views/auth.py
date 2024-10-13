@@ -57,8 +57,13 @@ class SigninView(FormView):
         messages.error(self.request, "Revise los campos.")
         
         for field, errors in form.errors.items():
-            for error in errors:
-                messages.error(self.request, f"{form[field].label} - {error}")
+            if field == '__all__':
+                for error in errors:
+                    messages.error(self.request, error)
+            else:
+                for error in errors:
+                    messages.error(self.request, f"{form[field].label} - {error}")
+
         
         return super().form_invalid(form)
 

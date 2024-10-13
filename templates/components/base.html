@@ -40,7 +40,7 @@
             {% if user.is_authenticated %}
             <li class="relative py-2 md:py-0">
               <button type="button" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" class="flex items-center">
-                <img src="{{ user.image.url }}" alt="profile" class="profile-picture">
+                <img src="{{ user.get_image }}" alt="profile" class="profile-picture">
               </button>
               <!-- Dropdown menu -->
               <div class="primary-container-bg z-50 hidden my-4 list-none divide-y divide-gray-100 rounded-lg shadow" id="user-dropdown">

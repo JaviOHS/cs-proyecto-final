@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import get_user_model
-from app.security.utils import validate_image, resize_image
 import os
 User = get_user_model()
 
@@ -55,17 +54,17 @@ class UserProfileForm(forms.ModelForm):
         email = self.cleaned_data['email']
         return email.lower()
     
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        if 'image' in self.changed_data:
-            if commit:
-                if user.image:
-                    user.save()
-                    image_path = user.image.path
-                    resize_image(image_path, (300, 300))  # Ajusta el tamaño según tus necesidades
-        if commit:
-            user.save()
-        return user
+    # def save(self, commit=True):
+    #     user = super().save(commit=False)
+    #     if 'image' in self.changed_data:
+    #         if commit:
+    #             if user.image:
+    #                 user.save()
+    #                 image_path = user.image.path
+    #                 resize_image(image_path, (300, 300))  # Ajusta el tamaño según tus necesidades
+    #     if commit:
+    #         user.save()
+    #     return user
     
 
 class UserProfilePasswordForm(PasswordChangeForm):
