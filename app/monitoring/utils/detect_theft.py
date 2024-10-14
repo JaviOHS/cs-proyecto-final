@@ -13,11 +13,7 @@ from app.monitoring.utils.send_email import send_alert_email_video
 from app.threat_management.models import DetectionCounter
 
 THEFT_DETECTION_TIME = 1
-FPS = 24
-FRAMES_BEFORE_AFTER = int(FPS * 0.2)
-FRAMES_TO_SAVE = int(FPS * 4)
-BUFFER_SIZE = int(FPS * 4)
-THEFT_THRESHOLD = 55 # Diagonal (35 - 45); Frontal (60 o mas)
+THEFT_THRESHOLD = 55  # Diagonal (35 - 45); Frontal (60 o más)
 
 mp_holistic = mp.solutions.holistic
 holistic = mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5)
@@ -90,7 +86,12 @@ def detect_suspicious_action(pose_landmarks, left_hand_landmarks, right_hand_lan
 
     return suspicious_score, left_hand_pos, right_hand_pos
 
-def detect_theft(frame, session):
+def detect_theft(frame, session, frame_index, fps):
+    # Cálculo de variables dependientes de fps
+    FRAMES_BEFORE_AFTER = int(fps * 0.2)
+    FRAMES_TO_SAVE = int(fps * 4)
+    BUFFER_SIZE = int(fps * 4)
+
     if not hasattr(session, 'theft_detection_state'):
         session.theft_detection_state = {
             'frame_count': 0,
@@ -111,7 +112,7 @@ def detect_theft(frame, session):
     current_time = datetime.now()
     results = holistic.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
-    # Add current frame to buffer
+    # Añadir el fotograma actual al buffer
     state['frame_buffer'].append((frame.copy(), current_time))
 
     if results.pose_landmarks:
@@ -141,10 +142,9 @@ def detect_theft(frame, session):
                     state['post_theft_frame_count'] = FRAMES_TO_SAVE
                     state['theft_number'] += 1
 
-                    executor.submit(save_theft_event, session, list(state['frame_buffer']), current_time, state['theft_number'])
+                    executor.submit(save_theft_event, session, list(state['frame_buffer']), current_time, state['theft_number'], fps)
                     
                     detection = session.detection_models.first()
-            
                     detection_counter, created = DetectionCounter.objects.get_or_create(
                         detection=detection,
                         user=session.user
@@ -152,7 +152,7 @@ def detect_theft(frame, session):
                     detection_counter.increment()
                     
                     alarm = Alarm.objects.filter(
-                        detection=session.detection_models.first(),
+                        detection=detection,
                         user=session.user,
                         is_active=True
                     ).first() 
@@ -178,7 +178,7 @@ def detect_theft(frame, session):
         state['prev_right_hand'] = right_hand_pos
         state['prev_time'] = current_time
 
-    # Handle post-theft frame saving
+    # Manejar el guardado de fotogramas después del robo
     if state['theft_detected'] and state['post_theft_frame_count'] > 0:
         state['post_theft_frame_count'] -= 1
         if state['post_theft_frame_count'] == 0:
@@ -186,23 +186,12 @@ def detect_theft(frame, session):
             
     return frame
 
-def save_theft_frames(frame_buffer, session):
-    theft_folder = os.path.join(settings.MEDIA_ROOT, 'theft_evidence', f'session_{session.id}')
-    os.makedirs(theft_folder, exist_ok=True)
-    for i, (frame, timestamp) in enumerate(frame_buffer):
-        filename = f"frame_{i:04d}_{timestamp.strftime('%Y%m%d_%H%M%S_%f')}.jpg"
-        file_path = os.path.join(theft_folder, filename)
-        cv2.imwrite(file_path, frame)
-        print(GREY_COLOR + f"Frame de robo guardado: {filename}" + RESET_COLOR)
-    return theft_folder
-
-def save_theft_event(session, frame_buffer, theft_time, theft_number):
+def save_theft_event(session, frame_buffer, theft_time, theft_number, fps):
     try:
-        theft_folder = save_theft_frames(frame_buffer, session)
         video_filename = f'theft_video_{theft_number}.mp4'
-        video_path = os.path.join(theft_folder, video_filename)
+        video_path = os.path.join(settings.BASE_DIR, video_filename)
         
-        create_video_from_frames(frame_folder=theft_folder, output_video_path=video_path, fps=FPS, delete_frames=True)
+        create_video_from_frames(frame_buffer, video_path, fps)
 
         if not os.path.exists(video_path):
             raise FileNotFoundError(f"El archivo de video no existe en la ruta: {video_path}")
@@ -229,37 +218,29 @@ def save_theft_event(session, frame_buffer, theft_time, theft_number):
         )
         
         os.remove(video_path)
+        print(GREY_COLOR + f"Video {video_filename} eliminado después de enviar." + RESET_COLOR)
 
-        Alarm.stop_alarm()
+        # Alarm.stop_alarm()
 
     except Exception as e:
         print(RED_COLOR + f"Error al guardar el evento de robo: {str(e)}" + RESET_COLOR)
-        Alarm.stop_alarm()
+        # Alarm.stop_alarm()
 
-def create_video_from_frames(frame_folder, output_video_path, fps, delete_frames=False):
-    images = [img for img in os.listdir(frame_folder) if img.endswith(".jpg")]
-    if not images:
-        print(YELLOW_COLOR + "No se encontraron imágenes para crear el video." + RESET_COLOR)
+def create_video_from_frames(frame_buffer, output_video_path, fps):
+    # Asumimos que el buffer ya contiene frames en el orden correcto
+    if not frame_buffer:
+        print(YELLOW_COLOR + "No hay fotogramas en el buffer para crear el video." + RESET_COLOR)
         return
 
-    frame = cv2.imread(os.path.join(frame_folder, images[0]))
-    height, width, layers = frame.shape
-    
+    frame_height, frame_width, _ = frame_buffer[0][0].shape
     fourcc = cv2.VideoWriter_fourcc(*'avc1')
-    video = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
+    video_writer = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
 
-    for image in sorted(images):
-        video.write(cv2.imread(os.path.join(frame_folder, image)))
+    for frame, _ in frame_buffer:
+        video_writer.write(frame)
 
-    print(GREEN_COLOR + f"Video creado exitosamente." + RESET_COLOR)
-
-    if delete_frames:
-        for filename in sorted(os.listdir(frame_folder)):
-            if filename.endswith('.jpg'):
-                os.remove(os.path.join(frame_folder, filename))
-        print(GREEN_COLOR + "Frames borrados exitosamente." + RESET_COLOR)
-
-    video.release()
-
+    video_writer.release()
+    print(GREEN_COLOR + f"Video guardado en {output_video_path}" + RESET_COLOR)
+    
 def cleanup():
     executor.shutdown(wait=True)    

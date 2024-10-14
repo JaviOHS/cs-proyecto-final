@@ -13,7 +13,7 @@ def create_default_detection_models(sender, **kwargs):
     
     default_models = [
         {"name": "Robos Inesperados", "icon": "fa-solid fa-user-ninja", "description": "Detecta cuando un individuo guarda pertenencias ajenas en bolsos, bolsillos o en su cuerpo."},
-        {"name": "Pérdidas Inesperadas", "icon": "fa-solid fa-box", "description": "Detecta cuando un individuo pierde objetos de manera inesperada, como caídas de pertenencias."},
+        {"name": "Objetos Caidos", "icon": "fa-solid fa-box", "description": "Detecta apariciones de objetos, como caídas de pertenencias."},
         {"name": "Aglomeraciones", "icon": "fa-solid fa-users", "description": "Detecta cuando existen aglomeraciones de personas en un espacio."},
         {"name": "Detectar Movimiento", "icon": "fa-solid fa-running", "description": "Detecta movimiento en un espacio."},
         {"name": "Detectar Agresiones", "icon": "fa-solid fa-fist-raised", "description": "Detecta agresiones físicas entre personas."},

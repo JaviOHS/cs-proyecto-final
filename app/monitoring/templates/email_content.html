@@ -18,22 +18,23 @@
             <p><strong>Fecha y hora de la detección:</strong> {{ activation_time }}</p>
             <p>Detalles del monitoreo:</p>
             <ul>
-                <li><strong>Nombre de la sesión:</strong> {{ session.name }}</li>
-                <li><strong>Modelo de detección:</strong> {{ session.detection_models.first }}</li>
+                <li><strong>Nombre de Sesión:</strong> {{ session.name }}</li>
+                <li><strong>Modelo de Detección:</strong> {{ session.detection_models.first }}</li>
                 <li><strong>Descripción:</strong> {{ session.description }}</li>
                 {% if is_crowding %}
-                <li><strong>Número de personas:</strong> {{ num_people }}</li>
-                <li><strong>Umbral de aglomeración:</strong> {{ threshold }}</li>
+                <li><strong>Número de Personas:</strong> {{ num_people }}</li>
+                <li><strong>Umbral de Aglomeración:</strong> {{ threshold }}</li>
                 {% endif %}
                 {% if is_theft %}
-                <li><strong>Número de robo:</strong> {{ theft_number }}</li>
-                <li><strong>Hora de robo:</strong> {{ theft_time }}</li>
-                {% endif %}
-                {% if is_dropped_item %}
-                <li><strong>Objetos caídos:</strong> {{ dropped_items }}</li>
+                <li><strong>Número de Robo:</strong> {{ theft_number }}</li>
+                <li><strong>Hora de Robo:</strong> {{ theft_time }}</li>
                 {% endif %}
                 {% if is_aggression %}
                 <li><strong>Número de Evento de Agresión:</strong> {{ event_id }}</li>
+                {% endif %}
+                {% if is_drop %}
+                <li><strong>Tiempo de Activación: </strong> {{ activation_time }}</li>
+                <li><strong>Posible Objeto: </strong> {{ category }}</li>
                 {% endif %}
             </ul>
             <p>Por favor, revise los archivos adjuntos y tome las medidas necesarias.</p>

@@ -7,16 +7,17 @@ import time
 from app.monitoring.utils.send_email import send_alert_email
 from app.threat_management.models import DetectionCounter
 
+# Inicializar el cliente de Rekognition de AWS
 rekognition = boto3.client('rekognition',
                            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                           region_name=settings.AWS_REGION)
+                           region_name=settings.AWS_S3_REGION_NAME)
 
 # Variable para rastrear el tiempo del último correo enviado
 last_email_time = 0
 EMAIL_COOLDOWN = 10  # Enviar correos cada 10 segundos
 
-def detect_crowding(frame, session):
+def detect_crowding(frame, session, frame_index, fps):
     global last_email_time
 
     # Convertir el frame a bytes
@@ -59,13 +60,15 @@ def detect_crowding(frame, session):
         if crowding_detected:
             detection = session.detection_models.first()
             
+            # Incrementar el contador de detecciones
             detection_counter, created = DetectionCounter.objects.get_or_create(
                 detection=detection,
                 user=session.user
             )
             detection_counter.increment()
             
-            alarm = Alarm.objects.filter(detection=session.detection_models.first(), user=session.user, is_active=True).first() 
+            # Intentar activar una alarma personalizada o reproducir una alarma por defecto
+            alarm = Alarm.objects.filter(detection=detection, user=session.user, is_active=True).first()
                     
             if alarm:
                 alarm.activate()
@@ -73,6 +76,7 @@ def detect_crowding(frame, session):
                 default_alarm = Alarm()
                 default_alarm.play_default_alarm()
 
+            # Enviar un correo si ha pasado suficiente tiempo desde el último correo
             current_time = time.time()
             is_crowding = True
             if current_time - last_email_time > EMAIL_COOLDOWN:
@@ -81,6 +85,8 @@ def detect_crowding(frame, session):
                     'session': session,
                     'num_people': num_people,
                     'threshold': session.crowding_threshold,
+                    'frame_index': frame_index,
+                    'fps': fps,
                     'is_crowding': is_crowding,
                 }
                 send_alert_email(

@@ -13,12 +13,12 @@ last_email_time = 0
 EMAIL_COOLDOWN = 10  # Enviar correos cada 10 segundos
 
 # Cooldown para detecciones
-COOLDOWN_TIME = timedelta(seconds=10)  # 5 segundos
+COOLDOWN_TIME = timedelta(seconds=10)
 
 # Inicializar la última detección
 last_detection_time = None
 
-def detect_motion(frame, session):
+def detect_motion(frame, session, frame_index, fps):
     global last_email_time, last_detection_time
     
     # Convertir a escala de grises
@@ -45,10 +45,10 @@ def detect_motion(frame, session):
             color = (0, 0, 255)
             motion_detected = True
 
-    # Activar la alarma si se detecta movimiento
+    # Calcular el tiempo actual basado en el índice del frame y los FPS
+    current_time = datetime.now() + timedelta(seconds=frame_index / fps)
+
     if motion_detected:
-        current_time = datetime.now()
-        
         # Comprobar si ha pasado suficiente tiempo desde la última detección
         if last_detection_time is None or current_time - last_detection_time > COOLDOWN_TIME:
             last_detection_time = current_time  # Actualizar el tiempo de la última detección
@@ -62,13 +62,21 @@ def detect_motion(frame, session):
             )
             detection_counter.increment()  # Incrementar el contador de detecciones
             
-            # Activar la alarma personalizada o por defecto
+            # Incrementar el contador de detecciones
+            detection_counter, created = DetectionCounter.objects.get_or_create(
+                detection=detection,
+                user=session.user
+            )
+            detection_counter.increment()
+            
+            # Activar la alarma :>
             alarm = Alarm.objects.filter(detection=detection, user=session.user, is_active=True).first()
+                    
             if alarm:
-                alarm.activate()  # Activar la alarma personalizada
+                alarm.activate()
             else:
                 default_alarm = Alarm()
-                default_alarm.play_default_alarm()  # Reproducir la alarma por defecto
+                default_alarm.play_default_alarm()
 
             # Verificar si ha pasado suficiente tiempo desde el último correo
             if current_time.timestamp() - last_email_time > EMAIL_COOLDOWN:
@@ -90,12 +98,8 @@ def detect_motion(frame, session):
                     recipient_list=[recipient_email]
                 )
                 last_email_time = current_time.timestamp()  # Actualizar el tiempo del último correo
-        else:
-            # Si no ha pasado el cooldown, no se incrementa el contador ni se activa nada
-            pass  
-
     else:
-        Alarm.stop_alarm()  # Detener la alarma si no hay movimiento
+        Alarm.stop_alarm()
 
     # Dibujar el estado en la parte superior
     cv2.rectangle(frame, (0, 0), (frame.shape[1], 40), (0, 0, 0), -1)

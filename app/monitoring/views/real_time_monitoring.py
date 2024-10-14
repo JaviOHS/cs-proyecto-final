@@ -59,11 +59,11 @@ class VideoStreamView(View):
     def load_detection_module(self, detection_id):
         detection_modules = {
             1: {'module': 'app.monitoring.utils.detect_theft', 'function': 'detect_theft'},
-            2: {'module': 'app.monitoring.utils.detect_loss', 'function': 'detect_dropped_item'},
+            2: {'module': 'app.monitoring.utils.detect_drop_items', 'function': 'detect_drop_items'},
             3: {'module': 'app.monitoring.utils.detect_crowding', 'function': 'detect_crowding'},
             4: {'module': 'app.monitoring.utils.detect_motion', 'function': 'detect_motion'},
             5: {'module': 'app.monitoring.utils.detect_aggression', 'function': 'detect_aggression'},
-            6: {'module': 'app.monitoring.utils.detect_bus_robbery', 'function': 'detect_suspicious_behavior'}
+            6: {'module': '', 'function': ''}
         }
 
         selected_module = detection_modules.get(detection_id)
@@ -86,19 +86,25 @@ class VideoStreamView(View):
 
     def gen_frames(self, detection_function, session):
         camera = cv2.VideoCapture(0)
+        frame_index = 0
+        fps = camera.get(cv2.CAP_PROP_FPS) or 30
+        
         while True:
             success, frame = camera.read()
             if not success:
                 break
             
             if detection_function:
-                processed_frame = detection_function(frame, session)
+                processed_frame = detection_function(frame, session, frame_index, fps)
             else:
                 processed_frame = frame
             
             ret, buffer = cv2.imencode('.jpg', processed_frame)
             frame = buffer.tobytes()
+            
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        camera.release()
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            
+            frame_index += 1  # Incrementa el índice del frame en cada iteración
         
+        camera.release()

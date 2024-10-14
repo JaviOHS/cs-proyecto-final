@@ -14,3 +14,4 @@ media/theft_evidence/*
 app/*/migrations/*
 !app/*/migrations/__init__.py
 media/violent_events/*
+.env
