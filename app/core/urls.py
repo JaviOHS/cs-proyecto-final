@@ -8,9 +8,7 @@ from django.contrib.auth import views as auth_views
 from .views.recuperation_email import CustomPasswordResetConfirmView
 from app.core.views.scaner_face import FacialRecognitionView
 from app.core.views.chatbot import ChatbotView
-from app.core.views.statistical_graphs import StatisticalGraphsTemplate 
-
-from django.conf.urls.i18n import i18n_patterns
+from app.core.views.graphs_view import StatisticalGraphsTemplate 
 from django.utils.translation import gettext_lazy as _
 from django.views.i18n import set_language
 
@@ -29,5 +27,4 @@ urlpatterns = [
     path('facial_recognition/', FacialRecognitionView.as_view(), name='facial_recognition'),
     path('api/chatbot/', ChatbotView.as_view(), name='chatbot_response'),
     path('statistics/', StatisticalGraphsTemplate.as_view(), name='statistics'),
-
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

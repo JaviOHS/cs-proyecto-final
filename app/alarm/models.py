@@ -38,7 +38,6 @@ def play_audio_from_s3(url):
     except Exception as e:
         print(f"Error inesperado: {e}")
 
-
 class Alarm(models.Model):
     detection = models.ForeignKey(Detection, on_delete=models.CASCADE, verbose_name='Amenaza a Detectar')
     sound_file = models.FileField(upload_to='alarms/', verbose_name='Archivo de Alarma', blank=True, null=True)
