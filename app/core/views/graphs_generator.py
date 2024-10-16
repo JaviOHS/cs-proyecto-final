@@ -1,3 +1,5 @@
+from re import X
+from tkinter import Y
 import plotly.graph_objects as go
 import plotly.offline as pyo
 from django.db.models import Sum, Count
@@ -8,25 +10,21 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 
-def get_daily_detections(user):
-    today = timezone.now()
-    start_date = today - timedelta(days=30)  # Cambiar el rango de fechas según sea necesario
-
-    # Obtener datos agrupados por día
-    daily_data = (
-        DetectionCounter.objects
-        .filter(user=user, detection__created_at__gte=start_date)
-        .values('detection__created_at__date')  # Agrupar por fecha
-        .annotate(total_count=Count('count'))  # Contar detecciones por día
-        .order_by('detection__created_at__date')
-    )
-    
-    return daily_data
-
 class GraphGenerator:
     def __init__(self, user):
         self.user = user
-
+    
+    def get_daily_detections(self):
+            today = timezone.now()
+            start_date = today - timedelta(days=30)  # Últimos 30 días
+            daily_data = (
+                DetectionCounter.objects
+                .filter(user=self.user, detection__created_at__gte=start_date)
+                .values('detection__created_at__date')
+                .annotate(total_count=Sum('count'))
+                .order_by('detection__created_at__date')
+            )
+            return daily_data
     def bar_chart_detections(self):
         detection_data = (
             DetectionCounter.objects
@@ -145,7 +143,7 @@ class GraphGenerator:
         return pyo.plot(pie_chart, auto_open=False, include_plotlyjs=False, output_type='div')
     
     def line_chart_detections_by_day(self):
-        daily_data = get_daily_detections(self.user)
+        daily_data = self.get_daily_detections()
 
         if not daily_data:
             return None
@@ -154,15 +152,15 @@ class GraphGenerator:
         dates = [item['detection__created_at__date'] for item in daily_data]
         counts = [item['total_count'] for item in daily_data]
 
-        # Convertir fechas a números (días desde el inicio)
-        X = np.array([(date - dates[0]).days for date in dates]).reshape(-1, 1)
-        y = np.array(counts)
+        # Convertir las fechas a días desde la primera fecha
+        X = np.array([(date - dates[0]).days for date in dates]).reshape(-1, 1)  # Asegurarse de que X sea 2D
+        Y = np.array(counts)
 
         # Crear y entrenar el modelo de regresión polinómica
         poly_features = PolynomialFeatures(degree=2, include_bias=False)
         X_poly = poly_features.fit_transform(X)
         model = LinearRegression()
-        model.fit(X_poly, y)
+        model.fit(X_poly, Y)
 
         # Generar predicciones
         X_future = np.array(range(len(X), len(X) + 7)).reshape(-1, 1)  # Predicción para 7 días más
@@ -218,3 +216,58 @@ class GraphGenerator:
         }
 
         return pyo.plot(line_chart, config=config, auto_open=False, include_plotlyjs=False, output_type='div')
+
+    # Calculos de los datos estadísticos
+    def get_total_threats(self):
+        return DetectionCounter.objects.filter(user=self.user).aggregate(total=Sum('count'))['total'] or 0
+
+    def get_threat_types(self):
+        return DetectionCounter.objects.filter(user=self.user).values('detection__name').distinct().count()
+
+    def get_next_day_prediction(self):
+        daily_data = self.get_daily_detections()
+        if not daily_data:
+            return 0
+
+        dates = [item['detection__created_at__date'] for item in daily_data]
+        counts = [item['total_count'] for item in daily_data]
+
+        if len(dates) < 2:
+            return counts[-1] if counts else 0
+
+        X = np.array([(date - dates[0]).days for date in dates]).reshape(-1, 1)
+        y = np.array(counts)
+
+        model = LinearRegression()
+        model.fit(X, y)
+
+        next_day = X[-1][0] + 1
+        prediction = model.predict([[next_day]])[0]
+        return round(prediction, 2)
+
+    def get_last_prediction_date(self):
+        daily_data = self.get_daily_detections()
+        if not daily_data:
+            return timezone.now().date()
+        return max(item['detection__created_at__date'] for item in daily_data) + timedelta(days=1)
+
+    def get_threat_details(self):
+        threat_data = (
+            DetectionCounter.objects
+            .filter(user=self.user)
+            .values('detection__name')
+            .annotate(total_count=Sum('count'))
+            .order_by('-total_count')
+        )
+        
+        total_threats = sum(item['total_count'] for item in threat_data)
+        
+        return [
+            {
+                'name': item['detection__name'],
+                'count': item['total_count'],
+                'percentage': round((item['total_count'] / total_threats) * 100, 2) if total_threats else 0,
+                'status': 'Activo'  # Puedes ajustar esto según tu lógica de negocio
+            }
+            for item in threat_data
+        ]

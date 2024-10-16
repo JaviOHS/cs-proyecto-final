@@ -23,7 +23,7 @@
       <div>
         {{ line_chart_detections_by_day|safe }}
       </div>
-      <a href="">
+      <a href="{% url 'core:statistics_plantilla' %}">
         <button class="aditional-button">{% trans "Exportar Estadísticas" %}</button>
       </a>
       {% else %}

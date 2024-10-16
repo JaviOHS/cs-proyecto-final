@@ -21,9 +21,14 @@
         {% for session in monitoring_sessions %}
         <div class="group relative bg-blue-100 dark:bg-blue-800 rounded-xl p-3 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
           <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
-            <a href="{% url 'monitoring:real_time_view' session_id=session.id %}">
-              <i class="fa-solid fa-video text-lg text-blue-500 dark:text-white text-center"></i> 
+            <a href="{% url 'monitoring:real_time_view' session_id=session.id %}" data-tooltip-target="tooltip-video-{{ session.id }}">
+              <i class="fa-solid fa-video text-lg text-blue-500 dark:text-white text-center"></i>
             </a>
+          </div>
+          <div id="tooltip-video-{{ session.id }}" role="tooltip"
+            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            Ver Sesión en Tiempo Real
+            <div class="tooltip-arrow" data-popper-arrow></div>
           </div>
           <span class="text-sm text-green-500 dark:text-green-400 font-bold">Sesión {{ session.id }}</span>
           <h2 class="title-module-cards mb-2">
