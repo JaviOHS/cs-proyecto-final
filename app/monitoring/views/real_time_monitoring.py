@@ -7,9 +7,10 @@ import cv2
 from django.http import StreamingHttpResponse
 from django.contrib import messages
 from app.monitoring.models import MonitoringSession
-from app.monitoring.utils.detect_crowding import detect_crowding
-from app.monitoring.utils.detect_motion import detect_motion
 from django.utils.translation import gettext_lazy as _  # Para traducir las variables dinámicas
+import numpy as np
+import asyncio
+import threading
 
 class RealTimeMonitoringView(View):
     def get(self, request, session_id):
@@ -33,6 +34,10 @@ class RealTimeMonitoringView(View):
         return render(request, 'real_time_monitoring.html', context)
 
 class VideoStreamView(View):
+    def stream_without_detection(self, request, session_id):
+        session = get_object_or_404(MonitoringSession, id=session_id)
+        return StreamingHttpResponse(self.gen_frames(None, session), content_type="multipart/x-mixed-replace; boundary=frame")
+
     def get(self, request, session_id):
         session = get_object_or_404(MonitoringSession, id=session_id)
         if session.user != request.user:
@@ -46,15 +51,13 @@ class VideoStreamView(View):
 
         try:
             detection_function = self.load_detection_module(detection.id)
+            if detection_function is None:
+                raise ValueError(f"No se pudo cargar la función de detección para el ID {detection.id}")
         except Exception as e:
             messages.warning(request, f"Error al cargar el módulo de detección: {str(e)}. Se mostrará el video sin procesamiento.")
             return self.stream_without_detection(request, session_id)
 
         return StreamingHttpResponse(self.gen_frames(detection_function, session), content_type="multipart/x-mixed-replace; boundary=frame")
-
-    def stream_without_detection(self, request, session_id):
-        session = get_object_or_404(MonitoringSession, id=session_id)
-        return StreamingHttpResponse(self.gen_frames(None, session), content_type="multipart/x-mixed-replace; boundary=frame")
 
     def load_detection_module(self, detection_id):
         detection_modules = {
@@ -63,7 +66,7 @@ class VideoStreamView(View):
             3: {'module': 'app.monitoring.utils.detect_crowding', 'function': 'detect_crowding'},
             4: {'module': 'app.monitoring.utils.detect_motion', 'function': 'detect_motion'},
             5: {'module': 'app.monitoring.utils.detect_aggression', 'function': 'detect_aggression'},
-            6: {'module': '', 'function': ''}
+            6: {'module': 'app.monitoring.utils.detect_wr', 'function': 'detect_objects_in_frame'}
         }
 
         selected_module = detection_modules.get(detection_id)
@@ -76,35 +79,66 @@ class VideoStreamView(View):
             print(f"Módulo importado correctamente: {detection_module}")
             detection_function = getattr(detection_module, selected_module['function'])
             print(f"Función de detección encontrada: {detection_function}")
+            return detection_function
         except ImportError as e:
-            raise ImportError(f"Error en la importación del módulo '{selected_module['module']}': {str(e)}")
+            print(f"Error en la importación del módulo '{selected_module['module']}': {str(e)}")
         except AttributeError as e:
-            raise AttributeError(f"Error al obtener la función de detección: {str(e)}")
-
-
-        return detection_function
+            print(f"Error al obtener la función de detección: {str(e)}")
+        
+        return None
 
     def gen_frames(self, detection_function, session):
+        import queue
         camera = cv2.VideoCapture(0)
-        frame_index = 0
-        fps = camera.get(cv2.CAP_PROP_FPS) or 30
-        
-        while True:
-            success, frame = camera.read()
-            if not success:
-                break
-            
-            if detection_function:
-                processed_frame = detection_function(frame, session, frame_index, fps)
-            else:
-                processed_frame = frame
-            
-            ret, buffer = cv2.imencode('.jpg', processed_frame)
-            frame = buffer.tobytes()
-            
-            yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-            
-            frame_index += 1  # Incrementa el índice del frame en cada iteración
-        
-        camera.release()
+        frame_queue = queue.Queue(maxsize=10)
+        stop_event = threading.Event()
+
+        def capture_frames():
+            frame_index = 0
+            fps = camera.get(cv2.CAP_PROP_FPS) or 30
+            detection_interval = 5  # Analizar cada 5 frames para detect_objects_in_frame
+
+            while not stop_event.is_set():
+                success, frame = camera.read()
+                if not success:
+                    break
+
+                if detection_function:
+                    if detection_function.__name__ == 'detect_objects_in_frame':
+                        # Usar la lógica específica para detect_wr (cada x frames)
+                        if frame_index % detection_interval == 0:
+                            frame = detection_function(frame, session, frame_index, fps)
+                    else:
+                        # Para otras funciones de detección, procesar cada frame
+                        frame = detection_function(frame, session, frame_index, fps)
+
+                try:
+                    frame_queue.put(frame, block=False)
+                except queue.Full:
+                    try:
+                        frame_queue.get_nowait()  # Descartar el frame más antiguo
+                        frame_queue.put(frame, block=False)
+                    except queue.Empty:
+                        pass
+
+                frame_index += 1
+
+            camera.release()
+
+        thread = threading.Thread(target=capture_frames)
+        thread.start()
+
+        try:
+            while True:
+                frame = frame_queue.get()
+                ret, buffer = cv2.imencode('.jpg', frame)
+                frame_bytes = buffer.tobytes()
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+        finally:
+            stop_event.set()
+            thread.join()
+              
+    def stream_without_detection(self, request, session_id):
+        session = get_object_or_404(MonitoringSession, id=session_id)
+        return StreamingHttpResponse(self.gen_frames(None, session), content_type="multipart/x-mixed-replace; boundary=frame")

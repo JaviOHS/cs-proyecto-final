@@ -36,6 +36,9 @@
                 <li><strong>Tiempo de Activación: </strong> {{ activation_time }}</li>
                 <li><strong>Posible Objeto: </strong> {{ category }}</li>
                 {% endif %}
+                {% if is_weapon %}
+                <li><strong>Tiempo de Detección: </strong> {{ weapons_time }}</li>
+                {% endif %}
             </ul>
             <p>Por favor, revise los archivos adjuntos y tome las medidas necesarias.</p>
         </div>

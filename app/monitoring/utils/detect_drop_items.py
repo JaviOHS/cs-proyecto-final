@@ -182,10 +182,10 @@ def handle_new_detections(session):
         ).first()
 
         if alarm:
-            print(GREEN_COLOR + f"Alarma activada para el modelo de detección {alarm.detection.name}" + RESET_COLOR)
+            print(f"{GREEN_COLOR}Alarma activada para el modelo de detección {alarm.detection.name}{RESET_COLOR}")
             alarm.activate()
         else:
-            print(YELLOW_COLOR + "No se encontró una alarma personalizada para el modelo de detección. Se ha activado la alarma por defecto." + RESET_COLOR)
+            print(f"{YELLOW_COLOR}No se encontró una alarma personalizada para el modelo de detección. Se ha activado la alarma por defecto.{RESET_COLOR}")
             default_alarm = Alarm()
             default_alarm.play_default_alarm()        
 def save_and_send_video(session, frame_buffer, category, fps):
@@ -216,10 +216,10 @@ def save_and_send_video(session, frame_buffer, category, fps):
         )
         
         os.remove(video_path)
-        print(GREEN_COLOR + f"Video {video_filename} eliminado después de enviar." + RESET_COLOR)
+        print(f"{GREEN_COLOR}Video {video_filename} eliminado después de enviar.{RESET_COLOR}")
 
     except Exception as e:
-        print(RED_COLOR + f"Error al guardar el evento de objeto caído: {str(e)}" + RESET_COLOR)
+        print(f"{RED_COLOR}Error al guardar el evento de objeto caído: {str(e)}{RESET_COLOR}")
 
 def create_video_from_frames(frame_buffer, output_video_path, fps):
     """Crea un video a partir de los fotogramas en el buffer."""

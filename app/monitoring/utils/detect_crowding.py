@@ -8,10 +8,12 @@ from app.monitoring.utils.send_email import send_alert_email
 from app.threat_management.models import DetectionCounter
 
 # Inicializar el cliente de Rekognition de AWS
-rekognition = boto3.client('rekognition',
-                           aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                           aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                           region_name=settings.AWS_S3_REGION_NAME)
+rekognition = boto3.client(
+    'rekognition',
+    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    region_name=settings.AWS_S3_REGION_NAME
+)
 
 # Variable para rastrear el tiempo del último correo enviado
 last_email_time = 0

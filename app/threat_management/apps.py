@@ -17,7 +17,7 @@ def create_default_detection_models(sender, **kwargs):
         {"name": "Aglomeraciones", "icon": "fa-solid fa-users", "description": "Detecta cuando existen aglomeraciones de personas en un espacio."},
         {"name": "Detectar Movimiento", "icon": "fa-solid fa-running", "description": "Detecta movimiento en un espacio."},
         {"name": "Detectar Agresiones", "icon": "fa-solid fa-fist-raised", "description": "Detecta agresiones físicas entre personas."},
-        {"name": "Robos en Buses", "icon": "fa-solid fa-bus", "description": "Detecta robos en buses de transporte público."},
+        {"name": "Detectar Armas", "icon": "fa-solid fa-shield-alt", "description": "Detecta la presencia de armas en un espacio."},
     ]
     
     for model_data in default_models:

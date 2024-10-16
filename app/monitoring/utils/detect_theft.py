@@ -129,14 +129,14 @@ def detect_theft(frame, session, frame_index, fps):
         if suspicious_score > 0:
             if state['suspicious_start_time'] is None:
                 state['suspicious_start_time'] = current_time
-                print(YELLOW_COLOR + f"Acción sospechosa detectada en el frame {state['frame_count']}. Puntuación: {suspicious_score}" + RESET_COLOR)
+                print(f"{YELLOW_COLOR}Acción sospechosa detectada en el frame {state['frame_count']}. Puntuación: {suspicious_score}{RESET_COLOR}")
             
             state['cumulative_score'] += suspicious_score
 
             if (current_time - state['suspicious_start_time']).total_seconds() >= THEFT_DETECTION_TIME and not state['theft_detected']:
                 if state['cumulative_score'] >= THEFT_THRESHOLD:
-                    print(RED_COLOR + f"Posible robo detectado! Puntuación acumulada: {state['cumulative_score']}")
-                    print(RED_COLOR + f"Robo confirmado en el frame {state['frame_count']}." + RESET_COLOR)
+                    print(f"{RED_COLOR}Posible robo detectado! Puntuación acumulada: {state['cumulative_score']}{RESET_COLOR}")
+                    print(f"{RED_COLOR}Robo confirmado en el frame {state['frame_count']}.{RESET_COLOR}")
 
                     state['theft_detected'] = True
                     state['post_theft_frame_count'] = FRAMES_TO_SAVE
@@ -158,14 +158,14 @@ def detect_theft(frame, session, frame_index, fps):
                     ).first() 
                     
                     if alarm:
-                        print(GREEN_COLOR + f"Alarma activada para el modelo de detección {alarm.detection.name}" + RESET_COLOR)
+                        print(f"{GREEN_COLOR}Alarma activada para el modelo de detección {alarm.detection.name}{RESET_COLOR}")
                         alarm.activate()
                     else:
-                        print(YELLOW_COLOR + "No se encontró una alarma personalizada para el modelo de detección. Se ha activado la alarma por defecto." + RESET_COLOR)
+                        print(f"{YELLOW_COLOR}No se encontró una alarma personalizada para el modelo de detección. Se ha activado la alarma por defecto.{RESET_COLOR}")
                         default_alarm = Alarm()
                         default_alarm.play_default_alarm()                    
                 else:
-                    print(BLUE_COLOR + f"Acción sospechosa descartada en el frame {state['frame_count']}. Puntuación final: {state['cumulative_score']}" + RESET_COLOR)
+                    print(f"{BLUE_COLOR}Acción sospechosa descartada en el frame {state['frame_count']}. Puntuación final: {state['cumulative_score']}{RESET_COLOR}")
                 state['suspicious_start_time'] = None
                 state['cumulative_score'] = 0
 
@@ -192,12 +192,7 @@ def save_theft_event(session, frame_buffer, theft_time, theft_number, fps):
         video_path = os.path.join(settings.BASE_DIR, video_filename)
         
         create_video_from_frames(frame_buffer, video_path, fps)
-
-        if not os.path.exists(video_path):
-            raise FileNotFoundError(f"El archivo de video no existe en la ruta: {video_path}")
-
-        print(GREEN_COLOR + f"Evento de robo enviado al correo." + RESET_COLOR)
-        
+            
         is_theft = True
         recipient_email = session.user.email
         current_time = datetime.now()
@@ -216,31 +211,32 @@ def save_theft_event(session, frame_buffer, theft_time, theft_number, fps):
             attachment_path=video_path,
             attachment_name=video_filename
         )
+        print(f"{GREEN_COLOR}Evento de robo enviado al correo.{RESET_COLOR}")
         
         os.remove(video_path)
-        print(GREY_COLOR + f"Video {video_filename} eliminado después de enviar." + RESET_COLOR)
+        print(f"{GREY_COLOR}Video {video_filename} eliminado después de enviar.{RESET_COLOR}")
 
         # Alarm.stop_alarm()
 
     except Exception as e:
-        print(RED_COLOR + f"Error al guardar el evento de robo: {str(e)}" + RESET_COLOR)
+        print(f"{RED_COLOR}Error al guardar el evento de robo: {str(e)}{RESET_COLOR}")
         # Alarm.stop_alarm()
 
 def create_video_from_frames(frame_buffer, output_video_path, fps):
     # Asumimos que el buffer ya contiene frames en el orden correcto
     if not frame_buffer:
-        print(YELLOW_COLOR + "No hay fotogramas en el buffer para crear el video." + RESET_COLOR)
+        print(f"{YELLOW_COLOR}No hay fotogramas en el buffer para crear el video.{RESET_COLOR}")
         return
 
     frame_height, frame_width, _ = frame_buffer[0][0].shape
-    fourcc = cv2.VideoWriter_fourcc(*'avc1')
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     video_writer = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
 
     for frame, _ in frame_buffer:
         video_writer.write(frame)
 
     video_writer.release()
-    print(GREEN_COLOR + f"Video guardado en {output_video_path}" + RESET_COLOR)
+    print(f"{GREEN_COLOR}Video guardado en {output_video_path}{RESET_COLOR}")
     
 def cleanup():
     executor.shutdown(wait=True)    

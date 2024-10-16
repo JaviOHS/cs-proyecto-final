@@ -21,7 +21,7 @@
       <!-- Sección de perfil -->
       <div class="lg:w-2/3 flex flex-col lg:flex-row items-center lg:items-start lg:space-x-6">
         <div class="flex-shrink-0 text-center lg:text-left mb-4 lg:mb-0">
-          <img src="{{ user.image.url }}" alt="user-avatar-image" class="border-4 border-blue-700 dark:border-indigo-400 rounded-full w-24 h-24 object-cover">
+          <img src="{{ user.get_image }}" alt="user-avatar-image" class="border-4 border-blue-700 dark:border-indigo-400 rounded-full w-24 h-24 object-cover">
         </div>
         <div class="text-center lg:text-left">
           <h3 class="full-name text-xl lg:text-2xl">{{ user.get_full_name }}</h3>
