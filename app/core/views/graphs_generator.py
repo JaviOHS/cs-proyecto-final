@@ -255,7 +255,7 @@ class GraphGenerator:
         threat_data = (
             DetectionCounter.objects
             .filter(user=self.user)
-            .values('detection__name')
+            .values('detection__name',  'detection__icon')
             .annotate(total_count=Sum('count'))
             .order_by('-total_count')
         )
@@ -265,9 +265,11 @@ class GraphGenerator:
         return [
             {
                 'name': item['detection__name'],
+                'icon': item['detection__icon'],
                 'count': item['total_count'],
                 'percentage': round((item['total_count'] / total_threats) * 100, 2) if total_threats else 0,
                 'status': 'Activo'  # Puedes ajustar esto según tu lógica de negocio
             }
             for item in threat_data
         ]
+        

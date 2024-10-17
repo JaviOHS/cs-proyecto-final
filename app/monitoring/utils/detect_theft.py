@@ -151,19 +151,14 @@ def detect_theft(frame, session, frame_index, fps):
                     )
                     detection_counter.increment()
                     
-                    alarm = Alarm.objects.filter(
-                        detection=detection,
-                        user=session.user,
-                        is_active=True
-                    ).first() 
-                    
+                    alarm = Alarm.objects.filter(detection=detection, user=session.user, is_active=True).first()
+                    if not alarm:
+                        alarm = Alarm()
+                        alarm = alarm.create_alarm(detection, session.user)
                     if alarm:
-                        print(f"{GREEN_COLOR}Alarma activada para el modelo de detección {alarm.detection.name}{RESET_COLOR}")
-                        alarm.activate()
+                        executor.submit(alarm.activate)
                     else:
-                        print(f"{YELLOW_COLOR}No se encontró una alarma personalizada para el modelo de detección. Se ha activado la alarma por defecto.{RESET_COLOR}")
-                        default_alarm = Alarm()
-                        default_alarm.play_default_alarm()                    
+                        print("No se pudo crear o encontrar la alarma.")                
                 else:
                     print(f"{BLUE_COLOR}Acción sospechosa descartada en el frame {state['frame_count']}. Puntuación final: {state['cumulative_score']}{RESET_COLOR}")
                 state['suspicious_start_time'] = None

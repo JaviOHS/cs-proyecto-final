@@ -3,6 +3,7 @@ import tempfile
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 import pygame
 from app.alarm.utils import validate_sound_file
 from app.threat_management.models import Detection
@@ -49,6 +50,11 @@ class Alarm(models.Model):
     last_activated = models.DateTimeField(null=True, blank=True, verbose_name='Última activación')
     alarm_sound_playing = False
 
+    class Meta:
+        unique_together = ('user', 'detection')
+        verbose_name = "Alarma"
+        verbose_name_plural = "Alarmas"
+        
     def clean(self):
         if self.sound_file:
             validate_sound_file(self.sound_file)
@@ -92,12 +98,19 @@ class Alarm(models.Model):
         Alarm.alarm_sound_playing = False
         pygame.mixer.music.stop()
 
-    def play_default_alarm(self):
-        default_sound_file_url = settings.MEDIA_URL + 'alarms/alarma_defecto.mp3'
-        if not Alarm.alarm_sound_playing:
-            play_audio_from_s3(default_sound_file_url)
-            Alarm.alarm_sound_playing = True
-
-    class Meta:
-        verbose_name = "Alarma"
-        verbose_name_plural = "Alarmas"
+    def create_alarm(self, detection, user):
+        try:
+            # Crear una nueva instancia de Alarm
+            print(f"Creando alarma para la detección '{detection.name}' y el usuario '{user.username}'...")
+            new_alarm = Alarm(
+                detection=detection,
+                user=user,
+                is_active=True,  # La alarma se crea como activa
+                notification_message=f"Se ha detectado una amenaza de {detection.name}."
+            )
+            new_alarm.save()
+            print(f"Alarma creada exitosamente para la detección '{detection.name}' y el usuario '{user.username}'.")
+            return new_alarm
+        except ValidationError as e:
+            print(f"Error al crear la alarma: {e}")
+            return None

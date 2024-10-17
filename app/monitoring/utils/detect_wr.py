@@ -9,6 +9,8 @@ from app.monitoring.utils.send_email import send_alert_email_video
 from app.threat_management.models import DetectionCounter
 from config.utils import GREEN_COLOR, RESET_COLOR, RED_COLOR, YELLOW_COLOR
 
+executor = ThreadPoolExecutor(max_workers=4)
+
 rekognition = boto3.client(
     'rekognition',
     aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
@@ -143,13 +145,14 @@ def send_alert(detected_items, session):
     detection_counter.increment()
     
     alarm = Alarm.objects.filter(detection=detection, user=session.user, is_active=True).first()
-                    
+    if not alarm:
+        alarm = Alarm()
+        alarm = alarm.create_alarm(detection, session.user)
     if alarm:
-        alarm.activate()
+        executor.submit(alarm.activate)
     else:
-        default_alarm = Alarm()
-        default_alarm.play_default_alarm()
-
+        print("No se pudo crear o encontrar la alarma.")
+                
     alert_message = f"{YELLOW_COLOR}¡Alerta! Se ha detectado un objeto de interés: {', '.join(item[0] for item in detected_items)}{RESET_COLOR}"
     print(alert_message)
 

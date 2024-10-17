@@ -6,6 +6,7 @@ from app.alarm.models import Alarm
 import time
 from app.monitoring.utils.send_email import send_alert_email
 from app.threat_management.models import DetectionCounter
+from concurrent.futures import ThreadPoolExecutor
 
 # Inicializar el cliente de Rekognition de AWS
 rekognition = boto3.client(
@@ -18,6 +19,7 @@ rekognition = boto3.client(
 # Variable para rastrear el tiempo del último correo enviado
 last_email_time = 0
 EMAIL_COOLDOWN = 10  # Enviar correos cada 10 segundos
+executor = ThreadPoolExecutor(max_workers=4)
 
 def detect_crowding(frame, session, frame_index, fps):
     global last_email_time
@@ -71,13 +73,13 @@ def detect_crowding(frame, session, frame_index, fps):
             
             # Intentar activar una alarma personalizada o reproducir una alarma por defecto
             alarm = Alarm.objects.filter(detection=detection, user=session.user, is_active=True).first()
-                    
+            if not alarm:
+                alarm = Alarm()
+                alarm = alarm.create_alarm(detection, session.user)
             if alarm:
-                alarm.activate()
+                executor.submit(alarm.activate)
             else:
-                default_alarm = Alarm()
-                default_alarm.play_default_alarm()
-
+                print("No se pudo crear o encontrar la alarma.")
             # Enviar un correo si ha pasado suficiente tiempo desde el último correo
             current_time = time.time()
             is_crowding = True

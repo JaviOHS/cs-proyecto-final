@@ -30,9 +30,11 @@ class User(AbstractUser):
         return 'componentes/default_user.jpg'
     
     def save(self, *args, **kwargs):
-        if self.pk:
+        if self.pk:  # Solo para actualizaciones
             old_user = User.objects.get(pk=self.pk)
             if old_user.image and old_user.image != self.image:
-                if old_user.image.name != 'componentes/usuario_anonimo.png':
+                # Asegurarse de que no se elimine la imagen por defecto
+                if old_user.image.name != 'componentes/default_user.jpg':
                     old_user.image.delete(save=False)
         super().save(*args, **kwargs)
+

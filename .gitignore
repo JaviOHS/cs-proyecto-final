@@ -2,17 +2,11 @@
 db.sqlite3
 node_modules/
 ent_blog/
-media/users/*
-!media/users/default_user.jpg
 *.pyc
 *.pyo
 *.pyd
 __pycache__/
-media/alarms/*
-!media/alarms/default_alarm.mp3
-media/theft_evidence/*
 app/*/migrations/*
 !app/*/migrations/__init__.py
-media/violent_events/*
 .env
 *.mp4

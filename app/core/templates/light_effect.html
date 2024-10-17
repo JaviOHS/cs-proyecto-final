@@ -1,0 +1,46 @@
+<!-- Efecto de luz CSS -->
+<style>
+  .py-10 {
+    position: relative;
+    overflow: hidden;
+    padding: 2.5rem 0;
+  }
+
+  .secondary-container-bg {
+    position: relative;
+    padding: 2.5rem;
+    border-radius: 1rem;
+  }
+
+  #light-effect {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0) 70%);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+  }
+</style>
+
+<!-- Script de efecto de luz -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.secondary-container-bg');
+    const lightEffect = document.getElementById('light-effect');
+
+    container.addEventListener('mousemove', (e) => {
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left - (lightEffect.offsetWidth / 2);
+      const y = e.clientY - rect.top - (lightEffect.offsetHeight / 2);
+
+      lightEffect.style.transform = `translate(${x}px, ${y}px)`;
+      lightEffect.style.opacity = '1';
+    });
+
+    container.addEventListener('mouseleave', () => {
+      lightEffect.style.opacity = '0';
+    });
+  });
+</script>

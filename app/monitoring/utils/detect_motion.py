@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from app.monitoring.utils.send_email import send_alert_email_video
 from app.threat_management.models import DetectionCounter
 from concurrent.futures import ThreadPoolExecutor
-import numpy as np
 import os
 from config.utils import RED_COLOR, GREEN_COLOR, RESET_COLOR, YELLOW_COLOR
 
@@ -117,10 +116,13 @@ def detect_motion(frame, session, frame_index, fps):
             
             # Activar la alarma de manera asíncrona
             alarm = Alarm.objects.filter(detection=detection, user=session.user, is_active=True).first()
+            if not alarm:
+                alarm = Alarm()
+                alarm = alarm.create_alarm(detection, session.user)
             if alarm:
                 executor.submit(alarm.activate)
             else:
-                executor.submit(Alarm().play_default_alarm)
+                print("No se pudo crear o encontrar la alarma.")
 
     else:
         if is_movement_event_active:

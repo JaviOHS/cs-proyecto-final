@@ -268,67 +268,26 @@
   }
 </script>
 
-<!-- Efecto de luz -->
-<style>
-  .py-10 {
-    position: relative;
-    overflow: hidden;
-    padding: 2.5rem 0;
-  }
-
-  .secondary-container-bg {
-    position: relative;
-    padding: 2.5rem;
-    border-radius: 1rem;
-  }
-
-  #light-effect {
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0) 70%);
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    opacity: 0;
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('.secondary-container-bg');
-    const lightEffect = document.getElementById('light-effect');
-
-    container.addEventListener('mousemove', (e) => {
-      const rect = container.getBoundingClientRect();
-      const x = e.clientX - rect.left - (lightEffect.offsetWidth / 2);
-      const y = e.clientY - rect.top - (lightEffect.offsetHeight / 2);
-
-      lightEffect.style.transform = `translate(${x}px, ${y}px)`;
-      lightEffect.style.opacity = '1';
-    });
-
-    container.addEventListener('mouseleave', () => {
-      lightEffect.style.opacity = '0';
-    });
-  });
-</script>
-
 <!-- Script para la barra de progreso -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     let progressBar = document.getElementById('progress-bar');
-    let totalHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-    window.addEventListener('scroll', function () {
-      let progress = (window.pageYOffset / totalHeight) * 100;
-      progressBar.style.width = progress + '%';
-    });
+    // Se ejecuta solo si está presente en la página
+    if (progressBar) {
+        let totalHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-    window.addEventListener('resize', function () {
-      totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-    });
-  });
+        window.addEventListener('scroll', function () {
+            let progress = (window.pageYOffset / totalHeight) * 100;
+            progressBar.style.width = progress + '%';
+        });
+
+        window.addEventListener('resize', function () {
+            totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        });
+    }
+});
+
 </script>
 
 <!-- Script para cerrar la sesión -->
@@ -589,51 +548,57 @@
     $chatInput.focus();
   }
 
-  // Evento para abrir el chat e inicializar el modelo
-  $openChat.addEventListener('click', () => {
-    $chatbot.classList.remove('hidden', 'opacity-0', 'translate-y-5');
-    $openChat.classList.add('hidden');
-    initializeChatbot();
-  });
+  // Para evitar errores de consola en caso de que no se encuentren los elementos
+  if ($openChat && $closeChat) {
+    // Evento para abrir el chat e inicializar el modelo
+    $openChat.addEventListener('click', () => {
+      $chatbot.classList.remove('hidden', 'opacity-0', 'translate-y-5');
+      $openChat.classList.add('hidden');
+      initializeChatbot();
+    });
 
-  // Evento para cerrar el chat y limpiar los mensajes
-  $closeChat.addEventListener('click', () => {
-    $chatbot.classList.add('hidden', 'opacity-0', 'translate-y-5');
-    $openChat.classList.remove('hidden');
-    $chatMessages.innerHTML = '';  // Limpiar los mensajes cuando se cierra el chat
-    messages = [];  // Vaciar el array de mensajes
-  });
+    // Evento para cerrar el chat y limpiar los mensajes
+    $closeChat.addEventListener('click', () => {
+      $chatbot.classList.add('hidden', 'opacity-0', 'translate-y-5');
+      $openChat.classList.remove('hidden');
+      $chatMessages.innerHTML = '';  // Limpiar los mensajes cuando se cierra el chat
+      messages = [];  // Vaciar el array de mensajes
+    });
 
-  // Eventos para enviar el mensaje
-  $sendMessage.addEventListener('click', sendMessage);
-  $chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
-  });
+    // Eventos para enviar el mensaje
+    $sendMessage.addEventListener('click', sendMessage);
+    $chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+  }
 </script>
 
 <!-- Script para el sidebar de los temas -->
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
-      const sidebar = document.getElementById('drawer-navigation');
-      const overlay = document.getElementById('sidebar-overlay');
-      const openButton = document.querySelector('[data-drawer-target="drawer-navigation"]');
-      const closeButton = document.querySelector('[data-drawer-hide="drawer-navigation"]');
+    const sidebar = document.getElementById('drawer-navigation');
+    const overlay = document.getElementById('sidebar-overlay');
+    const openButton = document.querySelector('[data-drawer-target="drawer-navigation"]');
+    const closeButton = document.querySelector('[data-drawer-hide="drawer-navigation"]');
 
+    // Verificar si los elementos existen antes de agregar eventos, para evitar errores si el usuario no está logueado
+    if (sidebar && openButton && closeButton && overlay) {
       function openSidebar() {
-          sidebar.classList.remove('-translate-x-full');
-          overlay.classList.remove('hidden');
-          document.body.classList.add('overflow-hidden');
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
       }
 
       function closeSidebar() {
-          sidebar.classList.add('-translate-x-full');
-          overlay.classList.add('hidden');
-          document.body.classList.remove('overflow-hidden');
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
       }
 
       openButton.addEventListener('click', openSidebar);
       closeButton.addEventListener('click', closeSidebar);
       overlay.addEventListener('click', closeSidebar);
+    }
   });
 </script>
 
@@ -641,22 +606,22 @@
 {% load i18n %}
 <script>
   function changeLanguage(lang) {
-      document.getElementById('selected-language').value = lang;
-      document.getElementById('language-form').submit();
+    document.getElementById('selected-language').value = lang;
+    document.getElementById('language-form').submit();
   }
   const flagSVG = {
-      'en': '<g fill-rule="evenodd"><g stroke-width="1pt"><path fill="#bd3d44" d="M0 0h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)" /><path fill="#fff" d="M0 10h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)" /></g><path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)" /><path fill="#fff" d="M8.2 3l1 2.8H12L9.7 7.5l.9 2.7-2.4-1.7L6 10.2l.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9z" transform="scale(3.9385)" /></g>',
-      'es': '<path fill="#ffce00" d="M0 128h512v256H0z" /><path fill="#dd0000" d="M0 0h512v128H0zm0 384h512v128H0z" />'
+    'en': '<g fill-rule="evenodd"><g stroke-width="1pt"><path fill="#bd3d44" d="M0 0h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)" /><path fill="#fff" d="M0 10h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0zm0 20h247v10H0z" transform="scale(3.9385)" /></g><path fill="#192f5d" d="M0 0h98.8v70H0z" transform="scale(3.9385)" /><path fill="#fff" d="M8.2 3l1 2.8H12L9.7 7.5l.9 2.7-2.4-1.7L6 10.2l.9-2.7-2.4-1.7h3zm16.5 0l.9 2.8h2.9l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9zm16.5 0l.9 2.8H45l-2.4 1.7 1 2.7-2.4-1.7-2.4 1.7 1-2.7-2.4-1.7h2.9z" transform="scale(3.9385)" /></g>',
+    'es': '<path fill="#ffce00" d="M0 128h512v256H0z" /><path fill="#dd0000" d="M0 0h512v128H0zm0 384h512v128H0z" />'
   };
   function updateFlag(lang) {
-      const flagSvg = document.getElementById('language-flag');
-      flagSvg.innerHTML = flagSVG[lang];
-      document.getElementById('language-text').textContent = lang === 'en' ? 'English' : 'Español';
+    const flagSvg = document.getElementById('language-flag');
+    flagSvg.innerHTML = flagSVG[lang];
+    document.getElementById('language-text').textContent = lang === 'en' ? 'English' : 'Español';
   }
   function changeLanguage(lang) {
-      document.getElementById('selected-language').value = lang;
-      updateFlag(lang);
-      document.getElementById('language-form').submit();
+    document.getElementById('selected-language').value = lang;
+    updateFlag(lang);
+    document.getElementById('language-form').submit();
   }
   // Inicializar la bandera con el idioma actual
   updateFlag('{{ LANGUAGE_CODE }}');

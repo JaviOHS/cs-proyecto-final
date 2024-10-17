@@ -242,7 +242,7 @@
             <tbody class="divide-y divide-gray-200">
                 {% for threat in threat_details %}
                 <tr>
-                    <td class="px-6 py-4"><i class="fas fa-check text-green-500 text-4xl mb-2"></i>  {{ threat.name }}</td>
+                    <td class="px-6 py-4"><i class="{{ threat.icon }}"></i>  {{ threat.name }}</td>
                     <td class="px-6 py-4">{{ threat.count }} Detecciones</td>
                     <td class="px-6 py-4">{{ threat.percentage }}%</td>
                     <td class="px-6 py-4"><span class="text-green-500 font-bold">{{ threat.status }}</span></td>

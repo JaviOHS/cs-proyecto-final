@@ -1,0 +1,19 @@
+Watching for file changes with StatReloader
+"GET /monitoring/get_notifications/2/ HTTP/1.1" 200 21
+"GET /monitoring/get_notifications/2/ HTTP/1.1" 200 21
+"GET /monitoring/get_notifications/2/ HTTP/1.1" 200 21
+"GET /monitoring/real_time_view/2 HTTP/1.1" 200 53901
+"GET /monitoring/get_notifications/2/ HTTP/1.1" 200 21
+"GET /monitoring/get_notifications/2/ HTTP/1.1" 200 21
+"GET /monitoring/get_notifications/2/ HTTP/1.1" 200 21
+"GET /monitoring/get_notifications/2/ HTTP/1.1" 200 21
+C:\Users\JaviOHS\Desktop\ACTIVIDADES Y TAREAS\CS\cs-proyecto-final\config\settings.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /monitoring/real_time_view/2 HTTP/1.1" 200 53901
+"GET /monitoring/get_notifications/2/ HTTP/1.1" 200 21
+"GET /monitoring/get_notifications/2/ HTTP/1.1" 200 21
+"GET /monitoring/get_notifications/2/ HTTP/1.1" 200 21
+"GET / HTTP/1.1" 200 61405
+C:\Users\JaviOHS\Desktop\ACTIVIDADES Y TAREAS\CS\cs-proyecto-final\config\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\JaviOHS\Desktop\ACTIVIDADES Y TAREAS\CS\cs-proyecto-final\config\settings.py changed, reloading.
