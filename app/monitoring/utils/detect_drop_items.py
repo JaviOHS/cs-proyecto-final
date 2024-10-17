@@ -206,14 +206,17 @@ def save_and_send_video(session, frame_buffer, category, fps):
             'is_drop': is_drop
         }
         
-        send_alert_email_video(
-            subject=f"Alerta: Objeto Caído Detectado - {category}",
-            template_name="email_content.html",
-            context=context,
-            recipient_list=[recipient_email],
-            attachment_path=video_path,
-            attachment_name=video_filename
-        )
+        try:
+            send_alert_email_video(
+                subject=f"Alerta: Objeto Caído Detectado - {category}",
+                template_name="email_content.html",
+                context=context,
+                recipient_list=[recipient_email],
+                attachment_path=video_path,
+                attachment_name=video_filename
+            )
+        except Exception as e:
+            print(f"{RED_COLOR}Error al enviar el correo de alerta: {str(e)}{RESET_COLOR}")
         
         os.remove(video_path)
         print(f"{GREEN_COLOR}Video {video_filename} eliminado después de enviar.{RESET_COLOR}")

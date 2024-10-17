@@ -16,14 +16,14 @@ model_path = os.path.join(current_directory, 'models/aggression_detection_model.
 
 model_loaded = joblib.load(model_path)
 
-NO_AGGRESSION_FRAMES_THRESHOLD = 45
-AGGRESSION_FRAMES_THRESHOLD = 30
+NO_AGGRESSION_FRAMES_THRESHOLD = 35
+AGGRESSION_FRAMES_THRESHOLD = 15  # Se ajusta a 1 para detección inmediata
+detection_interval = 5
 
 class AggressionDetector:
     def __init__(self):
         self.aggression_event_active = False
         self.frames_without_aggression = 0
-        self.frames_with_aggression = 0
         self.aggression_frames = deque(maxlen=300)
         self.prev_frame = None
         self.frame_count = 0
@@ -36,13 +36,10 @@ class AggressionDetector:
     def set_fps(self, fps):
         """Establecer los cuadros por segundo para ajustar los umbrales."""
         self.fps = fps
-        # Ajustar los umbrales de acuerdo a fps si es necesario
         self.no_aggression_frames_threshold = int(NO_AGGRESSION_FRAMES_THRESHOLD * (fps / 12))
-        self.aggression_frames_threshold = int(AGGRESSION_FRAMES_THRESHOLD * (fps / 12))
         
     def extract_features(self, frame):
         frame_resized = cv2.resize(frame, (320, 240))
-        
         rects, _ = self.hog.detectMultiScale(frame_resized, winStride=(16, 16), padding=(32, 32), scale=1.1)
         
         if self.prev_frame is not None:
@@ -64,20 +61,26 @@ class AggressionDetector:
     def process_detection(self, frame, session, frame_index):
         features, frame_resized = self.extract_features(frame)
         self.prev_frame = frame_resized
-        
+
         if features is not None:
             prediction = model_loaded.predict(np.array(features).reshape(1, -1))
 
             if prediction[0] == 1:
                 self.aggression_frames.append(frame)
-                self.frames_with_aggression += 1
-                self.frames_without_aggression = 0
-                
-                if not self.aggression_event_active and self.frames_with_aggression >= self.aggression_frames_threshold:
+
+                # Iniciar el evento de agresión inmediatamente si no está activo
+                if not self.aggression_event_active:
                     self.start_aggression_event(session, frame_index)
+                
+                # Reiniciar frames sin agresión ya que se ha detectado agresión
+                self.frames_without_aggression = 0
+
             else:
+                # Si la agresión estaba activa y ahora no, aumentar el conteo de frames sin agresión
                 if self.aggression_event_active:
                     self.frames_without_aggression += 1
+                    print(f"{YELLOW_COLOR}Frame {frame_index} - Frames sin agresión: {self.frames_without_aggression}/{self.no_aggression_frames_threshold}{RESET_COLOR}")
+
                     if self.frames_without_aggression >= self.no_aggression_frames_threshold:
                         self.end_aggression_event(session)
                 else:
@@ -89,7 +92,6 @@ class AggressionDetector:
         print(RED_COLOR + f"Se inició el evento de agresión. ID: {self.current_event_id}, Frame: {frame_index}" + RESET_COLOR)
         
         detection = session.detection_models.first()
-            
         detection_counter, created = DetectionCounter.objects.get_or_create(
             detection=detection,
             user=session.user
@@ -97,7 +99,7 @@ class AggressionDetector:
         detection_counter.increment()
         
         alarm = Alarm.objects.filter(
-            detection=session.detection_models.first(),
+            detection=detection,
             user=session.user,
             is_active=True
         ).first() 
@@ -117,54 +119,44 @@ class AggressionDetector:
             self.executor.submit(self.save_aggression_event, list(self.aggression_frames), session, self.current_event_id)
             self.reset_state()
 
+    def detect_aggression(self, frame, session, frame_index, fps):
+        if self.fps != fps:
+            self.set_fps(fps)
+
+        # Respetar el intervalo de detección desde la vista
+        print(f"{YELLOW_COLOR}Procesando detección de agresión en el frame {frame_index}{RESET_COLOR}")
+        self.executor.submit(self.process_detection, frame.copy(), session, frame_index)
+        return frame
+
     def reset_state(self):
         self.aggression_event_active = False
-        self.frames_with_aggression = 0
         self.frames_without_aggression = 0
         self.aggression_frames.clear()
         self.current_event_id = None
 
-    def detect_aggression(self, frame, session, frame_index, fps):
-        if self.fps != fps:
-            self.set_fps(fps)
-        
-        # Ejecutar la detección de agresión cada 5 cuadros para reducir la carga de procesamiento
-        if self.frame_count % 5 == 0:
-            self.executor.submit(self.process_detection, frame.copy(), session, frame_index)
-        self.frame_count += 1
-        return frame
-
     @staticmethod
     def save_aggression_event(frames, session, event_id):
-        # Guardar el video directamente en la raíz del proyecto
         video_path = f"event_{event_id}.mp4"
         
-        # Obtener dimensiones del frame para el video
         height, width, layers = frames[0].shape
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         
-        # Crear el video
         video = cv2.VideoWriter(video_path, fourcc, 12, (width, height))
-        
         for frame in frames:
             video.write(frame)
-        
         video.release()
         
         print(GREEN_COLOR + f"Vídeo del evento de agresión guardado en {video_path}" + RESET_COLOR)
         
-        # Datos para el correo electrónico
         recipient_email = session.user.email
         current_time = datetime.now()
-        is_aggression = True
         context = {
             'session': session,
             'activation_time': current_time.strftime("%d/%m/%Y %H:%M:%S"),
             'event_id': event_id,
-            'is_aggression': is_aggression,
+            'is_aggression': True,
         }
         
-        # Enviar el correo con el video como adjunto
         try:
             send_alert_email_video(
                 subject=f"Evento de agresión detectado en la sesión {session.id}",
@@ -177,7 +169,6 @@ class AggressionDetector:
         except Exception as e:
             print(f"Error al enviar el correo electrónico: {e}")
         
-        # Eliminar el archivo de video después de enviarlo
         try:
             if os.path.exists(video_path):
                 os.remove(video_path)
@@ -186,8 +177,10 @@ class AggressionDetector:
                 print(f"El archivo de video {video_path} no se encontró para eliminar.")
         except Exception as e:
             print(f"Error al intentar eliminar el archivo de video: {e}")
-                
+
+# Instancia del detector
 detector = AggressionDetector()
 
+# Función para la detección
 def detect_aggression(frame, session, frame_index, fps):
     return detector.detect_aggression(frame, session, frame_index, fps)

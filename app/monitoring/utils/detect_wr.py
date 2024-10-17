@@ -17,7 +17,7 @@ rekognition = boto3.client(
 )
 
 max_no_detection_frames = 30
-detection_interval = 5  # Este valor debe coincidir con el de VideoStreamView
+detection_interval = 60  
 
 class DetectionState:
     def __init__(self):

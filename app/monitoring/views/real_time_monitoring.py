@@ -33,6 +33,7 @@ class RealTimeMonitoringView(View):
         
         return render(request, 'real_time_monitoring.html', context)
 
+video_lock = threading.Lock()
 class VideoStreamView(View):
     def stream_without_detection(self, request, session_id):
         session = get_object_or_404(MonitoringSession, id=session_id)
@@ -74,11 +75,10 @@ class VideoStreamView(View):
             raise ValueError(f"No se encontró un módulo de detección para el ID '{detection_id}'")
 
         try:
-            print(f"Intentando importar el módulo: {selected_module['module']}")
+            print(f"Cargando módulo de detección: {selected_module['module']}")
             detection_module = importlib.import_module(selected_module['module'])
-            print(f"Módulo importado correctamente: {detection_module}")
             detection_function = getattr(detection_module, selected_module['function'])
-            print(f"Función de detección encontrada: {detection_function}")
+            print(f"Función de detección cargada: {detection_function.__name__}")
             return detection_function
         except ImportError as e:
             print(f"Error en la importación del módulo '{selected_module['module']}': {str(e)}")
@@ -92,53 +92,66 @@ class VideoStreamView(View):
         camera = cv2.VideoCapture(0)
         frame_queue = queue.Queue(maxsize=10)
         stop_event = threading.Event()
-
+        is_saving_video = threading.Event()  # Evento para controlar si ya se está guardando un video
+        fps = camera.get(cv2.CAP_PROP_FPS) or 30
+        
         def capture_frames():
             frame_index = 0
-            fps = camera.get(cv2.CAP_PROP_FPS) or 30
-            detection_interval = 5  # Analizar cada 5 frames para detect_objects_in_frame
-
             while not stop_event.is_set():
                 success, frame = camera.read()
                 if not success:
                     break
 
-                if detection_function:
-                    if detection_function.__name__ == 'detect_objects_in_frame':
-                        # Usar la lógica específica para detect_wr (cada x frames)
-                        if frame_index % detection_interval == 0:
-                            frame = detection_function(frame, session, frame_index, fps)
-                    else:
-                        # Para otras funciones de detección, procesar cada frame
-                        frame = detection_function(frame, session, frame_index, fps)
-
-                try:
-                    frame_queue.put(frame, block=False)
-                except queue.Full:
-                    try:
-                        frame_queue.get_nowait()  # Descartar el frame más antiguo
-                        frame_queue.put(frame, block=False)
-                    except queue.Empty:
-                        pass
-
+                if frame_queue.full():
+                    frame_queue.get()  # Elimina el frame más antiguo si la cola está llena
+                frame_queue.put((frame, frame_index))
                 frame_index += 1
 
             camera.release()
 
-        thread = threading.Thread(target=capture_frames)
-        thread.start()
+        def process_detection():
+            while not stop_event.is_set():
+                if not frame_queue.empty():
+                    frame, frame_index = frame_queue.get()
+
+                    if detection_function and detection_function.__name__ == 'detect_objects_in_frame':
+                        from app.monitoring.utils.detect_wr import detection_interval
+                        if frame_index % detection_interval == 0:
+                            threading.Thread(
+                                target=run_detection,
+                                args=(frame, session, frame_index, fps, is_saving_video)
+                            ).start()
+                    elif detection_function.__name__ == 'detect_aggression':
+                        from app.monitoring.utils.detect_aggression import detection_interval
+                        if frame_index % detection_interval == 0:
+                            threading.Thread(
+                                target=run_detection,
+                                args=(frame, session, frame_index, fps, is_saving_video)
+                            ).start()
+                    else:
+                        threading.Thread(
+                            target=run_detection,
+                            args=(frame, session, frame_index, fps, is_saving_video)
+                        ).start()
+
+        def run_detection(frame, session, frame_index, fps, is_saving_video):
+            if not is_saving_video.is_set():
+                is_saving_video.set()  # Marcar que se está guardando un video
+                try:
+                    frame = detection_function(frame, session, frame_index, fps)
+                finally:
+                    is_saving_video.clear()  # Liberar la marca al terminar la detección
+
+        threading.Thread(target=capture_frames, daemon=True).start()
+        threading.Thread(target=process_detection, daemon=True).start()
 
         try:
             while True:
-                frame = frame_queue.get()
-                ret, buffer = cv2.imencode('.jpg', frame)
-                frame_bytes = buffer.tobytes()
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+                if not frame_queue.empty():
+                    frame, _ = frame_queue.get()
+                    ret, buffer = cv2.imencode('.jpg', frame)
+                    frame_bytes = buffer.tobytes()
+                    yield (b'--frame\r\n'
+                           b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
         finally:
             stop_event.set()
-            thread.join()
-              
-    def stream_without_detection(self, request, session_id):
-        session = get_object_or_404(MonitoringSession, id=session_id)
-        return StreamingHttpResponse(self.gen_frames(None, session), content_type="multipart/x-mixed-replace; boundary=frame")
