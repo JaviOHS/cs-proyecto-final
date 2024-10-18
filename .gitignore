@@ -10,3 +10,4 @@ app/*/migrations/*
 !app/*/migrations/__init__.py
 .env
 *.mp4
+debug.log

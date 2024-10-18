@@ -1,8 +1,8 @@
 module.exports = {
+  mode: 'jit',
   content: [
-    '../../templates/**/*.html', 
-    '../../**/templates/**/*.html', 
-    '../../**/*.html',
+    '../../templates/**/*.html',
+    '../../app/**/templates/**/*.html',
     '../css/tailwind.css',
   ],
   darkMode: 'class',

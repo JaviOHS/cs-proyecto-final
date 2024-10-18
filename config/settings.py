@@ -43,22 +43,6 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'WARNING',  # Cambiar a WARNING para suprimir INFO
-        },
-    },
-}
-
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [

@@ -129,3 +129,28 @@
 .custom-checkbox-class input[type="checkbox"]:focus {
   @apply rounded-full ring-2 ring-blue-700 dark:ring-indigo-400;
 }
+
+.clip-image {
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+  position: absolute;
+  left: -15%; /* Ajusta este valor para mover la imagen horizontalmente */
+  top: 0;
+  width: 115%; /* Compensa el recorte para mantener el tamaño original */
+}
+
+
+::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de desplazamiento */
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-50 dark:bg-gray-700; /* Color de fondo usando Tailwind */
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-500 dark:bg-indigo-600; /* Color de la barra de desplazamiento usando Tailwind */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-blue-700 dark:dark:bg-indigo-800; /* Color de la barra de desplazamiento al pasar el mouse usando Tailwind */
+}
