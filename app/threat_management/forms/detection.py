@@ -14,7 +14,8 @@ class DetectionForm(forms.ModelForm):
             'name': forms.TextInput(attrs={
                 'id': 'id_name',
                 'class': 'inputs',
-                'placeholder': 'Ingrese Amenaza'
+                'placeholder': 'Ingrese Amenaza',
+                'autofocus': True
             }),
             'description': forms.Textarea(attrs={
                 'id': 'id_description',

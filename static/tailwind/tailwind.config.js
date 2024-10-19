@@ -2,7 +2,7 @@ module.exports = {
   mode: 'jit',
   content: [
     '../../templates/**/*.html',
-    '../../app/**/templates/**/*.html',
+    '../../app/**/templates/*.html',
     '../css/tailwind.css',
   ],
   darkMode: 'class',

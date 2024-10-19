@@ -107,7 +107,7 @@ def detect_motion(frame, session, frame_index, fps):
         # Activar la alarma solo la primera vez que se detecta movimiento en un evento
         if not alarm_triggered:
             alarm_triggered = True
-            detection = session.detection_models.first()
+            detection = session.detection_model
             detection_counter, created = DetectionCounter.objects.get_or_create(
                 detection=detection,
                 user=session.user

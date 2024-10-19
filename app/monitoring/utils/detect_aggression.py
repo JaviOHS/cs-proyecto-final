@@ -91,7 +91,7 @@ class AggressionDetector:
         self.current_event_id = f"event_{session.id}_{frame_index}"
         print(RED_COLOR + f"Se inició el evento de agresión. ID: {self.current_event_id}, Frame: {frame_index}" + RESET_COLOR)
         
-        detection = session.detection_models.first()
+        detection = session.detection_model
         detection_counter, created = DetectionCounter.objects.get_or_create(
             detection=detection,
             user=session.user

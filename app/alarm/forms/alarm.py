@@ -27,6 +27,7 @@ class AlarmForm(forms.ModelForm):
                 'class': 'textarea',
                 'placeholder': 'Escriba aquí el mensaje de notificación',
                 'rows': 4,
+                'autofocus': True 
             }),
         }
     

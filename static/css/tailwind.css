@@ -103,7 +103,7 @@
 }
 
 .inputs {
-  @apply w-full bg-white dark:bg-[#0c1322] text-gray-800 dark:text-gray-400 text-base font-semibold pl-10 p-2.5 rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-700 dark:focus:ring-indigo-400;
+  @apply w-full bg-white dark:bg-[#0c1322] text-gray-800 dark:text-gray-400 text-base font-semibold pl-10 p-2.5 rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-700 dark:focus:ring-indigo-400 my-2;
 }
 
 .textarea {

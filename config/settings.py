@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'fallback-secret-key')
 
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -84,6 +84,8 @@ DATABASES = {
 #         'PORT': os.getenv('DB_PORT'),
 #     }
 # }
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 # Configuración Servicios AWS
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')

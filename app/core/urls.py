@@ -12,7 +12,8 @@ from app.core.views.graphs_view import StatisticalGraphsTemplate
 from app.core.views.statistics_format import Plantilla 
 from django.utils.translation import gettext_lazy as _
 from django.views.i18n import set_language
-
+from app.core.views.error_page import ErrorPageTemplate
+from app.core.views.open_api import OpenAIChatView
 app_name = 'core'
 
 urlpatterns = [
@@ -29,4 +30,6 @@ urlpatterns = [
     path('api/chatbot/', ChatbotView.as_view(), name='chatbot_response'),
     path('statistics/', StatisticalGraphsTemplate.as_view(), name='statistics'),
     path('statistics_plantilla/', Plantilla.as_view(), name='statistics_plantilla'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('error_page/', ErrorPageTemplate.as_view(), name='error_page'),
+    path('api/chat/', OpenAIChatView.as_view(), name='openai_chat'),
+]

@@ -136,7 +136,7 @@ def save_video_segment(frames, start_time, session, detected_items):
         print(f"{RED_COLOR}Error al enviar el correo o leer el archivo: {e}{RESET_COLOR}")
         
 def send_alert(detected_items, session):
-    detection = session.detection_models.first()
+    detection = session.detection_model
     
     detection_counter, created = DetectionCounter.objects.get_or_create(
         detection=detection,

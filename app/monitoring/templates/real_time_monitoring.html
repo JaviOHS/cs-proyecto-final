@@ -14,9 +14,7 @@
   <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
   <p class="description-font text-center">{{ details }}<br>
     <span class="text-green-500 dark:text-green-300 font-bold text-center">
-      {% for detection in detections %}
       {{ detection.name }}
-      {% endfor %}
     </span>
   </p>
   <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center">
@@ -70,7 +68,6 @@
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log("Datos de notificaciones:", data);
         const container = document.getElementById('notifications-container');
 
         data.notifications.forEach(notification => {

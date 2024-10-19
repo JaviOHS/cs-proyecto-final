@@ -144,7 +144,7 @@ def detect_theft(frame, session, frame_index, fps):
 
                     executor.submit(save_theft_event, session, list(state['frame_buffer']), current_time, state['theft_number'], fps)
                     
-                    detection = session.detection_models.first()
+                    detection = session.detection_model
                     detection_counter, created = DetectionCounter.objects.get_or_create(
                         detection=detection,
                         user=session.user

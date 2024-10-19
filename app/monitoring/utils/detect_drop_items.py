@@ -168,7 +168,7 @@ def detect_drop_items(frame, session, frame_index, fps):
 
 def handle_new_detections(session):
     with transaction.atomic():
-        detection = session.detection_models.first()
+        detection = session.detection_model
         detection_counter, created = DetectionCounter.objects.get_or_create(
             detection=detection,
             user=session.user

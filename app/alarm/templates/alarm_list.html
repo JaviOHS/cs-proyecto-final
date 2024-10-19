@@ -82,6 +82,11 @@
     </div>
   </div>
 
+  <!-- Paginación -->
+  {% block pagination %}
+  {% include 'components/pagination.html' %}
+  {% endblock pagination %}
+
   <!-- Botones con Tooltips -->
   <div class="flex justify-center mt-6 mb-4 space-x-2">
     <!-- Botón Crear Alarma con Tooltip -->

@@ -30,7 +30,7 @@
             Ver Sesión en Tiempo Real
             <div class="tooltip-arrow" data-popper-arrow></div>
           </div>
-          <span class="text-sm text-green-500 dark:text-green-400 font-bold">Sesión {{ session.id }}</span>
+          <span class="text-sm text-green-500 dark:text-green-400 font-bold">ID {{ session.id }}</span>
           <h2 class="title-module-cards mb-2">
             {{ session.name }}
           </h2>
@@ -74,6 +74,11 @@
       {% endif %}
     </div>
   </div>
+
+  <!-- Paginación -->
+  {% block pagination %}
+  {% include 'components/pagination.html' %}
+  {% endblock pagination %}
 
   <!-- Botones con Tooltips -->
   <div class="flex justify-center mt-6 mb-4 space-x-2">

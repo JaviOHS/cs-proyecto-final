@@ -8,8 +8,6 @@ import pygame
 from app.alarm.utils import validate_sound_file
 from app.threat_management.models import Detection
 import requests
-from pydub import AudioSegment
-from pydub.playback import play
 import io
 
 pygame.init()
@@ -23,16 +21,17 @@ def play_audio_from_s3(url):
             pygame.mixer.music.load(audio_data)
             pygame.mixer.music.play()
         except Exception as e:
-            print(f"Error al reproducir con pygame: {e}")
-            print("Intentando reproducir con pydub...")
+            print(f"Error al reproducir con pygame: {e}\nIntentando reproducir con pydub...")
+            # from pydub import AudioSegment
+            # from pydub.playback import play
 
             # Si falla pygame, intentar con pydub
-            try:
-                audio = AudioSegment.from_file(audio_data, format='mp3')
-                play(audio)
-            except Exception as e:
-                print(f"Error al reproducir con pydub: {e}")
-                print("No se pudo reproducir el audio.")
+            # try:
+            #     audio = AudioSegment.from_file(audio_data, format='mp3')
+            #     play(audio)
+            # except Exception as e:
+            #     print(f"Error al reproducir con pydub: {e}")
+            #     print("No se pudo reproducir el audio.")
 
     except requests.RequestException as e:
         print(f"Error al obtener el archivo de audio: {e}")

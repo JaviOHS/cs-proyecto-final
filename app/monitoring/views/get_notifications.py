@@ -9,11 +9,12 @@ from datetime import timedelta
 def get_notifications(request, session_id):
     try:
         session = MonitoringSession.objects.get(id=session_id)
-        detection_ids = session.detection_models.values_list('id', flat=True)
-        recent_time_threshold = timezone.now() - timedelta(seconds=20)
+        
+        detection_id = session.detection_model.id  # Obtiene el ID del modelo de detección
+        recent_time_threshold = timezone.now() - timedelta(seconds=10)
 
         alerts = Alarm.objects.filter(
-            detection_id__in=detection_ids,
+            detection_id=detection_id,
             is_active=True,
             last_activated__gte=recent_time_threshold
         )
@@ -32,4 +33,5 @@ def get_notifications(request, session_id):
         return JsonResponse({'error': 'Sesión no encontrada'}, status=404)
     
     except Exception as e:
+        print(f"Error en get_notifications: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)

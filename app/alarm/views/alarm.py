@@ -1,39 +1,36 @@
 from django.forms import ValidationError
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView, UpdateView
+from django.urls import reverse_lazy
 from app.alarm.models import Alarm
 from app.alarm.forms.alarm import AlarmForm
-from django.views.generic.edit import CreateView, UpdateView
-from django.urls import reverse_lazy
-from django.contrib import messages
 from app.core.views.confirm_delete import ConfirmDeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import redirect
-from django.utils.translation import gettext_lazy as _ # Para traducir las variables dinámicas
+from django.utils.translation import gettext_lazy as _
+from app.security.mixins.permission_mixin import UserPermissionMixin
+from django.contrib import messages
+from app.security.mixins.form_error_handling import FormErrorHandlingMixin  
 
-class AlarmListView(LoginRequiredMixin, ListView):
+class AlarmListView(UserPermissionMixin, ListView):
     model = Alarm
     template_name = 'alarm_list.html'
     context_object_name = 'alarm_models'
-    
+    permission_required = 'view_alarm'
+
     def get_queryset(self):
-        return Alarm.objects.filter(user=self.request.user)
-    
+        return Alarm.objects.filter(user=self.request.user).order_by('id')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title1"] = _("Gestión de Alarmas")
         context["title2"] = _("Modelos de Alarmas")
         return context
-    
-class AlarmCreateView(LoginRequiredMixin, CreateView):
+
+class AlarmCreateView(FormErrorHandlingMixin, UserPermissionMixin, CreateView):
     model = Alarm
     template_name = 'alarm_form.html'
     form_class = AlarmForm
     success_url = reverse_lazy('alarm:alarm_list')
-    
-    def handle_no_permission(self):
-        messages.error(self.request, 'No tienes permisos para realizar esta acción.')
-        return redirect('alarm:alarm_list')
-    
+    permission_required = 'add_alarm'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title1"] = _("Crear Registros")
@@ -43,76 +40,45 @@ class AlarmCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        response = super().form_valid(form)
-        alarm = self.object
-        messages.success(self.request, f"Éxito al crear alarma para el modelo {alarm.detection}.")
-        return response
+        return super().form_valid(form)
 
-    def form_invalid(self, form):
-        messages.error(self.request, 'Revise los campos.')
-
-        for field, errors in form.errors.items():
-            if field != '__all__':
-                for error in errors:
-                    messages.error(self.request, f"{form.fields[field].label} - {error}")
-            else:
-                for error in errors:
-                    messages.error(self.request, f"Error - {error}")
-
-        return super().form_invalid(form)
+    def add_success_message(self):
+        if hasattr(self, 'object') and self.object and hasattr(self.object, 'detection') and self.object.detection:
+            messages.success(self.request, f"Éxito al crear alarma para el modelo {self.object.detection}.")
+        else:
+            messages.success(self.request, "Éxito al crear la alarma.")
     
-class AlarmUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class AlarmUpdateView(FormErrorHandlingMixin, UserPermissionMixin, UpdateView):
     model = Alarm
     template_name = 'alarm_form.html'
     form_class = AlarmForm
     success_url = reverse_lazy('alarm:alarm_list')
-    
-    def handle_no_permission(self):
-        messages.error(self.request, 'No tienes permisos para realizar esta acción.')
-        return redirect('alarm:alarm_list')
-    
-    def test_func(self):
-        session = self.get_object()
-        return session.user == self.request.user
-    
+    permission_required = 'change_alarm'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title1"] = _("Actualizar Registros")
         context["title2"] = _("Actualizar Alarmas Personalizadas")
         context["back_url"] = self.success_url
         return context
-    
+
     def form_valid(self, form):
-        response = super().form_valid(form)
-        alarm = self.object
-        messages.success(self.request, f"Éxito al actualizar alarma para el modelo {alarm.detection}.")
-        return response
-    
-    def form_invalid(self, form):
-        messages.error(self.request, 'Revise los campos.')
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-        for field, errors in form.errors.items():
-            if field != '__all__':
-                for error in errors:
-                    messages.error(self.request, f"{form.fields[field].label} - {error}")
-            else:
-                for error in errors:
-                    messages.error(self.request, f"Error - {error}")
+    def add_success_message(self):
+        if hasattr(self, 'object') and self.object and hasattr(self.object, 'detection') and self.object.detection:
+            messages.success(self.request, f"Éxito al actualizar alarma para el modelo {self.object.detection}.")
+        else:
+            messages.success(self.request, "Éxito al actualizar la alarma.")
 
-        return super().form_invalid(form)
-    
-class AlarmDeleteView(LoginRequiredMixin, UserPassesTestMixin, ConfirmDeleteView):
+class AlarmDeleteView(FormErrorHandlingMixin, UserPermissionMixin, ConfirmDeleteView):
     model = Alarm
     success_url = reverse_lazy('alarm:alarm_list')
-    
-    def test_func(self):
-        session = self.get_object()
-        return session.user == self.request.user
-    
-    def handle_no_permission(self):
-        messages.error(self.request, 'No tienes permisos para realizar esta acción.')
-        return redirect('alarm:alarm_list')
-    
+    permission_required = 'delete_alarm'
+
     def get_details(self):
-        """Personaliza los detalles que se muestran en la confirmación."""
         return f"ID: {self.object.id} - {self.object.detection}"
+    
+    def add_success_message(self):
+        messages.success(self.request, "Éxito al eliminar la alarma.")

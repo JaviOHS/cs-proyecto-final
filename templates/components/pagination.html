@@ -1,0 +1,31 @@
+{% load static %}
+
+<!-- Paginación -->
+{% if page_obj.paginator.count > page_obj.paginator.per_page %}
+<div class="flex justify-center mt-4">
+  <nav>
+    <ul class="inline-flex -space-x-px text-sm">
+      {% if page_obj.has_previous %}
+      <li>
+        <a href="?page=1"
+          class="secondary-container-bg nav-font-color flex items-center justify-center px-3 h-8 ms-0 leading-tight rounded-s-lg">Anterior</a>
+      </li>
+      {% endif %}
+      {% for num in page_obj.paginator.page_range %}
+      <li>
+        <a href="?page={{ num }}"
+          class="secondary-container-bg nav-font-color flex items-center justify-center px-3 h-8 leading-tight {% if num == page_obj.number %}bg-blue-700 dark:bg-indigo-700 text-white{% endif %}">
+          {{ num }}
+        </a>
+      </li>
+      {% endfor %}
+      {% if page_obj.has_next %}
+      <li>
+        <a href="?page={{ page_obj.next_page_number }}"
+          class="secondary-container-bg nav-font-color flex items-center justify-center px-3 h-8 leading-tight rounded-e-lg">Siguiente</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+{% endif %}

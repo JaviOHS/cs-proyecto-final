@@ -5,17 +5,18 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from app.core.views.confirm_delete import ConfirmDeleteView
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from django.shortcuts import redirect
-from django.utils.translation import gettext_lazy as _  # Para traducir las variables dinámicas
+from django.utils.translation import gettext_lazy as _
+from app.security.mixins.permission_mixin import UserPermissionMixin
+from app.security.mixins.form_error_handling import FormErrorHandlingMixin
 
-class DetectionListView(LoginRequiredMixin, ListView):
+class DetectionListView(UserPermissionMixin, ListView):
     model = Detection
     template_name = 'detection_list.html'
     context_object_name = 'detection_models'
+    permission_required = 'view_detection'
     
     def get_queryset(self):
-        return Detection.objects.filter(is_active=True)
+        return Detection.objects.filter(is_active=True).order_by('id')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23,19 +24,12 @@ class DetectionListView(LoginRequiredMixin, ListView):
         context["title2"] = _("Modelos de Detección de Amenazas")
         return context
     
-class DetectionCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class DetectionCreateView(FormErrorHandlingMixin, UserPermissionMixin, CreateView):
     model = Detection
     template_name = 'detection_form.html'
     form_class = DetectionForm
     success_url = reverse_lazy('detection:detection_list')
-    
-    def test_func(self):
-        # Solo permitir acceso a administradores
-        return self.request.user.is_staff or self.request.user.is_superuser
-
-    def handle_no_permission(self):
-        messages.error(self.request, 'No tienes permisos para realizar esta acción.')
-        return redirect('detection:detection_list')
+    permission_required = 'add_detection'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -44,34 +38,18 @@ class DetectionCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context["back_url"] = self.success_url
         return context
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        detection = self.object
-        messages.success(self.request, f"Éxito al crear el modelo de amenaza {detection.name}.")
-        return response
+    def add_success_message(self):
+        if hasattr(self, 'object') and self.object:
+            messages.success(self.request, f"Éxito al crear el modelo de amenaza {self.object.name}.")
+        else:
+            messages.success(self.request, "Éxito al crear el modelo de amenaza.")
 
-    def form_invalid(self, form):
-        messages.error(self.request, 'Revise los campos.')
-        
-        for field, errors in form.errors.items():
-            for error in errors:
-                messages.error(self.request, f"{form[field].label} - {error}")
-        
-        return super().form_invalid(form)
-    
-class DetectionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class DetectionUpdateView(FormErrorHandlingMixin, UserPermissionMixin, UpdateView):
     model = Detection
     template_name = 'detection_form.html'
     form_class = DetectionForm
     success_url = reverse_lazy('detection:detection_list')
-    
-    def test_func(self):
-        # Solo permitir acceso a administradores
-        return self.request.user.is_staff or self.request.user.is_superuser
-
-    def handle_no_permission(self):
-        messages.error(self.request, 'No tienes permisos para realizar esta acción.')
-        return redirect('detection:detection_list')
+    permission_required = 'change_detection'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -80,33 +58,23 @@ class DetectionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context["back_url"] = self.success_url
         return context
     
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        detection = self.object
-        messages.success(self.request, f"Éxito al actualizar el modelo de amenaza {detection.name}.")
-        return response
-    
-    def form_invalid(self, form):
-        messages.error(self.request, 'Revise los campos.')
-        
-        for field, errors in form.errors.items():
-            for error in errors:
-                messages.error(self.request, f"{form[field].label} - {error}")
-        
-        return super().form_invalid(form)
-    
-class DetectionDeleteView(LoginRequiredMixin, UserPassesTestMixin, ConfirmDeleteView):
+    def add_success_message(self):
+        if hasattr(self, 'object') and self.object:
+            messages.success(self.request, f"Éxito al actualizar el modelo de amenaza {self.object.name}.")
+        else:
+            messages.success(self.request, "Éxito al actualizar el modelo de amenaza.")
+
+class DetectionDeleteView(FormErrorHandlingMixin, UserPermissionMixin, ConfirmDeleteView):
     model = Detection
     success_url = reverse_lazy('detection:detection_list')
-    
-    def test_func(self):
-        # Solo permitir acceso a administradores
-        return self.request.user.is_staff or self.request.user.is_superuser
+    permission_required = 'delete_detection'
 
-    def handle_no_permission(self):
-        messages.error(self.request, 'No tienes permisos para realizar esta acción.')
-        return redirect('detection:detection_list')
-    
     def get_details(self):
         """Personaliza los detalles que se muestran en la confirmación."""
         return f"ID: {self.object.id} - {self.object.name}"
+
+    def add_success_message(self):
+        if hasattr(self, 'object') and self.object:
+            messages.success(self.request, f"Éxito al eliminar el modelo de amenaza: {self.object.name}.")
+        else:
+            messages.success(self.request, "Éxito al eliminar el modelo de amenaza.")

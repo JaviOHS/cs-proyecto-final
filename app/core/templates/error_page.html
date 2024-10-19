@@ -1,0 +1,36 @@
+{% extends 'components/base.html' %}
+{% load static %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+{% block content %}
+<div class="py-12"></div>
+<div class="grid lg:grid-cols-2 px-12 space-y-4 space-x-4">
+  <div class="flex flex-col justify-center items-center">
+    <div class="flex items-center p-4 mb-4 rounded-xl text-sm bg-red-500 dark:bg-red-700" role="alert">
+      <div class="bg-white rounded-full p-2 mr-6">
+        <i class="fa-solid fa-triangle-exclamation text-2xl text-red-600"></i>
+      </div>
+      <div class="block space-y-2">
+        <h3 class="text-white font-black tracking-tight text-xl">
+          {{ title2 }}
+        </h3>
+        <div class="text-neutral-200 text-base font-bold transition-all duration-500 leading-5 space-y-2">
+          <p>Detalles:</p>
+          <ul>
+            <li>{{ error_message }}</li>
+            <li>
+              {% if error_details %}
+              {{ error_details }}
+              {% endif %}
+            </li>
+          </ul>
+          <p>Si el problema persiste, contacta al administrador.</p>
+        </div>
+      </div>
+    </div>
+    <a href="{% url 'home' %}" class="aditional-button">Volver a la página principal</a>
+  </div>
+  <div class="flex justify-center">
+    <img src="{% static image_url %}" alt="error" class="w-full h-auto object-contain max-h-96">
+  </div>
+</div>
+{% endblock content %}

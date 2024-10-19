@@ -9,12 +9,12 @@ class Detection(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
-    def __str__(self):
-        return self.name
-    
     class Meta:
         verbose_name = "Modelo de Detección de Amenaza"
         verbose_name_plural = "Modelos de Detección de Amenazas"
+        
+    def __str__(self):
+        return self.name
     
     def save(self, *args, **kwargs):
         if not self.icon:

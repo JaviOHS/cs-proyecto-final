@@ -133,12 +133,6 @@
               </span>
               {{ field }}
             </div>
-            {% if field.help_text %}
-            <p class="description-font">{{ field.help_text }}</p>
-            {% endif %}
-            {% for error in field.errors %}
-            <p class="description-font">{{ error }}</p>
-            {% endfor %}
           </div>
           {% endfor %}
         </div>

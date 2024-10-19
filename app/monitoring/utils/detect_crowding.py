@@ -62,7 +62,7 @@ def detect_crowding(frame, session, frame_index, fps):
     # Activar o detener la alarma según se detecte o no aglomeración
     try:
         if crowding_detected:
-            detection = session.detection_models.first()
+            detection = session.detection_model
             
             # Incrementar el contador de detecciones
             detection_counter, created = DetectionCounter.objects.get_or_create(

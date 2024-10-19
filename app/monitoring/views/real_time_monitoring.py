@@ -1,6 +1,5 @@
 import importlib
 from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse
 from django.views import View
 from app.monitoring.models import MonitoringSession
 import cv2
@@ -8,24 +7,24 @@ from django.http import StreamingHttpResponse
 from django.contrib import messages
 from app.monitoring.models import MonitoringSession
 from django.utils.translation import gettext_lazy as _  # Para traducir las variables dinámicas
-import numpy as np
-import asyncio
 import threading
 
 class RealTimeMonitoringView(View):
+    permission_required = 'view_monitoringsession'
+    
     def get(self, request, session_id):
         session = get_object_or_404(MonitoringSession, id=session_id)
         
         if session.user != request.user:
-            messages.error(request, 'No tienes permiso para acceder a esta sesión de monitoreo.')
-            return render(request, 'monitoring_session.html', status=403)
-
-        detection = session.detection_models.all()
+            messages.error(request, _('No tienes permiso para acceder a esta sesión de monitoreo.'))
+            return redirect('monitoring:monitoring_session')
+        
+        detection = session.detection_model
 
         context = {
             'session_id': session_id,
             'session': session,
-            'detections': detection,
+            'detection': detection,
             'title1': _('Real-Time Monitoring'),
             'title2': _('Monitoring Session: ') + f'{session.id}',
             'details': f'{session.name} - {session.description}'
@@ -41,11 +40,8 @@ class VideoStreamView(View):
 
     def get(self, request, session_id):
         session = get_object_or_404(MonitoringSession, id=session_id)
-        if session.user != request.user:
-            messages.error(request, 'No tienes permiso para acceder a esta sesión de monitoreo.')
-            return redirect(reverse('monitoring:monitoring_session'))
-
-        detection = session.detection_models.first()
+        
+        detection = session.detection_model
         if not detection:
             messages.warning(request, 'No hay un modelo de detección válido asociado con esta sesión. Se mostrará el video sin procesamiento.')
             return self.stream_without_detection(request, session_id)

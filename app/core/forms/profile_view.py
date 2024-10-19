@@ -11,7 +11,8 @@ class UserProfileForm(forms.ModelForm):
         widgets = {
             'first_name': forms.TextInput(attrs={
                 'id': 'id_first_name',
-                'class': 'inputs'
+                'class': 'inputs',
+                'autofocus': 'autofocus'
             }),
             'last_name': forms.TextInput(attrs={
                 'id': 'id_last_name',
@@ -52,11 +53,18 @@ class UserProfileForm(forms.ModelForm):
     
     def clean_email(self):
         email = self.cleaned_data['email']
-        return email.lower()    
+        return email.lower()  
+    
+    def clean_current_password(self):
+        current_password = self.cleaned_data['current_password']
+        if not self.instance.check_password(current_password):
+            raise forms.ValidationError('La contraseña actual no es correcta.')
+        return current_password  
 
 class UserProfilePasswordForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['old_password'].label = 'Contraseña Actual'
         self.fields['new_password2'].label = 'Confirmar Contraseña'
         for field in self.fields.values():
             field.widget.attrs.update({

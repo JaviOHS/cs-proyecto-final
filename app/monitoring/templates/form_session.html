@@ -22,13 +22,13 @@
           <div class="mb-6">
             <h2 class="labels">{% trans 'Modelos de Detección' %}</h2>
             <fieldset class="space-y-4 flex align-items">
-              {{ form.detection_models }}
+              {{ form.detection_model }}
             </fieldset>
           </div>
           <!-- Columna derecha: Inputs -->
           <div>
             {% for field in form %}
-              {% if field.name != "detection_models" %}
+              {% if field.name != "detection_model" %}
               <div class="mb-6 flex flex-col">
                 <label class="labels">
                   {{ field.label }}

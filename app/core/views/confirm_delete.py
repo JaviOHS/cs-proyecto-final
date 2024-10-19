@@ -1,19 +1,10 @@
 from django.views.generic import DeleteView
 from django.urls import reverse_lazy
-from django.core.exceptions import PermissionDenied
-from django.contrib import messages
 from django.utils.translation import gettext_lazy as _ # Para traducir las variables dinámicas
 
 class ConfirmDeleteView(DeleteView):
     template_name = 'confirm_delete.html' 
     success_url = reverse_lazy('home')
-
-    def get_object(self, queryset=None):
-        obj = super().get_object(queryset)
-        if hasattr(obj, 'user') and obj.user != self.request.user:
-            raise PermissionDenied("No tienes permiso para eliminar este objeto.")
-        return obj
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -37,5 +28,4 @@ class ConfirmDeleteView(DeleteView):
         return self.success_url
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, f"{self.model._meta.verbose_name} eliminado con éxito.")
         return super().delete(request, *args, **kwargs)

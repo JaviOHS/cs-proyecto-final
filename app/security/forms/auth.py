@@ -6,7 +6,12 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'dni', 'phone', 'image')
-    
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].label = 'Usuario'
+        self.fields['password2'].label = 'Confirmar Contraseña'
+        
     def clean_first_name(self):
         first_name = self.cleaned_data['first_name']
         return first_name.title()
