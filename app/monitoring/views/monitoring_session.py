@@ -46,6 +46,7 @@ class CreateMonitoringSessionView(FormErrorHandlingMixin, UserPermissionMixin, C
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        print('Datos del formulario:', form.cleaned_data)
         return super().form_valid(form)
     
     def add_success_message(self):

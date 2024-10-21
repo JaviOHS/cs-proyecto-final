@@ -3,9 +3,16 @@ from app.monitoring.models import MonitoringSession
 from django.core.exceptions import ValidationError
 
 class MonitoringSessionForm(forms.ModelForm):
+    camera_type = forms.ChoiceField(
+        choices=[('local', 'Utilizar Cámara Local'), ('external', 'Utilizar Cámara Externa')],
+        widget=forms.RadioSelect,
+        required=True,
+        label='Tipo de Cámara'
+    )
+    
     class Meta:
         model = MonitoringSession
-        fields = ['name', 'description', 'detection_model']
+        fields = ['name', 'description', 'detection_model', 'camera_type', 'camera_ip']
         error_messages = {
             'unique': {
                 'name': 'Ya existe una sesión con este nombre. Por favor, elija otro.',
@@ -28,6 +35,12 @@ class MonitoringSessionForm(forms.ModelForm):
             'detection_model': forms.RadioSelect(attrs={
                 'class': 'checkbox custom-checkbox-class',
                 'id': 'id_detection_model'
+            }),
+            'camera_ip': forms.TextInput(attrs={
+                'id': 'id_camera_ip',
+                'class': 'inputs',
+                'required': False,
+                'placeholder': 'Dirección IP de la cámara'
             })
         }
 
@@ -35,7 +48,8 @@ class MonitoringSessionForm(forms.ModelForm):
         detection_model = kwargs.pop('detection_model')
         super().__init__(*args, **kwargs)
         self.fields['detection_model'].queryset = detection_model
-
+        self.fields['camera_ip'].label = 'Cámara IP'
+        
     def clean(self):
         cleaned_data = super().clean()
         user = self.initial.get('user')  # Asume que el usuario se pasa como contexto inicial
@@ -57,3 +71,9 @@ class MonitoringSessionForm(forms.ModelForm):
         if not description: return description 
         if description[-1] != '.': description += '.'
         return description.capitalize()
+
+    def clean_camera_ip(self):
+        camera_type = self.cleaned_data.get('camera_type')
+        if camera_type == 'local':
+            return None
+        return self.cleaned_data.get('camera_ip')

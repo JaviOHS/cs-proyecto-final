@@ -13,40 +13,79 @@
   <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
   <p class="description-font text-center">{% trans 'Complete el formulario.' %}</p>
 
-  <div class="flex justify-center pt-2 space-y-2">
-    <div class="secondary-container-bg w-full max-w-4xl shadow-lg rounded-lg p-6">
+  <div class="flex justify-center pt-2">
+    <div class="secondary-container-bg w-full max-w-4xl shadow-lg rounded-lg p-6 space-y-2">
       <form method="post">
         {% csrf_token %}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <!-- Columna izquierda: Modelos de detección -->
+          <!-- Columna derecha: Detecciones -->
           <div class="mb-6">
             <h2 class="labels">{% trans 'Modelos de Detección' %}</h2>
             <fieldset class="space-y-4 flex align-items">
               {{ form.detection_model }}
             </fieldset>
           </div>
-          <!-- Columna derecha: Inputs -->
+
+          <!-- Columna derecha: Nombre y descripcion -->
           <div>
-            {% for field in form %}
-              {% if field.name != "detection_model" %}
-              <div class="mb-6 flex flex-col">
-                <label class="labels">
-                  {{ field.label }}
-                </label>
-                <div class="relative mt-1">
-                  {% if field.name == "name" %}
-                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <i class="form-icons fa-solid fa-file-signature"></i>
-                  </div>
-                  {% endif %}
-                  {{ field }}
+            <div class="mb-6 flex flex-col">
+              <label class="labels">{{ form.name.label }}</label>
+              <div class="relative mt-1">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <i class="form-icons fa-solid fa-file-signature"></i>
                 </div>
+                {{ form.name }}
               </div>
-              {% endif %}
-            {% endfor %}
+            </div>
+            <div class="mb-6 flex flex-col">
+              <label class="labels">{{ form.description.label }}</label>
+              <div class="relative mt-1">
+                {{ form.description }}
+              </div>
+            </div>
           </div>
         </div>
-        <div class="flex items-center justify-center">
+
+        <!-- Tipos de cámara en la parte inferior -->
+        <div>
+          <h2 class="labels text-center">{% trans 'Tipo de Cámara' %}</h2>
+          <ul class="grid w-full gap-6 md:grid-cols-2">
+            {% for camera in form.camera_type.field.choices %}
+            <li>
+              <input type="radio" id="camera_type_{{ forloop.counter0 }}" name="camera_type" value="{{ camera.0 }}"
+                class="hidden peer" required />
+              <label for="camera_type_{{ forloop.counter0 }}" class="camera-type">
+                <div class="block">
+                  {% if camera.0 == 'local' %}
+                  <span class="text-lg">Cámara Local</span>
+                  <i class="form-icons fa-solid fa-laptop"></i>
+                  <p class="text-sm">Utiliza la cámara del dispositivo.</p>
+                  {% elif camera.0 == 'external' %}
+                  <span class="text-lg">Cámara Externa</span>
+                  <i class="form-icons fa-solid fa-video"></i>
+                  <p class="text-sm">Ingresa la IP de la cámara externa.</p>
+                  {% endif %}
+                </div>
+              </label>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Contenedor del campo de IP, inicialmente oculto -->
+        <div id="camera-ip-container" style="display: none;" class="mt-2">
+          <div class="mb-6 flex flex-col items-center">
+            <label class="labels">{{ form.camera_ip.label }}</label>
+              <div class="relative mt-1">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <i class="form-icons fa-solid fa-location-dot"></i>
+                </div>
+                {{ form.camera_ip }}
+              </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-center mt-4">
           <button type="submit" class="save-change-button">
             {% trans 'Guardar Cambios' %}
             <i class="fa-solid fa-floppy-disk px-2"></i>
@@ -83,5 +122,24 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const localCameraRadio = document.getElementById('camera_type_0');
+    const externalCameraRadio = document.getElementById('camera_type_1');
+    const cameraIpContainer = document.getElementById('camera-ip-container');
+
+    function toggleCameraIpField() {
+      cameraIpContainer.style.display = externalCameraRadio.checked ? 'block' : 'none';
+    }
+
+    localCameraRadio.addEventListener('change', toggleCameraIpField);
+    externalCameraRadio.addEventListener('change', toggleCameraIpField);
+
+    toggleCameraIpField();
+  });
+</script>
+
+
 
 {% endblock content %}

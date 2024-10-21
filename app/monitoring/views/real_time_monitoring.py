@@ -85,7 +85,12 @@ class VideoStreamView(View):
 
     def gen_frames(self, detection_function, session):
         import queue
-        camera = cv2.VideoCapture(0)
+        camera_ip = session.camera_ip 
+        camera_url = 0 if camera_ip is None else f'http://{camera_ip}/video'
+        camera = cv2.VideoCapture(camera_url)
+        if not camera.isOpened():
+            print(f"No se pudo abrir la cámara en la URL: {camera_url}")
+        camera = cv2.VideoCapture(camera_url)
         frame_queue = queue.Queue(maxsize=10)
         stop_event = threading.Event()
         is_saving_video = threading.Event()  # Evento para controlar si ya se está guardando un video

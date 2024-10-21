@@ -102,8 +102,23 @@
   @apply text-slate-900 dark:text-gray-200 text-xl capitalize font-bold mb-2;
 }
 
-.inputs {
-  @apply w-full bg-white dark:bg-[#0c1322] text-gray-800 dark:text-gray-400 text-base font-semibold pl-10 p-2.5 rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-700 dark:focus:ring-indigo-400 my-2;
+.inputs, .camera-type {
+  @apply w-full bg-white dark:bg-[#0c1322] text-gray-800 dark:text-gray-400 text-base font-semibold pl-10 p-2.5 rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-700 dark:focus:ring-indigo-400;
+}
+
+.camera-type {
+  @apply 
+    hover:bg-gray-100 
+    dark:hover:bg-[#091227] 
+    border-l-4 border-blue-400 dark:border-indigo-500 
+    p-6 inline-flex items-center justify-between w-full 
+    rounded-lg cursor-pointer 
+    peer-checked:border-transparent 
+    peer-checked:border-blue-600 
+    dark:peer-checked:border-indigo-500 
+    dark:peer-checked:text-indigo-500 
+    peer-checked:text-blue-600
+    
 }
 
 .textarea {

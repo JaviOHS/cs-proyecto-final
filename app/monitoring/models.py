@@ -1,5 +1,4 @@
 
-import os
 from django.conf import settings
 from django.db import models
 from app.threat_management.models import Detection
@@ -11,12 +10,9 @@ class MonitoringSession(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     detection_model = models.ForeignKey(Detection, verbose_name='Modelo de Detección', on_delete=models.CASCADE)
-    crowding_threshold = models.IntegerField(
-        default=10,
-        verbose_name='Umbral de Aglomeración',
-        help_text='Número de personas a partir del cual se considera aglomeración'
-    )
-
+    crowding_threshold = models.IntegerField(default=10, verbose_name='Umbral de Aglomeración', help_text='Número de personas a partir del cual se considera aglomeración')
+    camera_ip = models.CharField(max_length=255, null=True, blank=True, verbose_name='IP de la Cámara')
+    
     class Meta:
         verbose_name = "Sesión de Monitoreo"
         verbose_name_plural = "Sesiones de Monitoreo"
@@ -29,4 +25,3 @@ class MonitoringSession(models.Model):
         if not self.description:
             self.description = 'No se ha proporcionado una descripción.'
         super().save(*args, **kwargs)
-        
