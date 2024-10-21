@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import FormView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from app.core.models import User2FAPreferences
 from app.security.forms.auth import CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _  # Para traducir las variables dinámicas
@@ -59,24 +60,33 @@ class SigninView(AuthErrorHandlingMixin, FormView):
         user = authenticate(self.request, username=username, password=password)
 
         if user is not None:
-            # Generate a 6-digit code
-            code = ''.join([str(random.randint(0, 9)) for _ in range(6)])
+            # Check if 2FA is enabled for this user
+            two_fa_preferences, created = User2FAPreferences.objects.get_or_create(user=user)
             
-            # Store the code in session
-            self.request.session['2fa_code'] = code
-            self.request.session['user_id'] = user.id
+            if two_fa_preferences.is_2fa_enabled:
+                # Generate a 6-digit code
+                code = ''.join([str(random.randint(0, 9)) for _ in range(6)])
+                
+                # Store the code in session
+                self.request.session['2fa_code'] = code
+                self.request.session['user_id'] = user.id
 
-            # Send the code via email
-            send_mail(
-                'Your 2FA Code',
-                f'Your 2FA code is: {code}',
-                'from@example.com',
-                [user.email],
-                fail_silently=False,
-            )
+                # Send the code via email
+                send_mail(
+                    'Your 2FA Code',
+                    f'Your 2FA code is: {code}',
+                    'from@example.com',
+                    [user.email],
+                    fail_silently=False,
+                )
 
-            # Redirect to 2FA verification page
-            return redirect('security:verify_2fa')
+                # Redirect to 2FA verification page
+                return redirect('security:verify_2fa')
+            else:
+                # If 2FA is not enabled, log the user in directly
+                login(self.request, user)
+                messages.success(self.request, "Has iniciado sesión correctamente.")
+                return redirect("home")
         else:
             messages.error(self.request, "El usuario o la contraseña son incorrectos.")
             return self.form_invalid(form)
