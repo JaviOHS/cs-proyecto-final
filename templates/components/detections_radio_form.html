@@ -1,0 +1,16 @@
+<div class="mb-6">
+  <h2 class="labels text-center">Modelos de Detección</h2>
+  <ul class="detections-models-container">
+    {% for detection in form.detection_model.field.choices %}
+    <li class="detection-item">
+      <input type="radio" id="detection_model_{{ forloop.counter0 }}" name="detection_model" value="{{ detection.0 }}"
+        class="hidden peer" required {% if form.detection_model.value==detection.0 %}checked{% endif %} />
+      <label for="detection_model_{{ forloop.counter0 }}" class="detection-label">
+        <span class="detection-font">
+          {{ detection.1 }}
+        </span>
+      </label>
+    </li>
+    {% endfor %}
+  </ul>
+</div>

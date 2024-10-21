@@ -70,7 +70,7 @@
   @apply text-blue-700 dark:text-indigo-400 text-3xl font-bold;
 }
 
-.description-font, .checkbox {
+.description-font {
   @apply text-gray-800 dark:text-neutral-400 font-semibold;
 }
 
@@ -99,7 +99,7 @@
 }
 
 .labels {
-  @apply text-slate-900 dark:text-gray-200 text-xl capitalize font-bold mb-2;
+  @apply text-slate-900 dark:text-gray-200 text-xl capitalize font-bold mb-2 text-center;
 }
 
 .inputs, .camera-type {
@@ -118,7 +118,6 @@
     dark:peer-checked:border-indigo-500 
     dark:peer-checked:text-indigo-500 
     peer-checked:text-blue-600
-    
 }
 
 .textarea {
@@ -132,27 +131,6 @@
 .form-icons {
   @apply text-blue-700 dark:text-indigo-400;
 }
-
-.custom-checkbox-class input[type="checkbox"] {
-  @apply h-4 w-4 rounded bg-blue-700 border-blue-400 dark:bg-indigo-400 dark:border-indigo-700 focus:ring-2 focus:outline-none;
-}
-
-.custom-checkbox-class input[type="checkbox"]:checked {
-  @apply rounded-full bg-blue-700 border-blue-400 dark:bg-indigo-400 dark:border-indigo-700;
-}
-
-.custom-checkbox-class input[type="checkbox"]:focus {
-  @apply rounded-full ring-2 ring-blue-700 dark:ring-indigo-400;
-}
-
-.clip-image {
-  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
-  position: absolute;
-  left: -15%; /* Ajusta este valor para mover la imagen horizontalmente */
-  top: 0;
-  width: 115%; /* Compensa el recorte para mantener el tamaño original */
-}
-
 
 ::-webkit-scrollbar {
   width: 12px; /* Ancho de la barra de desplazamiento */
@@ -168,4 +146,37 @@
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-blue-700 dark:dark:bg-indigo-800; /* Color de la barra de desplazamiento al pasar el mouse usando Tailwind */
+}
+
+.detections-models-container {
+  @apply flex flex-col gap-2 bg-white dark:bg-[#0c1322] p-2 rounded-lg
+  border-l-4 border-blue-400 dark:border-indigo-500 
+  transition-all duration-300; 
+}
+
+.detection-label {
+  @apply 
+    block w-full
+    bg-white dark:bg-[#0c1322]
+    p-2
+    rounded-lg cursor-pointer 
+    transition-all duration-300;
+}
+
+.detection-font {
+  @apply 
+    block
+    text-gray-800 dark:text-neutral-400 
+    font-semibold;
+}
+
+.peer:checked + .detection-label {
+  @apply 
+    border-transparent 
+    border-blue-600 dark:border-indigo-500;
+}
+
+.peer:checked + .detection-label .detection-font {
+  @apply 
+    text-blue-600 dark:text-indigo-500;
 }

@@ -19,14 +19,11 @@
         {% csrf_token %}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Columna derecha: Detecciones -->
-          <div class="mb-6">
-            <h2 class="labels">{% trans 'Modelos de Detección' %}</h2>
-            <fieldset class="space-y-4 flex align-items">
-              {{ form.detection_model }}
-            </fieldset>
-          </div>
+          {% block detection_radio %}
+          {% include 'components/detections_radio_form.html' %}
+          {% endblock detection_radio %}
 
-          <!-- Columna derecha: Nombre y descripcion -->
+          <!-- Columna derecha: Nombre, descripcion, ip -->
           <div>
             <div class="mb-6 flex flex-col">
               <label class="labels">{{ form.name.label }}</label>
@@ -43,17 +40,26 @@
                 {{ form.description }}
               </div>
             </div>
+            <div id="camera-ip-container" class="mb-6 flex flex-col opacity-0 transition-opacity duration-500">
+              <label class="labels">{{ form.camera_ip.label }}</label>
+              <div class="relative mt-1">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <i class="form-icons fa-solid fa-location-dot"></i>
+                </div>
+                {{ form.camera_ip }}
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Tipos de cámara en la parte inferior -->
         <div>
-          <h2 class="labels text-center">{% trans 'Tipo de Cámara' %}</h2>
+          <h2 class="labels text-center">{% trans 'Tipo de Conexion' %}</h2>
           <ul class="grid w-full gap-6 md:grid-cols-2">
             {% for camera in form.camera_type.field.choices %}
             <li>
               <input type="radio" id="camera_type_{{ forloop.counter0 }}" name="camera_type" value="{{ camera.0 }}"
-                class="hidden peer" required />
+                class="hidden peer" required {%if form.camera_type.value == camera.0 %}checked{% endif %}/>
               <label for="camera_type_{{ forloop.counter0 }}" class="camera-type">
                 <div class="block">
                   {% if camera.0 == 'local' %}
@@ -70,19 +76,6 @@
             </li>
             {% endfor %}
           </ul>
-        </div>
-
-        <!-- Contenedor del campo de IP, inicialmente oculto -->
-        <div id="camera-ip-container" style="display: none;" class="mt-2">
-          <div class="mb-6 flex flex-col items-center">
-            <label class="labels">{{ form.camera_ip.label }}</label>
-              <div class="relative mt-1">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <i class="form-icons fa-solid fa-location-dot"></i>
-                </div>
-                {{ form.camera_ip }}
-              </div>
-          </div>
         </div>
 
         <div class="flex items-center justify-center mt-4">
@@ -130,16 +123,23 @@
     const cameraIpContainer = document.getElementById('camera-ip-container');
 
     function toggleCameraIpField() {
-      cameraIpContainer.style.display = externalCameraRadio.checked ? 'block' : 'none';
+      // Si la cámara externa está seleccionada, muestra el contenedor
+      if (externalCameraRadio.checked) {
+        cameraIpContainer.classList.remove('opacity-0', 'height-0');
+        cameraIpContainer.classList.add('opacity-100', 'h-auto'); // Para mostrar con animación
+      } else {
+        cameraIpContainer.classList.add('opacity-0', 'height-0'); // Para ocultar con animación
+        cameraIpContainer.classList.remove('opacity-100', 'h-auto'); // Para ocultar con animación
+      }
     }
 
+    // Escuchar cambios en ambos radio buttons
     localCameraRadio.addEventListener('change', toggleCameraIpField);
     externalCameraRadio.addEventListener('change', toggleCameraIpField);
 
+    // Ejecutar la función una vez al cargar la página para manejar el estado inicial
     toggleCameraIpField();
   });
 </script>
-
-
 
 {% endblock content %}

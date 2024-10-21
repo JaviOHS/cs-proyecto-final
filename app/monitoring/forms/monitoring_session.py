@@ -7,7 +7,7 @@ class MonitoringSessionForm(forms.ModelForm):
         choices=[('local', 'Utilizar Cámara Local'), ('external', 'Utilizar Cámara Externa')],
         widget=forms.RadioSelect,
         required=True,
-        label='Tipo de Cámara'
+        label='Conexión de la Cámara'
     )
     
     class Meta:
@@ -33,7 +33,6 @@ class MonitoringSessionForm(forms.ModelForm):
                 'placeholder': 'Descripción de la sesión'
             }),
             'detection_model': forms.RadioSelect(attrs={
-                'class': 'checkbox custom-checkbox-class',
                 'id': 'id_detection_model'
             }),
             'camera_ip': forms.TextInput(attrs={

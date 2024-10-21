@@ -1,7 +1,7 @@
 {% extends 'components/base.html' %}
 {% load static %}
 {% load i18n %}
-<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+<title>{% block title %}{{ title1 }} {% endblock title %}</title>
 {% block content %}
 <div class="py-12 lg:py-14"></div>
 <div id="notifications-container" class="fixed top-16 right-4 z-50 w-96 max-w-full" data-aos="fade-left"></div>
@@ -37,6 +37,9 @@
         <i class="fa-solid fa-home text-lg"></i>
       </button>
     </a>
+    <button onclick="location.reload()" class="home-and-back-button">
+      <i class="fa-solid fa-sync-alt text-lg"></i> <!-- Icono de actualización -->
+    </button>
   </div>
 </div>
 <audio id="alarmSound" src="{{ session.alarm.sound_file.url }}" preload="auto"></audio>

@@ -18,37 +18,45 @@
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="grid grid-cols-1">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
             <!-- Modelo de Detección -->
-            <div class="mb-4 sm:mb-6 flex flex-col">
-              <label class="labels">
-                {{ form.detection.label }}
-              </label>
-              {{ form.detection }}
-            </div>
+            {% block detection_radio %}
+            {% include 'components/detections_radio_form.html' %}
+            {% endblock detection_radio %}
             <!-- Notificación -->
-            <div class="mb-4 sm:mb-6 flex flex-col">
-              <label class="labels">
-                {{ form.notification_message.label }}
-              </label>
-              {{ form.notification_message }}
-            </div>
-            <!-- Archivo -->
-            <div class="mb-4 sm:mb-6 flex flex-col justify-center items-center">
-              <label for="dropzone-file"
-                class="cursor-pointer w-[90%] sm:w-[70%] space-y-2 primary-container-bg flex flex-col items-center justify-center rounded-2xl p-4">
-                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                  <i class="form-icons fa-solid fa-bell text-2xl"></i>
-                  <p class="description-module-cards text-center text-sm sm:text-base">
-                      {% trans "Click para subir tono de alarma" %}<br>
-                      {% trans "Formato Mp3" %}<br>
-                      {% trans "Tamaño Máximo: 10Mb" %}<br>
-                      {% trans "Duración Máxima: 20s" %}
-                  </p>                
-                  <!-- Campo de archivo oculto -->
-                  <input type="file" name="sound_file" id="dropzone-file" class="hidden">
+            <div>
+              <!-- Mensaje de Notificacion-->
+              <div class="mb-4 sm:mb-6 flex flex-col">
+                <label class="labels">
+                  {{ form.notification_message.label }}
+                </label>
+                {{ form.notification_message }}
+              </div>
+              <!-- Archivo -->
+              <div class="mb-4 sm:mb-6 flex flex-col justify-center items-center">
+                <label for="dropzone-file"
+                  class="cursor-pointer w-[90%] sm:w-[70%] space-y-2 primary-container-bg flex flex-col items-center justify-center rounded-2xl p-4">
+                  <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                    <i class="form-icons fa-solid fa-bell text-2xl"></i>
+                    <p class="description-module-cards text-center text-sm sm:text-base">
+                      {% trans "Subir tono MP3" %}<br>
+                      {% trans "Tamaño Máximo: 1MB" %}<br>
+                      {% trans "Duración Máxima: 20S" %}
+                    </p>
+                    <input type="file" name="sound_file" id="dropzone-file" class="hidden"
+                      onchange="updateAlarmMessage()">
+                  </div>
+                </label>
+                <div class="mt-4 flex flex-col">
+                  <p id="alarm-message" class="text-center description-font">
+                    {% if current_sound_file %}
+                    {% trans 'Alarma actual:' %} {{ current_sound_file }}
+                    {% else %}
+                    {% trans 'No hay una alarma seleccionada.' %}
+                    {% endif %}
+                  </p>
                 </div>
-              </label>
+              </div>
             </div>
           </div>
         </div>
@@ -90,5 +98,16 @@
     </div>
   </div>
 </div>
+
+<script>
+  function updateAlarmMessage() {
+    const fileInput = document.getElementById('dropzone-file');
+    const alarmMessage = document.getElementById('alarm-message');
+    if (fileInput.files.length > 0) {
+      const fileName = fileInput.files[0].name;
+      alarmMessage.textContent = `{{ _('Alarma seleccionada:') }} ${fileName}`;
+    }
+  }
+</script>
 
 {% endblock content %}
