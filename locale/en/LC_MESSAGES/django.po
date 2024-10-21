@@ -64,6 +64,21 @@ msgid "Todos los derechos reservados."
 msgstr "All rights reserved"
 
 
+msgid "Configuraciones"
+msgstr "Settings"
+
+msgid "Configuraciones de Seguridad"
+msgstr "Security Settings"
+
+msgid "Visualice las configuraciones de seguridad disponibles"
+msgstr "View the available security settings"
+
+msgid "Habilitar 2FA para su cuenta"
+msgstr "Enable 2FA for your account"
+
+msgid "Guardar Configuración"
+msgstr "Save Settings"
+
 
 
 # TRADUCCIOÓN DE home.html -------------------------------------------------------------------------------

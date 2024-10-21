@@ -24,7 +24,7 @@
       <form method="POST" class="space-y-8">
         {% csrf_token %}
         <div class="flex items-center justify-between">
-          <label for="{{ form.is_2fa_enabled.id_for_label }}" class="labels">Habilitar 2FA para su cuenta</label>
+          <label for="{{ form.is_2fa_enabled.id_for_label }}" class="labels">{% trans 'Habilitar 2FA para su cuenta' %}</label>
           <div class="relative">
             <label class="inline-flex items-center cursor-pointer">
               <input type="checkbox" name="{{ form.is_2fa_enabled.name }}" {% if form.is_2fa_enabled.value %}checked{% endif %} class="sr-only peer">
@@ -41,6 +41,5 @@
     </div>
   </div>
 
-  
 </section>
 {% endblock content %}
