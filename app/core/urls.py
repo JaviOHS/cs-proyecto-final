@@ -14,6 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.i18n import set_language
 from app.core.views.error_page import ErrorPageTemplate
 from app.core.views.open_api import OpenAIChatView
+from app.core.views.user_settings import UserSettingsView
 app_name = 'core'
 
 urlpatterns = [
@@ -32,4 +33,5 @@ urlpatterns = [
     path('statistics_plantilla/', Plantilla.as_view(), name='statistics_plantilla'),
     path('error_page/', ErrorPageTemplate.as_view(), name='error_page'),
     path('api/chat/', OpenAIChatView.as_view(), name='openai_chat'),
+    path('settings/', UserSettingsView.as_view(), name='user_settings'),
 ]
