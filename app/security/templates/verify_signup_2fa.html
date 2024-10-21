@@ -1,0 +1,46 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% load i18n %}
+
+<title>{% block title %} Verificación 2FA para Registro {% endblock title %}</title>
+
+{% block content %}
+<div class="primary-container-bg p-8 relative overflow-hidden">
+  <div class="relative">
+    <section class="secondary-container-bg p-8 my-4 mx-auto max-w-4xl rounded-3xl" data-aos="fade-up" data-aos-delay="200">
+      <div class="gap-2 mb-8">
+        <h1 class="title-font text-3xl text-center mt-4">
+          Verificación de dos factores para Registro
+        </h1>
+        <p class="description-font text-center">
+          {% trans 'Ingresa el código de 6 dígitos que hemos enviado a tu correo electrónico para completar el registro.' %}
+        </p>
+      </div>  
+      <div class="flex items-center justify-center">
+        <div class="w-full max-w-md mx-auto">
+          <form method="POST" class="space-y-8">
+            {% csrf_token %}
+            <div>
+              <label for="{{ form.code.id_for_label }}" class="labels">Código de verificación</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <i class="form-icons fa-solid fa-key"></i>
+                </span>
+                <input type="text" id="{{ form.code.id_for_label }}" name="code" class="inputs" maxlength="6" required>
+              </div>
+            </div>
+            <div class="flex items-center justify-center">
+              <button type="submit" class="sign-in-and-sign-up-button">
+                {% trans 'Verificar y Completar Registro' %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock content %}
+
+{% block navbar %}
+{% endblock navbar %}
