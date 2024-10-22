@@ -764,21 +764,30 @@
 <!-- Script de Accesibilidad para cambiar el tipo de letra -->
 <script>
   // Array de fuentes disponibles, incluyendo la fuente por defecto
-  const fonts = ['Arial', 'Verdana', 'Georgia', 'Times New Roman', 'Courier New', 'TuFuentePorDefecto'];
+  const fonts = ['Quicksand', 'Arial', 'Verdana', 'Georgia', 'Times New Roman', 'Courier New'];
   let currentFontIndex = 0;
 
   // Función para cambiar la tipografía
   function changeFont() {
       currentFontIndex = (currentFontIndex + 1) % fonts.length;
       const newFont = fonts[currentFontIndex];
+      
+      // Aplicar la nueva fuente
       document.body.style.fontFamily = newFont;
-
+      
       // Actualizar el texto del botón para mostrar la fuente actual
-      const button = document.querySelector('.font-toggle-button');
-      button.innerHTML = `<i class="fas fa-font"></i> ${newFont}`;
-
+      updateFontDisplay(newFont);
+      
       // Guardar la fuente seleccionada en localStorage
       localStorage.setItem('selectedFont', newFont);
+  }
+
+  // Función para actualizar el texto mostrado
+  function updateFontDisplay(fontName) {
+      const fontDisplay = document.querySelector('.current-font-name');
+      if (fontDisplay) {
+          fontDisplay.textContent = fontName;
+      }
   }
 
   // Al cargar la página, aplicar la fuente guardada si existe
@@ -788,10 +797,12 @@
           document.body.style.fontFamily = savedFont;
           currentFontIndex = fonts.indexOf(savedFont);
           if (currentFontIndex === -1) currentFontIndex = 0;
-
-          // Actualizar el botón con la fuente actual
-          const button = document.querySelector('.font-toggle-button');
-          button.innerHTML = `<i class="fas fa-font"></i> ${savedFont}`;
+          
+          // Actualizar el texto mostrado con la fuente actual
+          updateFontDisplay(savedFont);
+      } else {
+          // Si no hay fuente guardada, mostrar la fuente por defecto
+          updateFontDisplay(fonts[0]);
       }
   });
 </script>
