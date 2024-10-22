@@ -36,7 +36,8 @@
           </h2>
           <p class="description-module-cards">
             {{ session.description }}<br><br>
-            Sesión creada el {{ session.start_time|date:"d/m/Y" }} a las {{ session.start_time|time:"H:i" }}
+            {{ session.detection_model }}<br><br>
+            Sesión creada el {{ session.start_time|date:"d/m/Y" }} a las {{ session.start_time|time:"H:i" }}<br>
           </p>
           <div class="flex mt-3 space-x-2">
             <!-- Botón Editar con Tooltip -->
@@ -107,5 +108,4 @@
     </div>
   </div>
 </div>
-
 {% endblock content %}

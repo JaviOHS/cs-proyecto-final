@@ -113,8 +113,13 @@
       Volver al Inicio
       <div class="tooltip-arrow" data-popper-arrow></div>
     </div>
+
+    <button onclick="showSuggestions()" class="home-and-back-button"><i class="fa-solid fa-question"></i></button>
   </div>
 </div>
+
+<!-- Botón de Ayuda -->
+{% include 'components/suggestions.html' with suggestion_id=1 %}
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {

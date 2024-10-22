@@ -3,8 +3,9 @@
   <ul class="detections-models-container">
     {% for detection in form.detection_model.field.choices %}
     <li class="detection-item">
-      <input type="radio" id="detection_model_{{ forloop.counter0 }}" name="detection_model" value="{{ detection.0 }}"
-        class="hidden peer" required {% if form.detection_model.value==detection.0 %}checked{% endif %} />
+      <input type="radio" id="detection_model_{{ forloop.counter0 }}" name="detection_model"
+        value="{{ detection.0 }}" class="hidden peer" required 
+        {% if form.detection_model.value == detection.0 %}checked{% endif %} />
       <label for="detection_model_{{ forloop.counter0 }}" class="detection-label">
         <span class="detection-font">
           {{ detection.1 }}
