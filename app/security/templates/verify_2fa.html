@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-<title>{% block title %} Verificación 2FA {% endblock title %}</title>
+<title>{% block title %} Verificación 2FA {% if is_signup %}para Registro{% endif %}{% endblock title %}</title>
 
 {% block content %}
 <div class="primary-container-bg p-8 relative overflow-hidden">
@@ -10,17 +10,21 @@
     <section class="secondary-container-bg p-8 my-4 mx-auto max-w-4xl rounded-3xl" data-aos="fade-up" data-aos-delay="200">
       <div class="gap-2 mb-8">
         <h1 class="title-font text-3xl text-center mt-4">
-          Verificación de dos factores
+          Verificación de dos factores {% if is_signup %}para Registro{% endif %}
         </h1>
         <p class="description-font text-center">
-          {% trans 'Ingresa el código de 6 dígitos que hemos enviado a tu correo electrónico.' %}
+          {% if is_signup %}
+            {% trans 'Ingresa el código de 6 dígitos que hemos enviado a tu correo electrónico para completar el registro.' %}
+          {% else %}
+            {% trans 'Ingresa el código de 6 dígitos que hemos enviado a tu correo electrónico.' %}
+          {% endif %}
         </p>
       </div>  
       <div class="flex items-center justify-center">
         <div class="w-full max-w-md mx-auto">
           <form method="POST" class="space-y-8">
             {% csrf_token %}
-            <div>
+            <div class="text-center">
               <label for="{{ form.code.id_for_label }}" class="labels">Código de verificación</label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -31,7 +35,11 @@
             </div>
             <div class="flex items-center justify-center">
               <button type="submit" class="sign-in-and-sign-up-button">
-                {% trans 'Verificar' %}
+                {% if is_signup %}
+                  {% trans 'Verificar y Completar Registro' %}
+                {% else %}
+                  {% trans 'Verificar' %}
+                {% endif %}
               </button>
             </div>
           </form>
@@ -42,5 +50,4 @@
 </div>
 {% endblock content %}
 
-{% block navbar %}
-{% endblock navbar %}
+{% block navbar %}{% endblock navbar %}

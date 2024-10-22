@@ -20,7 +20,7 @@ class DetectionForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'id': 'id_description',
                 'class': 'textarea',
-                'rows': 2,
+                'rows': 6,
                 'placeholder': 'Descripción de Amenaza'
             }),
             'icon': forms.TextInput(attrs={
@@ -29,6 +29,12 @@ class DetectionForm(forms.ModelForm):
                 'placeholder': 'Ícono de Font Awesome'
             })
         }
+        
+    def __init__(self, *args, **kwargs):
+        super(DetectionForm, self).__init__(*args, **kwargs)
+        self.fields['name'].label = 'Amenaza'
+        self.fields['description'].label = 'Descripción'
+        self.fields['icon'].label = 'Ícono'
         
     def clean_name(self):
         name = self.cleaned_data['name']
