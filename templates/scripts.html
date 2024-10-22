@@ -735,3 +735,86 @@
   // Inicializar la bandera con el idioma actual
   updateFlag('{{ LANGUAGE_CODE }}');
 </script>
+
+<!-- Script de Accesibilidad para cambiar el tamaño de la letra -->
+<script>
+    // Variables para el ajuste de tamaño de fuente
+    let currentFontSize = 100;
+    const fontSizeStep = 10;
+    const minFontSize = 80;
+    const maxFontSize = 200;
+  
+    // Función para cambiar el tamaño de la fuente
+    function changeFontSize(action) {
+      if (action === 'increase' && currentFontSize < maxFontSize) {
+        currentFontSize += fontSizeStep;
+      } else if (action === 'decrease' && currentFontSize > minFontSize) {
+        currentFontSize -= fontSizeStep;
+      }
+      document.body.style.fontSize = `${currentFontSize}%`;
+    }
+  
+    // Función para resetear el tamaño de la fuente
+    function resetFontSize() {
+      currentFontSize = 100;
+      document.body.style.fontSize = '100%';
+    }
+</script>
+
+<!-- Script de Accesibilidad para cambiar el tipo de letra -->
+<script>
+  // Array de fuentes disponibles, incluyendo la fuente por defecto
+  const fonts = ['Arial', 'Verdana', 'Georgia', 'Times New Roman', 'Courier New', 'TuFuentePorDefecto'];
+  let currentFontIndex = 0;
+
+  // Función para cambiar la tipografía
+  function changeFont() {
+      currentFontIndex = (currentFontIndex + 1) % fonts.length;
+      const newFont = fonts[currentFontIndex];
+      document.body.style.fontFamily = newFont;
+
+      // Actualizar el texto del botón para mostrar la fuente actual
+      const button = document.querySelector('.font-toggle-button');
+      button.innerHTML = `<i class="fas fa-font"></i> ${newFont}`;
+
+      // Guardar la fuente seleccionada en localStorage
+      localStorage.setItem('selectedFont', newFont);
+  }
+
+  // Al cargar la página, aplicar la fuente guardada si existe
+  document.addEventListener('DOMContentLoaded', function() {
+      const savedFont = localStorage.getItem('selectedFont');
+      if (savedFont) {
+          document.body.style.fontFamily = savedFont;
+          currentFontIndex = fonts.indexOf(savedFont);
+          if (currentFontIndex === -1) currentFontIndex = 0;
+
+          // Actualizar el botón con la fuente actual
+          const button = document.querySelector('.font-toggle-button');
+          button.innerHTML = `<i class="fas fa-font"></i> ${savedFont}`;
+      }
+  });
+</script>
+
+ <!-- Script de Accesibilidad para leer la pagina -->
+<script>
+  function toggleTextToSpeech() {
+    // Si hay una lectura en curso, detenerla
+    if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        return;
+    }
+
+    // Obtener todo el texto visible de la página
+    const text = document.body.innerText;
+
+    // Crear el objeto de voz
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Configurar en español
+    utterance.lang = 'es-ES';
+    
+    // Iniciar la lectura
+    window.speechSynthesis.speak(utterance);
+}
+</script>

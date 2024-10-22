@@ -149,6 +149,9 @@ msgstr "Implementation of functionalities to add new threats."
 msgid "Módulo de Estadísticas"
 msgstr "Statistics Module"
 
+msgid "Opciones de Accesibilidad"
+msgstr "Accessibility Options"
+
 
 
 
