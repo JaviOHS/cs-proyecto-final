@@ -68,9 +68,11 @@
           <div class="primary-container-bg flex flex-col items-center justify-center lg:w-96 w-auto h-auto shadow-xl lg:p-6 p-4 backdrop-filter backdrop-blur-md bg-opacity-70">
             <h2 class="title-font text-xl mb-4 text-center">{% trans 'Métodos alternativos' %}</h2>
             <div class="space-y-4 flex items-center justify-center">
-              <button id="facialRecognitionButton" class="aditional-button">
-                <i class="fa-solid fa-camera mr-2"></i> {% trans 'Reconocimiento Facial' %}
-              </button>
+              {% if show_facial_recognition %}
+                <button id="facialRecognitionButton" class="aditional-button">
+                  <i class="fa-solid fa-camera mr-2"></i> {% trans 'Reconocimiento Facial' %}
+                </button>
+              {% endif %}
             </div>
           </div>
         </div>

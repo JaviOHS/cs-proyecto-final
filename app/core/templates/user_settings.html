@@ -18,28 +18,48 @@
       <p class="description-font text-center">{% trans 'Visualice las configuraciones de seguridad disponibles' %}</p>
     </div>
 
-  <!-- Resto del contenido -->
-  <div class="flex items-center justify-center">
-    <div class="w-full max-w-md mx-auto">
-      <form method="POST" class="space-y-8">
-        {% csrf_token %}
-        <div class="flex items-center justify-between">
-          <label for="{{ form.is_2fa_enabled.id_for_label }}" class="labels">{% trans 'Habilitar 2FA para su cuenta' %}</label>
-          <div class="relative">
-            <label class="inline-flex items-center cursor-pointer">
-              <input type="checkbox" name="{{ form.is_2fa_enabled.name }}" {% if form.is_2fa_enabled.value %}checked{% endif %} class="sr-only peer">
-              <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            </label>
+    <!-- Contenido -->
+    <div class="flex items-center justify-center">
+      <div class="flex items-center justify-between w-full max-w-lg mx-auto">
+        <form method="POST" class="space-y-8 w-full">
+          {% csrf_token %}
+          
+          <!-- 2FA Toggle -->
+          <div class="flex items-center justify-between w-full max-w-lg mx-auto">
+            <label for="{{ form.is_2fa_enabled.id_for_label }}" class="labels">{% trans 'Habilitar 2FA para su cuenta' %}</label>
+            <div class="relative">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" name="{{ form.is_2fa_enabled.name }}" {% if form.is_2fa_enabled.value %}checked{% endif %} class="sr-only peer">
+                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
           </div>
-        </div>
-        <div class="flex items-center justify-center">
-          <button type="submit" class="sign-in-and-sign-up-button">
-            {% trans 'Guardar Configuración' %}
-          </button>
-        </div>
-      </form>
+          <span class="text-sm text-gray-500 dark:text-gray-400">Activa la función de verificación de Dos Factores (2FA), al habilitar esta función recibirás un código de seis dígitos a tu correo registrado para poder iniciar sesión en la plataforma.</span>
+          
+          <div class="mx-5 my-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+          
+          <!-- Facial Recognition Toggle -->
+          <div class="flex items-center justify-between w-full max-w-lg mx-auto">
+            <label for="{{ form.is_facial_recognition_enabled.id_for_label }}" class="labels">{% trans 'Habilitar Reconocimiento Facial' %}</label>
+            <div class="relative">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" name="{{ form.is_facial_recognition_enabled.name }}" {% if form.is_facial_recognition_enabled.value %}checked{% endif %} class="sr-only peer">
+                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+          </div>
+          <span class="text-sm text-gray-500 dark:text-gray-400">Activa la función de reconocimiento facial para poder iniciar sesión utilizando tu rostro como método de autenticación.</span>
+          
+          <div class="mx-5 my-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+          
+          <div class="flex items-center justify-center">
+            <button type="submit" class="sign-in-and-sign-up-button">
+              {% trans 'Guardar Configuración' %}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-
 </section>
 {% endblock content %}

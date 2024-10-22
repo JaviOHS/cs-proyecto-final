@@ -93,5 +93,15 @@ class SigninView(AuthErrorHandlingMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['success_messages'] = messages.get_messages(self.request)
+        
+        # Mostrar el botón de reconocimiento facial si al menos un usuario lo tiene habilitado
+        show_facial_recognition = User2FAPreferences.objects.filter(
+            is_facial_recognition_enabled=True
+        ).exists()
+        
+        context.update({
+            'show_facial_recognition': show_facial_recognition,
+            'success_messages': messages.get_messages(self.request)
+        })
+        
         return context

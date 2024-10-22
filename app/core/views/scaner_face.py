@@ -28,7 +28,7 @@ class FacialRecognitionView(View):
             if image is None:
                 return JsonResponse({"success": False, "message": "Error al decodificar la imagen"}, status=400)
 
-            # Convertir la imagen de entrada en escala de grises
+            # Convertir la imagen en escala de grises
             gray_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2GRAY)
             face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
             faces = face_cascade.detectMultiScale(gray_image, 1.1, 4)
@@ -36,33 +36,37 @@ class FacialRecognitionView(View):
             if len(faces) == 0:
                 return JsonResponse({"success": False, "message": "No se detectó un rostro en la imagen"}, status=400)
 
-            for (x, y, w, h) in faces:
-                face_region = gray_image[y:y + h, x:x + w]
+            # Solo buscar entre usuarios que tienen el reconocimiento facial habilitado
+            users = User.objects.filter(
+                two_fa_preferences__is_facial_recognition_enabled=True
+            ).exclude(image='')
 
-                # Comparar con las imágenes de los usuarios
-                users = User.objects.exclude(image='')  # Excluye usuarios sin imagen
-                for user in users:
-                    if user.image:
-                        profile_image = Image.open(user.image.path)
-                        profile_image_np = np.array(profile_image)
-                        gray_profile_image = cv2.cvtColor(profile_image_np, cv2.COLOR_RGB2GRAY)
+            for user in users:
+                if user.image:
+                    # Resto del código de comparación facial...
+                    profile_image = Image.open(user.image.path)
+                    profile_image_np = np.array(profile_image)
+                    gray_profile_image = cv2.cvtColor(profile_image_np, cv2.COLOR_RGB2GRAY)
 
-                        profile_faces = face_cascade.detectMultiScale(gray_profile_image, 1.1, 4)
-                        if len(profile_faces) > 0:
-                            for (px, py, pw, ph) in profile_faces:
-                                profile_face_region = gray_profile_image[py:py + ph, px:px + pw]
+                    profile_faces = face_cascade.detectMultiScale(gray_profile_image, 1.1, 4)
+                    if len(profile_faces) > 0:
+                        for (px, py, pw, ph) in profile_faces:
+                            profile_face_region = gray_profile_image[py:py + ph, px:px + pw]
+                            
+                            for (x, y, w, h) in faces:
+                                face_region = gray_image[y:y + h, x:x + w]
                                 
                                 # Comparar la región de la cara usando correlación normalizada
                                 match_result = cv2.matchTemplate(face_region, profile_face_region, cv2.TM_CCOEFF_NORMED)
                                 similarity = cv2.minMaxLoc(match_result)[1]
 
-                                if similarity > 0.8:  # Ajustar umbral de similitud
+                                if similarity > 0.8:  # Ajustar umbral de similitud según necesidad
                                     login(request, user)
                                     return JsonResponse({
                                         "success": True,
                                         "message": "Coincidencia facial válida, usuario autenticado",
                                         "redirect": reverse('home')
-                                    }, status=200)
+                                    })
 
             return JsonResponse({"success": False, "message": "No se encontró una coincidencia facial válida"}, status=400)
 
