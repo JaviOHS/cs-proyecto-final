@@ -25,7 +25,7 @@
 
           <!-- Columna derecha: Nombre, descripcion, ip -->
           <div>
-            <div class="mb-6 flex flex-col">
+            <div class="mb-4 flex flex-col">
               <label class="labels">{{ form.name.label }}</label>
               <div class="relative mt-1">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -34,13 +34,13 @@
                 {{ form.name }}
               </div>
             </div>
-            <div class="mb-6 flex flex-col">
+            <div class="mb-4 flex flex-col">
               <label class="labels">{{ form.description.label }}</label>
               <div class="relative mt-1">
                 {{ form.description }}
               </div>
             </div>
-            <div id="camera-ip-container" class="mb-6 flex flex-col opacity-0 transition-opacity duration-500">
+            <div id="camera-ip-container" class="mb-4 flex flex-col opacity-0 transition-opacity duration-500">
               <label class="labels">{{ form.camera_ip.label }}</label>
               <div class="relative mt-1">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
