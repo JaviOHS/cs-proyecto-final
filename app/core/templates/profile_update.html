@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="py-12 lg:py-14"></div>
-<section class="primary-container-bg mb-8">
+<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
   <div class="container mx-auto px-4 text-center" data-aos="fade-up" data-aos-delay="300">
     <div class="flex flex-col items-center justify-center">
       <span class="information">
@@ -13,103 +13,115 @@
       </span>
     </div>
     <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
-    <p class="description-font text-center">{% trans 'Actualice su información y contraseña.' %}</p>
+    <p class="description-font text-center">{% trans 'Actualice su información y contraseña.' %}</p><br>
   </div>
   
-  <div class="w-full max-w-5xl mx-auto px-6 sm:px-8 mt-12" data-aos="fade-up" data-aos-delay="300">
-    <form method="post" enctype="multipart/form-data" class="secondary-container-bg shadow-2xl rounded-lg p-3 space-y-4">
+  <!-- Formulario -->
+   
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl" data-aos="fade-up" data-aos-delay="300">
+    <form method="post" enctype="multipart/form-data" class="p-8">
       {% csrf_token %}
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Imagen de perfil -->
-        <div class="primary-container-bg rounded-lg w-full shadow-xl p-6 text-center space-y-2">
-          <h2 class="labels mt-4">{% trans 'Imagen de perfil' %}</h2>
-          <div class="flex flex-col items-center">
-            <img id="selected-img"
-              src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}"
-              alt="profile"
-              class="border-4 border-blue-700 dark:border-indigo-400 rounded-full w-24 h-24 object-cover cursor-pointer">
-            <div>
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 text-center space-y-4">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans 'Imagen de perfil' %}</h2>
+          <div class="flex flex-col items-center space-y-4">
+            <div class="relative group cursor-pointer">
+              <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full opacity-75 group-hover:opacity-100 transition duration-200 blur"></div>
+              <img id="selected-img"
+                src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}"
+                alt="profile"
+                class="relative w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800">
+            </div>
+            <div class="relative">
               {{ form.image }}
             </div>
           </div>
-          <p class="description-font"> {% trans 'Haz clic en la imagen para cambiarla' %}</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">{% trans 'Haz clic en la imagen para cambiarla' %}</p>
         </div>
-        <!-- Información del perfil y campos del formulario -->
+
+        <!-- Información del perfil -->
         <div class="lg:col-span-2">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Izquierda -->
-            <div class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Columna izquierda -->
+            <div class="space-y-6">
               <!-- Nombre -->
-              <div>
-                <label for="{{ form.first_name.id_for_label }}" class="labels">
+              <div class="space-y-2">
+                <label for="{{ form.first_name.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.first_name.label }}
                 </label>
                 <div class="relative">
-                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <i class="form-icons fa-solid fa-user-pen"></i>
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 dark:text-gray-400">
+                    <i class="fa-solid fa-user-pen"></i>
                   </span>
                   {{ form.first_name }}
                 </div>
               </div>
+
               <!-- Usuario -->
-              <div>
-                <label for="{{ form.username.id_for_label }}" class="labels">
+              <div class="space-y-2">
+                <label for="{{ form.username.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.username.label }}
                 </label>
                 <div class="relative">
-                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <i class="form-icons fa-solid fa-user-tag"></i>
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 dark:text-gray-400">
+                    <i class="fa-solid fa-user-tag"></i>
                   </span>
                   {{ form.username }}
                 </div>
               </div>
+
               <!-- Correo -->
-              <div>
-                <label for="{{ form.email.id_for_label }}" class="labels">
+              <div class="space-y-2">
+                <label for="{{ form.email.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.email.label }}
                 </label>
                 <div class="relative">
-                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <i class="form-icons fa-solid fa-envelope"></i>
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 dark:text-gray-400">
+                    <i class="fa-solid fa-envelope"></i>
                   </span>
                   {{ form.email }}
                 </div>
               </div>
             </div>
-            <!-- Derecha -->
-            <div class="space-y-4">
+
+            <!-- Columna derecha -->
+            <div class="space-y-6">
               <!-- Apellido -->
-              <div>
-                <label for="{{ form.last_name.id_for_label }}" class="labels">
+              <div class="space-y-2">
+                <label for="{{ form.last_name.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.last_name.label }}
                 </label>
                 <div class="relative">
-                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <i class="form-icons fa-solid fa-user-pen"></i>
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 dark:text-gray-400">
+                    <i class="fa-solid fa-user-pen"></i>
                   </span>
                   {{ form.last_name }}
                 </div>
               </div>
+
               <!-- DNI -->
-              <div>
-                <label for="{{ form.dni.id_for_label }}" class="labels">
+              <div class="space-y-2">
+                <label for="{{ form.dni.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.dni.label }}
                 </label>
                 <div class="relative">
-                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <i class="form-icons fa-solid fa-id-card"></i>
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 dark:text-gray-400">
+                    <i class="fa-solid fa-id-card"></i>
                   </span>
                   {{ form.dni }}
                 </div>
               </div>
+
               <!-- Teléfono -->
-              <div>
-                <label for="{{ form.phone.id_for_label }}" class="labels">
+              <div class="space-y-2">
+                <label for="{{ form.phone.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.phone.label }}
                 </label>
                 <div class="relative">
-                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <i class="form-icons fa-solid fa-phone"></i>
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 dark:text-gray-400">
+                    <i class="fa-solid fa-phone"></i>
                   </span>
                   {{ form.phone }}
                 </div>
@@ -118,47 +130,48 @@
           </div>
         </div>
       </div>
-      <!-- Sección para el cambio de contraseña -->
-      <div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {% for field in password_form %}
-          <div class="secondary-container-bg p-2 rounded-lg shadow-sm">
-            <label for="{{ field.id_for_label }}"
-              class="labels">
-              {{ field.label }}
-            </label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                <i class="form-icons fa-solid fa-lock"></i>
-              </span>
-              {{ field }}
+
+      <!-- Sección de cambio de contraseña -->
+      <div class="mt-10">
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">{% trans 'Cambiar Contraseña' %}</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for field in password_form %}
+            <div class="space-y-2">
+              <label for="{{ field.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {{ field.label }}
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 dark:text-gray-400">
+                  <i class="fa-solid fa-lock"></i>
+                </span>
+                {{ field }}
+              </div>
             </div>
+            {% endfor %}
           </div>
-          {% endfor %}
         </div>
       </div>
 
       <!-- Botones de acción -->
-      <div class="mt-10 flex justify-center space-x-6">
-        <button type="submit" name="profile_update"
-          class="flex items-center py-3 px-6 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-base leading-7 shadow-md transition-all duration-300 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-700">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      <div class="mt-10 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+        <button type="submit" name="profile_update" class="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
           {% trans 'Actualizar Perfil' %}
         </button>
 
-        <button type="submit" name="password_change"
-          class="flex items-center py-3 px-6 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold text-base leading-7 shadow-md transition-all duration-300 focus:ring-4 focus:ring-green-300 dark:focus:ring-green-700">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        <button type="submit" name="password_change" class="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg text-base font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
           </svg>
           {% trans 'Cambiar Contraseña' %}
         </button>
       </div>
     </form>
   </div>
+</section>
+</div>
 </section>
 {% endblock content %}

@@ -76,6 +76,15 @@ msgstr "View the available security settings"
 msgid "Habilitar 2FA para su cuenta"
 msgstr "Enable 2FA for your account"
 
+msgid "Habilitar Reconocimiento Facial"
+msgstr "Enable Facial Recognition"
+
+msgid "Activa la función de verificación de Dos Factores (2FA), al habilitar esta función recibirás un código de seis dígitos a tu correo registrado para poder iniciar sesión en la plataforma."
+msgstr "Activate the Two-Factor Verification (2FA) function. By enabling this function, you will receive a six-digit code to your registered email to log in to the platform."
+
+msgid "Activa la función de reconocimiento facial para poder iniciar sesión utilizando tu rostro como método de autenticación. Recuerda que debes cargar una imagen de perfil en la sección de Perfil del usuario."
+msgstr "Activate the facial recognition function so you can log in using your face as an authentication method. Remember that you must upload a profile image in the user's Profile section."
+
 msgid "Guardar Configuración"
 msgstr "Save Settings"
 
@@ -161,7 +170,7 @@ msgid "Usuario"
 msgstr "User"
 
 msgid "Información"
-msgstr "Información"
+msgstr "Information"
 
 msgid "Cédula"
 msgstr "identity card"
@@ -414,6 +423,9 @@ msgstr "Capture"
 
 msgid "Inicio de Sesión"
 msgstr "Login"
+
+msgid "Activa la función de reconocimiento facial en la sección de configuraciones, para poder iniciar sesión utilizando tu rostro como método de autenticación."
+msgstr "Activate the facial recognition function in the settings section, to be able to log in using your face as an authentication method."
 
 
 

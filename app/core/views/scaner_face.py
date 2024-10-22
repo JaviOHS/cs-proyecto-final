@@ -11,10 +11,28 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.files.base import ContentFile
+import boto3
+import requests
+from botocore.exceptions import ClientError
+from django.conf import settings
+
+from app.core.models import User2FAPreferences
 
 User = get_user_model()
 
 class FacialRecognitionView(View):
+    def get_s3_image(self, image_url):
+        try:
+            # Get the image from S3 URL
+            response = requests.get(image_url)
+            if response.status_code == 200:
+                return Image.open(BytesIO(response.content))
+            return None
+        except Exception as e:
+            print(f"Error getting image from S3: {str(e)}")
+            return None
+
     def post(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
@@ -43,8 +61,11 @@ class FacialRecognitionView(View):
 
             for user in users:
                 if user.image:
-                    # Resto del código de comparación facial...
-                    profile_image = Image.open(user.image.path)
+                    # Obtener la imagen del perfil desde S3
+                    profile_image = self.get_s3_image(user.image.url)
+                    if profile_image is None:
+                        continue
+
                     profile_image_np = np.array(profile_image)
                     gray_profile_image = cv2.cvtColor(profile_image_np, cv2.COLOR_RGB2GRAY)
 
@@ -55,6 +76,9 @@ class FacialRecognitionView(View):
                             
                             for (x, y, w, h) in faces:
                                 face_region = gray_image[y:y + h, x:x + w]
+                                
+                                # Redimensionar las regiones faciales al mismo tamaño para comparación
+                                face_region = cv2.resize(face_region, (pw, ph))
                                 
                                 # Comparar la región de la cara usando correlación normalizada
                                 match_result = cv2.matchTemplate(face_region, profile_face_region, cv2.TM_CCOEFF_NORMED)
@@ -91,10 +115,22 @@ class RegisterFaceView(LoginRequiredMixin, View):
             if not base64_image:
                 return JsonResponse({"success": False, "message": "No se recibió imagen en base64"}, status=400)
 
-            user = request.user
+            # Decodificar la imagen base64
             image_data = base64.b64decode(base64_image.split(',')[1])
-            user.image.save(f'face_{user.id}.jpg', ContentFile(image_data), save=True)
+            
+            # Guardar la imagen en el campo image del usuario
+            # Django manejará automáticamente la carga a S3 si está configurado correctamente
+            filename = f'face_{request.user.id}.jpg'
+            request.user.image.save(filename, ContentFile(image_data), save=True)
 
-            return JsonResponse({"success": True, "message": "Imagen facial registrada con éxito"})
+            # Activar el reconocimiento facial para el usuario
+            preferences, created = User2FAPreferences.objects.get_or_create(user=request.user)
+            preferences.is_facial_recognition_enabled = True
+            preferences.save()
+
+            return JsonResponse({
+                "success": True, 
+                "message": "Imagen facial registrada con éxito y reconocimiento facial activado"
+            })
         except Exception as e:
             return JsonResponse({"success": False, "message": str(e)}, status=500)
