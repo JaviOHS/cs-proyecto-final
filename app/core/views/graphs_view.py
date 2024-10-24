@@ -12,7 +12,6 @@ class StatisticalGraphsTemplate(TemplateView):
         context["title1"] = _("Estadísticas")
         context["title2"] = _("Gráficos Estadísticos")
         context["details"] = _("Visualización de datos estadísticos de detección de amenazas.")
-
         graph_generator = GraphGenerator(user=self.request.user)
 
         context['bar_chart'] = graph_generator.bar_chart_detections()

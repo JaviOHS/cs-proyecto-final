@@ -12,9 +12,7 @@
   </div>
   <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
   <p class="description-font text-center">{% trans 'Gestionar Sesiones de Monitoreo. '%}</p>
-  
   <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center space-y-2">
-    <!-- CRUD Sesiones -->
     <div class="secondary-container-bg p-4 rounded-lg shadow-md">
       {% if monitoring_sessions %}
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -36,11 +34,9 @@
           </h2>
           <p class="description-module-cards">
             {{ session.description }}<br><br>
-            {{ session.detection_model }}<br><br>
             Sesión creada el {{ session.start_time|date:"d/m/Y" }} a las {{ session.start_time|time:"H:i" }}<br>
           </p>
           <div class="flex mt-3 space-x-2">
-            <!-- Botón Editar con Tooltip -->
             <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
               <a href="{% url 'monitoring:update_session' session.id %}" data-tooltip-target="tooltip-editar-{{ session.id }}">
                 <i class="fa-solid fa-edit text-lg text-blue-500 dark:text-white"></i>
@@ -51,8 +47,6 @@
               Editar Sesión
               <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
-          
-            <!-- Botón Eliminar con Tooltip -->
             <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
               <a href="{% url 'monitoring:delete_session' session.id %}" data-tooltip-target="tooltip-eliminar-{{ session.id }}">
                 <i class="fa-solid fa-trash text-lg text-blue-500 dark:text-white"></i>
@@ -64,7 +58,6 @@
               <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
           </div>
-          
         </div>
         {% endfor %}
       </div>
@@ -76,14 +69,11 @@
     </div>
   </div>
 
-  <!-- Paginación -->
   {% block pagination %}
   {% include 'components/pagination.html' %}
   {% endblock pagination %}
 
-  <!-- Botones con Tooltips -->
   <div class="flex justify-center mt-6 mb-4 space-x-2">
-    <!-- Botón Crear Sesión con Tooltip -->
     <a href="{% url 'monitoring:create_session' %}">
       <button data-tooltip-target="tooltip-crear-sesion" class="add-threat-button">
         <i class="fa-solid fa-plus"></i>
@@ -95,7 +85,6 @@
       <div class="tooltip-arrow" data-popper-arrow></div>
     </div>
 
-    <!-- Botón Volver al Inicio con Tooltip -->
     <a href="{% url 'home' %}">
       <button data-tooltip-target="tooltip-home" class="home-and-back-button">
         <i class="fa-solid fa-home text-lg"></i>

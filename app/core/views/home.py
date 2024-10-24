@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 from app.monitoring.models import MonitoringSession
-from django.utils.translation import gettext_lazy as _ # Para traducir las variables dinámicas
+from django.utils.translation import gettext_lazy as _
 
 class HomeTemplateView(TemplateView):
     template_name = 'home.html'

@@ -51,14 +51,12 @@ class MonitoringSessionForm(forms.ModelForm):
         
     def clean(self):
         cleaned_data = super().clean()
-        user = self.initial.get('user')  # Asume que el usuario se pasa como contexto inicial
-
+        user = self.initial.get('user')
         detection_model = cleaned_data.get('detection_model')
         if user and detection_model:
             existing_session = MonitoringSession.objects.filter(user=user, detection_model=detection_model).exists()
             if existing_session:
                 raise ValidationError("Ya existe una sesión de monitoreo para este modelo de detección y este usuario.")
-        
         return cleaned_data
 
     def clean_name(self):
@@ -68,11 +66,10 @@ class MonitoringSessionForm(forms.ModelForm):
     def clean_description(self):
         description = self.cleaned_data.get('description', '').strip() 
         if not description: return description 
-        if description[-1] != '.': description += '.'
+        if description[-1] not in ['.', '?', '!']: description += '.'
         return description.capitalize()
 
     def clean_camera_ip(self):
         camera_type = self.cleaned_data.get('camera_type')
-        if camera_type == 'local':
-            return None
+        if camera_type == 'local': return None
         return self.cleaned_data.get('camera_ip')

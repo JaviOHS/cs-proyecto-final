@@ -20,7 +20,6 @@
   <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center">
     <div class="secondary-container-bg p-4 rounded-lg shadow-md">
       <div class="text-center py-4 space-y-6 flex flex-col items-center justify-center">
-        <!-- Camara en tiempo real -->
         <img src="{% url 'monitoring:video_feed' session.id %}" alt="Cámara en tiempo real"
           class="w-[50%] rounded-2xl shadow-lg" />
       </div>
@@ -38,7 +37,7 @@
       </button>
     </a>
     <button onclick="location.reload()" class="home-and-back-button">
-      <i class="fa-solid fa-sync-alt text-lg"></i> <!-- Icono de actualización -->
+      <i class="fa-solid fa-sync-alt text-lg"></i>
     </button>
   </div>
 </div>
@@ -83,7 +82,6 @@
             const notificationElement = createNotificationElement(notification.message);
             container.appendChild(notificationElement);
 
-            // Trigger reflow to start the animation
             notificationElement.offsetHeight;
             notificationElement.style.opacity = '1';
             notificationElement.style.transform = 'translateX(0)';
@@ -93,8 +91,8 @@
               notificationElement.style.transform = 'translateX(100%)';
               setTimeout(() => {
                 notificationElement.remove();
-              }, 300); // Tiempo de la animación de salida
-            }, 19700); // 20000 - 300 para que la animación de salida termine justo a los 20 segundos
+              }, 300);
+            }, 19700);
           }
         });
       })

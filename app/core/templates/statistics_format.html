@@ -1,7 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,277 +15,271 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 </head>
 <style>
-    @media print {
-      /* Oculta botones y elementos que no quieras que aparezcan al imprimir */
-      #printButton, #cancelar, #saveButton, .navbar, .footer {
-        display: none;
-      }
+  @media print {
 
-      /* Asegura que las tablas y gráficos no se corten en páginas */
-      table, .chart-container {
-        page-break-inside: avoid;
-      }
-
-      /* Ajusta márgenes y padding para impresión */
-      .max-w-6xl {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
-      /* Configura tamaños fijos para evitar que los elementos se distorsionen */
-      .table-auto {
-        width: 100%;
-      }
-
-      /* Controla que el contenido se mantenga en una sola página (si es posible) */
-      h1, h2, h3, p {
-        page-break-after: avoid;
-      }
-
-      table {
-        width: 100%;
-        table-layout: fixed;
-      }
-
-      .chart-container {
-        width: 100%;
-        height: auto;
-      }
-
-      img {
-        max-width: 100%;
-        height: auto;
-      }
-
-      .plotly-graph-div {
-        width: 100% !important;
-        height: 435px !important; /* Ajusta según el tamaño de tu gráfico */
-      }
-
-      /* Nuevo código para mantener el diseño de cuadrícula */
-      body {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
-      .grid {
-        display: grid !important;
-        grid-template-columns: repeat(2, 2fr) !important;
-        gap: 10px !important;
-        page-break-inside: avoid;
-      }
-
-      .grid > div {
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-
-      .text-4xl {
-        font-size: 24pt !important;
-      }
-
-      .text-2xl {
-        font-size: 18pt !important;
-      }
-
-      .text-gray-600 {
-        font-size: 12pt !important;
-        color: #4a5568 !important;
-      }
-
-      .fas {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .p-6 {
-        padding: 10px !important;
-      }
-
-      .mb-8 {
-        margin-bottom: 20px !important;
-      }
-
-      .shadow, .rounded-lg {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-      }
+    #printButton,
+    #cancelar,
+    #saveButton,
+    .navbar,
+    .footer {
+      display: none;
     }
+
+    table,
+    .chart-container {
+      page-break-inside: avoid;
+    }
+
+    .max-w-6xl {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .table-auto {
+      width: 100%;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      page-break-after: avoid;
+    }
+
+    table {
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: auto;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .plotly-graph-div {
+      width: 100% !important;
+      height: 435px !important;
+    }
+
+    body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, 2fr) !important;
+      gap: 10px !important;
+      page-break-inside: avoid;
+    }
+
+    .grid>div {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .text-4xl {
+      font-size: 24pt !important;
+    }
+
+    .text-2xl {
+      font-size: 18pt !important;
+    }
+
+    .text-gray-600 {
+      font-size: 12pt !important;
+      color: #4a5568 !important;
+    }
+
+    .fas {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .p-6 {
+      padding: 10px !important;
+    }
+
+    .mb-8 {
+      margin-bottom: 20px !important;
+    }
+
+    .shadow,
+    .rounded-lg {
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+  }
 </style>
 {% load i18n %}
+
 {% block content %}
-    <div class="max-w-6xl mx-auto p-4">
-        <!-- Encabezado -->
-        <div class="flex justify-between items-center py-6 px-4 bg-white">
-            <!-- Logo y Título -->
-            <div class="flex items-center space-x-4">
-                <img src="{% static 'img/components/icon.png' %}" alt="logo" class="w-14 h-14 object-cover rounded-full border-2 border-gray-200 shadow-sm">
-                <div>
-                    <h1 class="text-2xl font-extrabold text-gray-900 tracking-wide">PASYS ALERT</h1>
-                    <p class="text-sm text-gray-600">La información de este reporte es válida y autorizada por la empresa PASYS ALERT.</p>
-                </div>
-            </div>
-        
-            <!-- Información adicional -->
-            <div class="text-right">
-                <div class="text-base text-gray-700 flex items-center justify-end space-x-1">
-                    <i class="fas fa-globe text-blue-500"></i>
-                    <a href="https://www.pasysalert.com" class="hover:text-blue-600 font-semibold transition duration-200">www.pasysalert.com</a>
-                </div>
-                <div class="text-base text-gray-700 flex items-center justify-end space-x-1 mt-2">
-                    <i class="fas fa-map-marker-alt text-red-500"></i>
-                    <p class="font-medium">Universidad Estatal de Milagro (UNEMI), Guayas, Ecuador</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Fecha actual de la impresión -->
-        <div class="flex items-center space-x-3">
-            <i class="far fa-calendar-alt text-indigo-600"></i>
-            <p class="text-gray-700 font-medium" id="currentDate"></p>        
-        </div>
-        <script>
-            // Función para mostrar la fecha actual
-            function showCurrentDate() {
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                const currentDate = new Date().toLocaleDateString('es-ES', options);
-                document.getElementById('currentDate').textContent = currentDate;
-            }
-            // Llamar a la función cuando se cargue la página
-            window.onload = showCurrentDate;
-        </script>
-
-        <!-- Información del usuario -->
-        <div class="my-6">
-            <h2 class="text-center text-3xl font-bold text-gray-700">Reporte Ejecutivo de Amenazas Detectadas</h2>
-            <p class="text-center text-gray-500">Documento válido hasta: <strong>{{ expiry_date }}</strong></p>
-            <p class="mt-4 text-gray-700"><strong>Emitido por:</strong> {{ user.get_full_name }}</p>
-            <p class="text-gray-700"><strong>Cargo:</strong> 
-                {% if user.is_superuser %}
-                    {% trans 'Administrador' %}
-                {% else %}
-                    {% trans 'Usuario' %}
-                {% endif %}
-            </p>
-            <p class="text-gray-700"><strong>Correo Electrónico:</strong> {{ user.email|default:"Correo no registrado" }}</p>
-            <p class="text-gray-700"><strong>Contacto:</strong> {{ user.phone|default:"No Registrado" }}</p>
-        </div>
-
-        <!-- Estadísticas -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 shadow rounded-lg text-center">
-                <i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-2"></i>
-                <h3 class="text-2xl font-bold">{{ total_threats }}</h3>
-                <p class="text-gray-600">Total Amenazas Detectadas</p>
-            </div>
-            <div class="bg-white p-6 shadow rounded-lg text-center">
-                <i class="fas fa-chart-pie text-blue-500 text-4xl mb-2"></i>
-                <h3 class="text-2xl font-bold">{{ threat_types }}</h3>
-                <p class="text-gray-600">Tipos de Amenazas</p>
-            </div>
-            <div class="bg-white p-6 shadow rounded-lg text-center">
-                <i class="fas fa-chart-line text-green-500 text-4xl mb-2"></i>
-                <h3 class="text-2xl font-bold">{{ next_day_prediction }}</h3>
-                <p class="text-gray-600">Predicción Próximo Día</p>
-            </div>
-            <div class="bg-white p-6 shadow rounded-lg text-center">
-                <i class="fas fa-calendar-alt text-red-500 text-4xl mb-2"></i>
-                <h3 class="text-2xl font-bold">{{ last_prediction_date }}</h3>
-                <p class="text-gray-600">Fecha Última Predicción</p>
-            </div>
-        </div>
-
-        <!-- Gráficos -->
-        <div class="text-center py-4 space-y-6">
-            {% if bar_chart %}
-            <div class="grid lg:grid-cols-2 gap-4">
-              <div>
-                {{ bar_chart|safe }}
-                <p class="text-gray-700 text-sm mt-2">
-                    Este gráfico muestra la cantidad total de amenazas por cada tipo. El tipo de amenaza más frecuente es <strong>{{ threat_details.0.name }}</strong> con <strong>{{ threat_details.0.count }}</strong> incidencias de detecciones, representando el <strong>{{ threat_details.0.percentage }}%</strong> del total.
-                </p>
-              </div>
-              <div>
-                {{ pie_chart|safe }}
-                <p class="text-gray-700 text-sm mt-2">
-                    El gráfico de pastel representa la distribución porcentual de los tipos de amenazas. La mayoría de las amenazas corresponden a <strong>{{ threat_details.0.name }}</strong> con un <strong>{{ threat_details.0.percentage }}%</strong> del total de Amenazas Detectadas.
-                </p>
-              </div>
-            </div>
-            <div>
-              {{ line_chart_detections_by_day|safe }}
-              <p class="text-gray-700 text-sm mt-2">
-                El gráfico de líneas muestra el número de amenazas detectadas por día. El pico más reciente ocurrirá el <strong>{{ last_prediction_date }}</strong>, con una predicción de <strong>{{ next_day_prediction }}</strong> detecciones para el siguiente día.
-              </p>
-            </div>
-            {% else %}
-            <p class="text-gray-500">
-              {% trans "No hay datos por mostrar." %} <span class="text-green-500 font-bold">{% trans "¿Por qué no generar nuevos datos?" %}</span>
-            </p>
-            {% endif %}
-        </div>
-        <br><br>
-        <h2 class="text-center text-3xl font-bold text-gray-700">Resumen del Reporte Estadístico</h2>
-        <!-- Tabla -->
-        <table class="min-w-full table-auto bg-white shadow rounded-lg overflow-hidden">
-            <thead class="bg-gray-50">
-                <tr class="text-left text-gray-600 uppercase text-sm">
-                    <th class="px-6 py-3">Tipo de Amenaza</th>
-                    <th class="px-6 py-3">Cantidad de Detecciones</th>
-                    <th class="px-6 py-3">Porcentaje</th>
-                    <th class="px-6 py-3">Estado</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                {% for threat in threat_details %}
-                <tr>
-                    <td class="px-6 py-4"><i class="{{ threat.icon }}"></i>  {{ threat.name }}</td>
-                    <td class="px-6 py-4">{{ threat.count }} Detecciones</td>
-                    <td class="px-6 py-4">{{ threat.percentage }}%</td>
-                    <td class="px-6 py-4"><span class="text-green-500 font-bold">{{ threat.status }}</span></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <!-- Botones de acción -->
-        <div class="p-6 text-center border-t mt-6">
-            <p class="mb-4">Muchas gracias por hacer negocios con nosotros.</p>
-            <div class="flex justify-center space-x-2">
-                <button id="printButton" class="bg-green-100 text-green-800 px-4 py-2 rounded">Imprimir</button>
-                <button id="saveButton" class="bg-blue-100 text-blue-800 px-4 py-2 rounded">Guardar como PDF</button>
-                <a id="cancelar" href="{% url 'core:statistics' %}"><button class="bg-red-100 text-red-800 px-4 py-2 rounded">Cancelar</button></a>
-            </div>
-        </div>
-        
-        <script>
-            // Función para imprimir el reporte
-            document.getElementById('printButton').addEventListener('click', function() {
-                window.print(); // Llama la función de imprimir del navegador
-            });
-        
-            // Función para guardar como PDF
-            document.getElementById('saveButton').addEventListener('click', function() {
-                const element = document.querySelector('.max-w-6xl');
-                const opt = {
-                    margin:       [3, 3, 3, 3], // Aumenta los márgenes si es necesario
-                    filename:     'reporte_amenazas.pdf',
-                    image:        { type: 'jpeg', quality: 1 },
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-
-                // Ocultar elementos que no deben aparecer en el PDF
-                const elementsToHide = document.querySelectorAll('.no-print');
-                elementsToHide.forEach(el => el.style.display = 'none');
-
-                html2pdf().set(opt).from(element).save().then(() => {
-                    // Mostrar de nuevo los elementos ocultos
-                    elementsToHide.forEach(el => el.style.display = '');
-                });
-            });
-        </script>
+<div class="max-w-6xl mx-auto p-4">
+  <div class="flex justify-between items-center py-6 px-4 bg-white">
+    <div class="flex items-center space-x-4">
+      <img src="{% static 'img/components/icon.png' %}" alt="logo"
+        class="w-14 h-14 object-cover rounded-full border-2 border-gray-200 shadow-sm">
+      <div>
+        <h1 class="text-2xl font-extrabold text-gray-900 tracking-wide">PASYS ALERT</h1>
+        <p class="text-sm text-gray-600">La información de este reporte es válida y autorizada por la empresa PASYS
+          ALERT.</p>
+      </div>
     </div>
-    
+    <div class="text-right">
+      <div class="text-base text-gray-700 flex items-center justify-end space-x-1">
+        <i class="fas fa-globe text-blue-500"></i>
+        <a href="https://www.pasysalert.com"
+          class="hover:text-blue-600 font-semibold transition duration-200">www.pasysalert.com</a>
+      </div>
+      <div class="text-base text-gray-700 flex items-center justify-end space-x-1 mt-2">
+        <i class="fas fa-map-marker-alt text-red-500"></i>
+        <p class="font-medium">Universidad Estatal de Milagro (UNEMI), Guayas, Ecuador</p>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center space-x-3">
+    <i class="far fa-calendar-alt text-indigo-600"></i>
+    <p class="text-gray-700 font-medium" id="currentDate"></p>
+  </div>
+  <script>
+    function showCurrentDate() {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const currentDate = new Date().toLocaleDateString('es-ES', options);
+      document.getElementById('currentDate').textContent = currentDate;
+    }
+    window.onload = showCurrentDate;
+  </script>
+
+  <div class="my-6">
+    <h2 class="text-center text-3xl font-bold text-gray-700">Reporte Ejecutivo de Amenazas Detectadas</h2>
+    <p class="text-center text-gray-500">Documento válido hasta: <strong>{{ expiry_date }}</strong></p>
+    <p class="mt-4 text-gray-700"><strong>Emitido por:</strong> {{ user.get_full_name }}</p>
+    <p class="text-gray-700"><strong>Cargo:</strong>
+      {% if user.is_superuser %}
+      {% trans 'Administrador' %}
+      {% else %}
+      {% trans 'Usuario' %}
+      {% endif %}
+    </p>
+    <p class="text-gray-700"><strong>Correo Electrónico:</strong> {{ user.email|default:"Correo no registrado" }}</p>
+    <p class="text-gray-700"><strong>Contacto:</strong> {{ user.phone|default:"No Registrado" }}</p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 shadow rounded-lg text-center">
+      <i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-2"></i>
+      <h3 class="text-2xl font-bold">{{ total_threats }}</h3>
+      <p class="text-gray-600">Total Amenazas Detectadas</p>
+    </div>
+    <div class="bg-white p-6 shadow rounded-lg text-center">
+      <i class="fas fa-chart-pie text-blue-500 text-4xl mb-2"></i>
+      <h3 class="text-2xl font-bold">{{ threat_types }}</h3>
+      <p class="text-gray-600">Tipos de Amenazas</p>
+    </div>
+    <div class="bg-white p-6 shadow rounded-lg text-center">
+      <i class="fas fa-chart-line text-green-500 text-4xl mb-2"></i>
+      <h3 class="text-2xl font-bold">{{ next_day_prediction }}</h3>
+      <p class="text-gray-600">Predicción Próximo Día</p>
+    </div>
+    <div class="bg-white p-6 shadow rounded-lg text-center">
+      <i class="fas fa-calendar-alt text-red-500 text-4xl mb-2"></i>
+      <h3 class="text-2xl font-bold">{{ last_prediction_date }}</h3>
+      <p class="text-gray-600">Fecha Última Predicción</p>
+    </div>
+  </div>
+  <div class="text-center py-4 space-y-6">
+    {% if bar_chart %}
+    <div class="grid lg:grid-cols-2 gap-4">
+      <div>
+        {{ bar_chart|safe }}
+        <p class="text-gray-700 text-sm mt-2">
+          Este gráfico muestra la cantidad total de amenazas por cada tipo. El tipo de amenaza más frecuente es
+          <strong>{{ threat_details.0.name }}</strong> con <strong>{{ threat_details.0.count }}</strong> incidencias de
+          detecciones, representando el <strong>{{ threat_details.0.percentage }}%</strong> del total.
+        </p>
+      </div>
+      <div>
+        {{ pie_chart|safe }}
+        <p class="text-gray-700 text-sm mt-2">
+          El gráfico de pastel representa la distribución porcentual de los tipos de amenazas. La mayoría de las
+          amenazas corresponden a <strong>{{ threat_details.0.name }}</strong> con un <strong>{{
+            threat_details.0.percentage }}%</strong> del total de Amenazas Detectadas.
+        </p>
+      </div>
+    </div>
+    <div>
+      {{ line_chart_detections_by_day|safe }}
+      <p class="text-gray-700 text-sm mt-2">
+        El gráfico de líneas muestra el número de amenazas detectadas por día. El pico más reciente ocurrirá el
+        <strong>{{ last_prediction_date }}</strong>, con una predicción de <strong>{{ next_day_prediction }}</strong>
+        detecciones para el siguiente día.
+      </p>
+    </div>
+    {% else %}
+    <p class="text-gray-500">
+      {% trans "No hay datos por mostrar." %} <span class="text-green-500 font-bold">{% trans "¿Por qué no generar
+        nuevos datos?" %}</span>
+    </p>
+    {% endif %}
+  </div>
+  <br><br>
+  <h2 class="text-center text-3xl font-bold text-gray-700">Resumen del Reporte Estadístico</h2>
+  <table class="min-w-full table-auto bg-white shadow rounded-lg overflow-hidden">
+    <thead class="bg-gray-50">
+      <tr class="text-left text-gray-600 uppercase text-sm">
+        <th class="px-6 py-3">Tipo de Amenaza</th>
+        <th class="px-6 py-3">Cantidad de Detecciones</th>
+        <th class="px-6 py-3">Porcentaje</th>
+        <th class="px-6 py-3">Estado</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      {% for threat in threat_details %}
+      <tr>
+        <td class="px-6 py-4"><i class="{{ threat.icon }}"></i> {{ threat.name }}</td>
+        <td class="px-6 py-4">{{ threat.count }} Detecciones</td>
+        <td class="px-6 py-4">{{ threat.percentage }}%</td>
+        <td class="px-6 py-4"><span class="text-green-500 font-bold">{{ threat.status }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="p-6 text-center border-t mt-6">
+    <p class="mb-4">Muchas gracias por hacer negocios con nosotros.</p>
+    <div class="flex justify-center space-x-2">
+      <button id="printButton" class="bg-green-100 text-green-800 px-4 py-2 rounded">Imprimir</button>
+      <button id="saveButton" class="bg-blue-100 text-blue-800 px-4 py-2 rounded">Guardar como PDF</button>
+      <a id="cancelar" href="{% url 'core:statistics' %}"><button
+          class="bg-red-100 text-red-800 px-4 py-2 rounded">Cancelar</button></a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('printButton').addEventListener('click', function () {
+      window.print();
+    });
+
+    document.getElementById('saveButton').addEventListener('click', function () {
+      const element = document.querySelector('.max-w-6xl');
+      const opt = {
+        margin: [3, 3, 3, 3],
+        filename: 'reporte_amenazas.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      const elementsToHide = document.querySelectorAll('.no-print');
+      elementsToHide.forEach(el => el.style.display = 'none');
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        elementsToHide.forEach(el => el.style.display = '');
+      });
+    });
+  </script>
+</div>
 {% endblock content %}

@@ -1,9 +1,7 @@
 {% extends 'components/base.html' %}
 {% load static %}
 {% load i18n %}
-
 <title>{% block title %} Verificación 2FA {% if is_signup %}para Registro{% endif %}{% endblock title %}</title>
-
 {% block content %}
 <div class="primary-container-bg p-8 relative overflow-hidden">
   <div class="relative">
@@ -49,5 +47,4 @@
   </div>
 </div>
 {% endblock content %}
-
 {% block navbar %}{% endblock navbar %}

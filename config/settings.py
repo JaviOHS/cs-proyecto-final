@@ -87,7 +87,6 @@ DATABASES = {
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-# Configuración Servicios AWS
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
@@ -114,10 +113,8 @@ STORAGES = {
     },
 }
 
-# Configuración de archivos media
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 
-# Configuración de archivos estáticos locales
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
@@ -150,11 +147,10 @@ AUTH_USER_MODEL = 'security.User'
 LOGIN_URL = '/security/auth/login'
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
-SESSION_COOKIE_AGE = 1800  # 30 minutos en segundos
+SESSION_COOKIE_AGE = 1800
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-# Configuración de correo
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -162,7 +158,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-# Configuracion para las traducciones
 USE_I18N = True
 LANGUAGES = [
     ('es', 'Spanish'),

@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import get_user_model
-import os
 User = get_user_model()
 
 class UserProfileForm(forms.ModelForm):
@@ -29,7 +28,7 @@ class UserProfileForm(forms.ModelForm):
             'dni': forms.TextInput(attrs={
                 'id': 'id_dni',
                 'class': 'inputs',
-                # 'readonly': 'readonly'
+                'readonly': 'readonly'
             }),
             'image': forms.FileInput(attrs={
                 'id': 'id_image',
@@ -39,7 +38,7 @@ class UserProfileForm(forms.ModelForm):
             'username': forms.TextInput(attrs={
                 'id': 'id_username',
                 'class': 'inputs',
-                # 'readonly': 'readonly'
+                'readonly': 'readonly'
             }),
         }
         

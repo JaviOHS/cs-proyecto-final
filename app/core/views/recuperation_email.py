@@ -11,10 +11,9 @@ from django.contrib.auth.tokens import default_token_generator
 from django.views import View
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _ # Para traducir las variables dinámicas
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
-
 class PasswordResetView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'password_reset.html', {'title1': _('Recuperar Contraseña')})
@@ -23,22 +22,13 @@ class PasswordResetView(View):
         email = request.POST['email']
         try:
             user = User.objects.get(email=email)
-            
-            # Generar token
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            
-            # Construir el enlace de restablecimiento
             reset_link = request.build_absolute_uri(
                 reverse('core:password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
             )
-            
-            # Obtener la URL de la imagen estática
-            web_url = 'http://127.0.0.1:8000/'  # Reemplaza con tu URL real de la aplicación
-
-            # Configurar el asunto y el mensaje del correo
+            web_url = 'http://127.0.0.1:8000/'
             subject = 'Restablecimiento de Contraseña - PASYS ALERT'
-
             message = format_html(
                 """
                 <!DOCTYPE html>
@@ -214,21 +204,15 @@ class PasswordResetView(View):
                 """,
                 reset_link=reset_link
             )
-
-
             from_email = 'noreply@tuempresa.com'
             recipient_list = [email]
-
-            # Enviar el correo
             send_mail(subject, '', from_email, recipient_list, fail_silently=False, html_message=message)
-            
             success_message = f'Se ha enviado un enlace para restablecer tu contraseña a {email}.'
             messages.success(request, success_message)
             return redirect(reverse('security:signin'))
         except User.DoesNotExist:
             error_message = 'El correo no se encuentra registrado.'
             messages.error(request, error_message)
-        
         return render(request, 'password_reset.html', {'title1': _('Recuperar Contraseña')})
     
     def get_context_data(self, **kwargs):

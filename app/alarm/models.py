@@ -1,5 +1,3 @@
-import os
-import tempfile
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -22,16 +20,6 @@ def play_audio_from_s3(url):
             pygame.mixer.music.play()
         except Exception as e:
             print(f"Error al reproducir con pygame: {e}\nIntentando reproducir con pydub...")
-            # from pydub import AudioSegment
-            # from pydub.playback import play
-
-            # Si falla pygame, intentar con pydub
-            # try:
-            #     audio = AudioSegment.from_file(audio_data, format='mp3')
-            #     play(audio)
-            # except Exception as e:
-            #     print(f"Error al reproducir con pydub: {e}")
-            #     print("No se pudo reproducir el audio.")
 
     except requests.RequestException as e:
         print(f"Error al obtener el archivo de audio: {e}")
@@ -99,12 +87,11 @@ class Alarm(models.Model):
 
     def create_alarm(self, detection, user):
         try:
-            # Crear una nueva instancia de Alarm
             print(f"Creando alarma para la detección '{detection.name}' y el usuario '{user.username}'...")
             new_alarm = Alarm(
                 detection=detection,
                 user=user,
-                is_active=True,  # La alarma se crea como activa
+                is_active=True,
                 notification_message=f"Se ha detectado una amenaza de {detection.name}."
             )
             new_alarm.save()

@@ -40,14 +40,13 @@ class AlarmForm(forms.ModelForm):
         if detection_model is not None:
             self.fields['detection_model'].queryset = detection_model
         
-        # Si estamos editando una alarma existente, seleccionamos el detection_model actual
         if self.instance.pk and self.instance.detection:
             self.initial['detection_model'] = self.instance.detection
     
     def clean_notification_message(self):
         notification_message = self.cleaned_data.get('notification_message', '').strip() 
         if not notification_message: return notification_message 
-        if notification_message[-1] != '.': notification_message += '.'
+        if notification_message[-1] not in ['.', '?', '!']: notification_message += '.'
         return notification_message.capitalize()
 
     def save(self, commit=True):

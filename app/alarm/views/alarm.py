@@ -1,4 +1,3 @@
-from django.forms import ValidationError
 from django.views.generic import ListView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from app.alarm.models import Alarm
