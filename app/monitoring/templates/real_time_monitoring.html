@@ -46,22 +46,41 @@
 {% endblock content %}
 
 {% block extra_js %}
+<style>
+  .notification-fade {
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+</style>
+
 <script>
-  function createNotificationElement(message) {
+  function createNotificationElement(message, tags) {
     const notificationDiv = document.createElement('div');
-    notificationDiv.className = 'flex items-center p-4 mb-4 text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 dark:border-yellow-800 notification-fade';
+    const baseClasses = 'flex items-center p-4 mb-4 rounded-lg notification-fade';
+
+    const styleClasses = tags === 'error'
+      ? 'text-red-800 border border-red-300 bg-red-50 dark:bg-gray-800 dark:text-red-300 dark:border-red-800'
+      : 'text-yellow-800 border border-yellow-300 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300 dark:border-yellow-800';
+
+    notificationDiv.className = `${baseClasses} ${styleClasses}`;
     notificationDiv.role = "alert";
 
+    const icon = tags === 'error' ? 'fa-times-circle' : 'fa-exclamation-triangle';
     notificationDiv.innerHTML = `
-      <i class="fas fa-exclamation-triangle flex-shrink-0 inline w-4 h-4 me-3"></i>
-      <div>
-        <span class="font-black">Alerta: </span>
-        <span class="description-font">${message}</span>
-      </div>
+        <i class="fas ${icon} flex-shrink-0 inline w-4 h-4 me-3"></i>
+        <div>
+            <span class="font-black">${tags === 'error' ? 'Error: ' : 'Alerta: '}</span>
+            <span class="description-font">${message}</span>
+        </div>
     `;
 
     return notificationDiv;
   }
+
+  let redirectTimeout = null;
+  let cameraErrorCount = 0;
+  const MAX_RETRIES = 3;
 
   function getNotifications() {
     const sessionId = "{{ session_id }}";
@@ -74,17 +93,36 @@
 
         data.notifications.forEach(notification => {
           const existingNotifications = Array.from(container.children);
-
           const isDuplicate = existingNotifications.some(
             (el) => el.textContent.includes(notification.message)
           );
+
           if (!isDuplicate) {
-            const notificationElement = createNotificationElement(notification.message);
+            const notificationElement = createNotificationElement(notification.message, notification.tags);
             container.appendChild(notificationElement);
 
             notificationElement.offsetHeight;
             notificationElement.style.opacity = '1';
             notificationElement.style.transform = 'translateX(0)';
+
+            if (notification.tags === 'error' && notification.message.includes('cámara')) {
+              cameraErrorCount++;
+
+              if (redirectTimeout) {
+                clearTimeout(redirectTimeout);
+              }
+
+              if (cameraErrorCount >= MAX_RETRIES) {
+                redirectTimeout = setTimeout(() => {
+                  const hasActiveErrors = Array.from(container.children).some(
+                    (el) => el.textContent.includes('cámara')
+                  );
+                  if (hasActiveErrors) {
+                    window.location.href = "{% url 'monitoring:monitoring_session' %}";
+                  }
+                }, 5000);
+              }
+            }
 
             setTimeout(() => {
               notificationElement.style.opacity = '0';
@@ -92,22 +130,18 @@
               setTimeout(() => {
                 notificationElement.remove();
               }, 300);
-            }, 19700);
+            }, 5000);
           }
         });
       })
       .catch(error => console.error('Error al obtener notificaciones:', error));
   }
 
+  setInterval(() => {
+    cameraErrorCount = 0;
+  }, 60000);
+
   setInterval(getNotifications, 5000);
   document.addEventListener('DOMContentLoaded', getNotifications);
 </script>
-
-<style>
-  .notification-fade {
-    opacity: 0;
-    transform: translateX(100%);
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-  }
-</style>
 {% endblock %}

@@ -32,10 +32,16 @@
           <h2 class="title-module-cards mb-2">
             {{ session.name }}
           </h2>
-          <p class="description-module-cards">
-            {{ session.description }}<br><br>
-            Sesión creada el {{ session.start_time|date:"d/m/Y" }} a las {{ session.start_time|time:"H:i" }}<br>
-          </p>
+          <div class="description-module-cards space-y-2">
+            <p><i class="fa-solid fa-comment"></i> {{ session.description }}</p>
+            <p class="text-purple-600 dark:text-purple-300"><i class="fa-regular fa-calendar-check"></i> Sesión creada el {{ session.start_time|date:"d/m/Y" }} a las {{ session.start_time|time:"H:i" }}</p>
+            <p class="text-orange-600 dark:text-orange-300"><i class="fa-solid fa-land-mine-on"></i> {{ session.detection_model }}</p>
+            {% if session.camera_status %}
+            <p class="text-green-600 dark:text-green-300"><i class="fa-solid fa-check"></i> Cámara activa después de última conexión.</p>
+            {% else %}
+            <p class="text-red-500 dark:text-red-300 font-black"><i class="fa-solid fa-circle-exclamation"></i> La cámara no estuvo disponible después de la última conexión.<br>Verifique si la IP ha cambiado.</p>
+            {% endif %}
+          </div>
           <div class="flex mt-3 space-x-2">
             <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
               <a href="{% url 'monitoring:update_session' session.id %}" data-tooltip-target="tooltip-editar-{{ session.id }}">
