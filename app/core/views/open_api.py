@@ -6,7 +6,6 @@ from django.views import View
 
 class OpenAIChatView(View):
     def post(self, request):
-        # Cargar el cuerpo de la solicitud como JSON
         try:
             body = json.loads(request.body)
             messages = body.get('messages')
@@ -26,8 +25,8 @@ class OpenAIChatView(View):
                 }
             )
 
-            response.raise_for_status()  # Lanza un error si la respuesta no es 200
+            response.raise_for_status()
             data = response.json()
-            return JsonResponse(data)  # Retorna la respuesta de OpenAI como JSON
+            return JsonResponse(data)
         except requests.exceptions.HTTPError as e:
-            return JsonResponse({'error': str(e)}, status=500)  # Manejo de errores
+            return JsonResponse({'error': str(e)}, status=500)

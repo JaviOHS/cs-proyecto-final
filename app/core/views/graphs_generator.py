@@ -15,16 +15,17 @@ class GraphGenerator:
         self.user = user
     
     def get_daily_detections(self):
-            today = timezone.now()
-            start_date = today - timedelta(days=30)  # Últimos 30 días
-            daily_data = (
-                DetectionCounter.objects
-                .filter(user=self.user, detection__created_at__gte=start_date)
-                .values('detection__created_at__date')
-                .annotate(total_count=Sum('count'))
-                .order_by('detection__created_at__date')
-            )
-            return daily_data
+        today = timezone.now()
+        start_date = today - timedelta(days=30)
+        daily_data = (
+            DetectionCounter.objects
+            .filter(user=self.user, detection__created_at__gte=start_date)
+            .values('detection__created_at__date')
+            .annotate(total_count=Sum('count'))
+            .order_by('detection__created_at__date')
+        )
+        return daily_data
+        
     def bar_chart_detections(self):
         detection_data = (
             DetectionCounter.objects
@@ -40,20 +41,16 @@ class GraphGenerator:
         detection_names = [item['detection__name'] for item in detection_data]
         counts = [item['total_count'] for item in detection_data]
 
-        # Crear y entrenar el modelo de regresión lineal
         X = np.arange(len(detection_names)).reshape(-1, 1)
         y = np.array(counts)
         model = LinearRegression()
         model.fit(X, y)
 
-        # Generar predicciones
         X_future = np.array([len(detection_names)]).reshape(-1, 1)
         y_pred = model.predict(X_future)
 
-        # Crear el gráfico de barras
         bar_chart = go.Figure()
 
-        # Detecciones reales
         bar_chart.add_trace(go.Bar(
             x=detection_names,
             y=counts,
@@ -62,7 +59,6 @@ class GraphGenerator:
             hovertemplate='<b>Detección:</b> %{x}<br><b>Cantidad:</b> %{y}<extra></extra>'
         ))
 
-        # Añadir etiquetas a las barras reales
         for i, count in enumerate(counts):
             bar_chart.add_annotation(
                 x=detection_names[i],
@@ -75,7 +71,6 @@ class GraphGenerator:
                 font=dict(size=10, color='black')
             )
 
-        # Barra de predicción
         bar_chart.add_trace(go.Bar(
             x=['Predicción'],
             y=y_pred,
@@ -84,7 +79,6 @@ class GraphGenerator:
             hovertemplate='Se predice la siguiente cantidad de aumento de detecciones: ' + str(round(y_pred[0], 2)) + '<extra></extra>'
         ))
 
-        # Etiqueta de la predicción
         bar_chart.add_annotation(
             x='Predicción',
             y=y_pred[0],
@@ -106,11 +100,9 @@ class GraphGenerator:
             barmode='group',
         )
 
-        # Configuración para deshabilitar la barra de herramientas
         config = {
-            'displayModeBar': False  # Deshabilitar la barra de herramientas
+            'displayModeBar': False
         }
-
         return pyo.plot(bar_chart, config=config, auto_open=False, include_plotlyjs=False, output_type='div')
 
     def pie_chart_detections(self):
@@ -148,26 +140,21 @@ class GraphGenerator:
         if not daily_data:
             return None
 
-        # Extraer fechas y conteos
         dates = [item['detection__created_at__date'] for item in daily_data]
         counts = [item['total_count'] for item in daily_data]
 
-        # Convertir las fechas a días desde la primera fecha
         X = np.array([(date - dates[0]).days for date in dates]).reshape(-1, 1)  # Asegurarse de que X sea 2D
         Y = np.array(counts)
 
-        # Crear y entrenar el modelo de regresión polinómica
         poly_features = PolynomialFeatures(degree=2, include_bias=False)
         X_poly = poly_features.fit_transform(X)
         model = LinearRegression()
         model.fit(X_poly, Y)
 
-        # Generar predicciones
         X_future = np.array(range(len(X), len(X) + 7)).reshape(-1, 1)  # Predicción para 7 días más
         X_future_poly = poly_features.transform(X_future)
         y_pred = model.predict(X_future_poly)
 
-        # Crear el gráfico de líneas con datos reales
         line_chart = go.Figure()
 
         line_chart.add_trace(go.Scatter(
@@ -178,7 +165,6 @@ class GraphGenerator:
             line=dict(color='blue')
         ))
 
-        # Agregar predicciones al gráfico
         future_dates = [dates[-1] + timedelta(days=i + 1) for i in range(7)]
         line_chart.add_trace(go.Scatter(
             x=future_dates,
@@ -187,8 +173,7 @@ class GraphGenerator:
             name='Predicciones',
             line=dict(color='red', dash='dash')
         ))
-
-        # Anotación con el mensaje de predicción
+        
         line_chart.add_annotation(
             x=future_dates[-1],
             y=y_pred[-1],
@@ -210,14 +195,11 @@ class GraphGenerator:
             paper_bgcolor='rgba(255, 255, 255, 0)'
         )
 
-        # Configuración para deshabilitar la barra de herramientas
         config = {
-            'displayModeBar': False  # Deshabilitar la barra de herramientas
+            'displayModeBar': False
         }
-
         return pyo.plot(line_chart, config=config, auto_open=False, include_plotlyjs=False, output_type='div')
 
-    # Calculos de los datos estadísticos
     def get_total_threats(self):
         return DetectionCounter.objects.filter(user=self.user).aggregate(total=Sum('count'))['total'] or 0
 
@@ -268,7 +250,7 @@ class GraphGenerator:
                 'icon': item['detection__icon'],
                 'count': item['total_count'],
                 'percentage': round((item['total_count'] / total_threats) * 100, 2) if total_threats else 0,
-                'status': 'Activo'  # Puedes ajustar esto según tu lógica de negocio
+                'status': 'Activo' 
             }
             for item in threat_data
         ]

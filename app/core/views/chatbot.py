@@ -32,7 +32,6 @@ class ChatbotView(View):
             logger.error(f"Error in ChatbotView: {str(e)}", exc_info=True)
             return JsonResponse({'response': 'Lo siento, ha ocurrido un error.'}, status=500)
         
-
 class Chatbot:
     def __init__(self):
         self.training_data = self.load_training_data()

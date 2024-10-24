@@ -18,7 +18,6 @@ class FormErrorHandlingMixin:
             return redirect(f"{reverse('core:error_page')}?error_message={error_message}")
 
     def form_valid(self, form):
-        """Método que maneja la validación exitosa del formulario."""
         try:
             response = super().form_valid(form)
             self.add_success_message()
@@ -43,6 +42,5 @@ class FormErrorHandlingMixin:
         return super().form_invalid(form)
 
     def add_success_message(self):
-        """Método para agregar mensajes de éxito. Puede ser sobrescrito en las vistas hijas."""
         if not messages.get_messages(self.request):
             messages.success(self.request, "Operación realizada con éxito.")

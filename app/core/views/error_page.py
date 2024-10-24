@@ -7,12 +7,10 @@ class ErrorPageTemplate(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title1"] = "Error"
-        context["title2"] = "¡Lo sentimos! Ha ocurrido un error."
-        
+        context["title2"] = "¡Lo sentimos! Ha ocurrido un error."  
         context["error_message"] = self.request.GET.get("error_message", "Ocurrió un error inesperado.")
         context["error_details"] = self.request.GET.get("error_details", "")
         context["image_url"] = self.request.GET.get("image_url", "img/error/default_error.png")
-
         return context
     
 def custom_404_view(request, exception):

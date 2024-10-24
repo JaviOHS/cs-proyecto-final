@@ -17,9 +17,7 @@
     {% trans "Consulte las amenazas disponibles en el sistema." %}
     {% endif %}
   </p>
-
   <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center">
-    <!-- Amenazas disponibles -->
     <div class="secondary-container-bg p-4 rounded-lg shadow-md">
       {% if detection_models %}
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -39,7 +37,6 @@
           </p>
           {% if user.is_superuser %}
           <div class="flex mt-3 space-x-2">
-            <!-- Botón Editar con Tooltip -->
             <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
               <a href="{% url 'detection:detection_update' model.id %}"
                 data-tooltip-target="tooltip-edit-{{ model.id }}">
@@ -52,7 +49,6 @@
               <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
 
-            <!-- Botón Eliminar con Tooltip -->
             <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
               <a href="{% url 'detection:detection_delete' model.id %}"
                 data-tooltip-target="tooltip-delete-{{ model.id }}">
@@ -77,15 +73,12 @@
     </div>
   </div>
 
-  <!-- Paginación -->
   {% block pagination %}
   {% include 'components/pagination.html' %}
   {% endblock pagination %}
 
-  <!-- Botones con Tooltips -->
   <div class="flex justify-center mt-6 mb-4 space-x-2">
     {% if user.is_superuser %}
-    <!-- Botón Añadir Amenaza con Tooltip -->
     <a href="{% url 'detection:detection_create' %}">
       <button data-tooltip-target="tooltip-add-threat" class="add-threat-button">
         <i class="fa-solid fa-plus"></i>
@@ -98,7 +91,6 @@
     </div>
     {% endif %}
 
-    <!-- Botón Video de Monitoreo con Tooltip -->
     <a href="{% url 'monitoring:monitoring_session' %}">
       <button data-tooltip-target="tooltip-video" class="monitoring-video-button">
         <i class="fa-solid fa-video"></i>
@@ -110,7 +102,6 @@
       <div class="tooltip-arrow" data-popper-arrow></div>
     </div>
 
-    <!-- Botón Volver al Inicio con Tooltip -->
     <a href="{% url 'home' %}">
       <button data-tooltip-target="tooltip-home" class="home-and-back-button">
         <i class="fa-solid fa-home"></i>

@@ -8,10 +8,9 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from app.core.forms.profile_view import UserProfileForm, UserProfilePasswordForm
 from django.contrib.auth import get_user_model
-from django.utils.translation import gettext_lazy as _ # Para traducir las variables dinámicas
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
-
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'profile.html'
     title1 = _('Perfil')
@@ -42,7 +41,6 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         
-        # Aquí es donde pasamos request.FILES
         form = self.get_form()
         password_form = UserProfilePasswordForm(request.user, request.POST)
 
@@ -56,8 +54,7 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
                 return self.render_to_response(self.get_context_data(form=form, password_form=password_form))
 
         elif 'profile_update' in request.POST:
-            # Pasa request.FILES al formulario
-            form = self.form_class(request.POST, request.FILES, instance=self.object)  # Actualizado aquí
+            form = self.form_class(request.POST, request.FILES, instance=self.object)
             if form.is_valid():
                 return self.form_valid(form)
             else:
@@ -71,7 +68,6 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
             print(f"Archivo subido: {form.instance.image}")
         response = super().form_valid(form)
         return response
-
 
     def form_invalid(self, form):
         response = super().form_invalid(form)

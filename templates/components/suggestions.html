@@ -1,7 +1,5 @@
-<!-- suggestions.html -->
 <div id="suggestions"
   class="fixed bottom-0 -right-0 z-[60] sm:max-w-sm w-full sm:w-auto p-8 opacity-0 transition-all duration-300">
-  <!-- Card -->
   <div
     class="bg-blue-100 dark:bg-indigo-900 text-center relative p-4 backdrop-blur-lg dark:backdrop-blur-lg rounded-xl">
     <h2 class="text-blue-700 dark:text-indigo-200 font-bold text-lg">Sugerencia</h2>
@@ -16,7 +14,6 @@
       </button>
     </div>
   </div>
-  <!-- Background SVG -->
   <svg class="absolute bottom-0 right-0 -z-10 w-full h-full" viewBox="0 0 273 250" fill="none"
     xmlns="http://www.w3.org/2000/svg">
     <g clip-path="url(#clip0_1727_230)">
@@ -54,7 +51,6 @@
   </svg>
 </div>
 
-<!-- SCRIPT DE SUGERENCIA -->
 <script>
   const suggestionId = {{ suggestion_id }};
   const suggestionsUrl = '/static/suggestions.json';
@@ -117,6 +113,5 @@
     }, { once: true });
   }
 
-  // Cargar y mostrar la sugerencia al cargar la página
   document.addEventListener('DOMContentLoaded', loadAndShowSuggestion);
 </script>

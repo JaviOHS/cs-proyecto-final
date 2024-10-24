@@ -1,5 +1,6 @@
 from django.urls import path
 from app.security.views import auth, verify_2fa
+
 app_name = 'security'
 
 urlpatterns = [

@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from app.core.models import User2FAPreferences
 from app.security.forms.auth import CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
-from django.utils.translation import gettext_lazy as _  # Para traducir las variables dinámicas
+from django.utils.translation import gettext_lazy as _
 from app.security.mixins.authentication_mixin import AuthErrorHandlingMixin
 import random
 from django.core.mail import send_mail
@@ -28,15 +28,11 @@ class SignupView(AuthErrorHandlingMixin, FormView):
     
     def form_valid(self, form):
         user = form.save(commit=False)
-        
-        # Generate a 6-digit code
         code = ''.join([str(random.randint(0, 9)) for _ in range(6)])
         
-        # Store the code and user data in session
         self.request.session['signup_2fa_code'] = code
         self.request.session['signup_user_data'] = form.cleaned_data
         
-        # Send the code via email
         send_mail(
             'Your 2FA Code for Registration',
             f'Your 2FA code for registration is: {code}',
@@ -60,18 +56,13 @@ class SigninView(AuthErrorHandlingMixin, FormView):
         user = authenticate(self.request, username=username, password=password)
 
         if user is not None:
-            # Check if 2FA is enabled for this user
             two_fa_preferences, created = User2FAPreferences.objects.get_or_create(user=user)
             
             if two_fa_preferences.is_2fa_enabled:
-                # Generate a 6-digit code
                 code = ''.join([str(random.randint(0, 9)) for _ in range(6)])
-                
-                # Store the code in session
                 self.request.session['2fa_code'] = code
                 self.request.session['user_id'] = user.id
 
-                # Send the code via email
                 send_mail(
                     'Your 2FA Code',
                     f'Your 2FA code is: {code}',
@@ -80,10 +71,8 @@ class SigninView(AuthErrorHandlingMixin, FormView):
                     fail_silently=False,
                 )
 
-                # Redirect to 2FA verification page
                 return redirect('security:verify_2fa')
             else:
-                # If 2FA is not enabled, log the user in directly
                 login(self.request, user)
                 messages.success(self.request, "Has iniciado sesión correctamente.")
                 return redirect("home")
@@ -94,7 +83,6 @@ class SigninView(AuthErrorHandlingMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Mostrar el botón de reconocimiento facial si al menos un usuario lo tiene habilitado
         show_facial_recognition = User2FAPreferences.objects.filter(
             is_facial_recognition_enabled=True
         ).exists()
@@ -103,5 +91,4 @@ class SigninView(AuthErrorHandlingMixin, FormView):
             'show_facial_recognition': show_facial_recognition,
             'success_messages': messages.get_messages(self.request)
         })
-        
         return context

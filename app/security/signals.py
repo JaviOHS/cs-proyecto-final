@@ -39,7 +39,7 @@ def create_groups_and_assign_permissions():
             ('delete_monitoringsession', 'monitoring', 'MonitoringSession'),
             ('view_user', 'security', 'User'),
         ],
-        'Administradores': None,  # Will be assigned all permissions
+        'Administradores': None,
     }
 
     for group_name, permission_info in permissions_by_group.items():
@@ -64,23 +64,23 @@ def create_groups_and_assign_permissions():
             print(f"{GREEN_COLOR}Permisos asignados al grupo '{group_name}'.{RESET_COLOR}")
 
 def create_client_user():
-    email = "ramon@gmail.com"
+    email = "ramon@pasysalert.com"
     if not User.objects.filter(email=email).exists():
         User.objects.create_user(
             email=email,
-            username="Ramoncitox_",
+            username="RamónPA_",
             first_name="Ramón",
             last_name="Común",
             dni="0912345678",
             phone="0987654321",
             password="secret_password"
         )
-        print(f"{YELLOW_COLOR}Usuario cliente 'Ramoncitox_' creado.{RESET_COLOR}")
+        print(f"{YELLOW_COLOR}Usuario cliente 'RamónPA_' creado.{RESET_COLOR}")
     else:
-        print(f"{BLUE_COLOR}El usuario cliente 'Ramoncitox_' ya existe.{RESET_COLOR}")
+        print(f"{BLUE_COLOR}El usuario cliente 'RamónPA_' ya existe.{RESET_COLOR}")
 
 def create_admin_user():
-    email = "dot40772@gmail.com"
+    email = "javicho@pasysalert.com"
     if not User.objects.filter(email=email).exists():
         User.objects.create_superuser(
             email=email,

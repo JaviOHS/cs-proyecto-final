@@ -15,16 +15,11 @@
     <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
     <p class="description-font text-center">{% trans 'Actualice su información y contraseña.' %}</p><br>
   </div>
-  
-  <!-- Formulario -->
-   
-  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl" data-aos="fade-up" data-aos-delay="300">
+  <div class="secondary-container-bg rounded-2xl shadow-xl" data-aos="fade-up" data-aos-delay="300">
     <form method="post" enctype="multipart/form-data" class="p-8">
       {% csrf_token %}
-      
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Imagen de perfil -->
-        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 text-center space-y-4">
+        <div class="primary-container-bg rounded-xl p-6 text-center space-y-4">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans 'Imagen de perfil' %}</h2>
           <div class="flex flex-col items-center space-y-4">
             <div class="relative group cursor-pointer">
@@ -40,13 +35,9 @@
           </div>
           <p class="text-sm text-gray-500 dark:text-gray-400">{% trans 'Haz clic en la imagen para cambiarla' %}</p>
         </div>
-
-        <!-- Información del perfil -->
         <div class="lg:col-span-2">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Columna izquierda -->
             <div class="space-y-6">
-              <!-- Nombre -->
               <div class="space-y-2">
                 <label for="{{ form.first_name.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.first_name.label }}
@@ -58,8 +49,6 @@
                   {{ form.first_name }}
                 </div>
               </div>
-
-              <!-- Usuario -->
               <div class="space-y-2">
                 <label for="{{ form.username.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.username.label }}
@@ -71,8 +60,6 @@
                   {{ form.username }}
                 </div>
               </div>
-
-              <!-- Correo -->
               <div class="space-y-2">
                 <label for="{{ form.email.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.email.label }}
@@ -85,10 +72,7 @@
                 </div>
               </div>
             </div>
-
-            <!-- Columna derecha -->
             <div class="space-y-6">
-              <!-- Apellido -->
               <div class="space-y-2">
                 <label for="{{ form.last_name.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.last_name.label }}
@@ -100,8 +84,6 @@
                   {{ form.last_name }}
                 </div>
               </div>
-
-              <!-- DNI -->
               <div class="space-y-2">
                 <label for="{{ form.dni.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.dni.label }}
@@ -113,8 +95,6 @@
                   {{ form.dni }}
                 </div>
               </div>
-
-              <!-- Teléfono -->
               <div class="space-y-2">
                 <label for="{{ form.phone.id_for_label }}" class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ form.phone.label }}
@@ -130,8 +110,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Sección de cambio de contraseña -->
       <div class="mt-10">
         <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6">
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">{% trans 'Cambiar Contraseña' %}</h3>
@@ -153,7 +131,6 @@
         </div>
       </div>
 
-      <!-- Botones de acción -->
       <div class="mt-10 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
         <button type="submit" name="profile_update" class="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-lg text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

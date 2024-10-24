@@ -7,14 +7,11 @@
 <div class="container px-6 mx-auto mb-4 flex items-center justify-center" data-aos="fade-up">
   <div class="secondary-container-bg w-full max-w-xl p-8 shadow-md hover:shadow-lg rounded-2xl">
     <div class="flex flex-col items-center text-center space-y-4">
-      <!-- Icono de Confirmación -->
       <svg xmlns="http://www.w3.org/2000/svg"
         class="primary-container-bg w-16 h-16 rounded-2xl p-3 text-red-400" fill="none"
         viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
-
-      <!-- Mensaje de Confirmación -->
       <div>
         <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ title2 }}</h2>
         <p class="text-gray-700 dark:text-gray-400 font-bold">
@@ -23,8 +20,6 @@
           <span class="text-red-400 font-black">{% trans 'Una vez eliminado, no podrás recuperar los datos.' %}</span>
         </p>
       </div>
-
-      <!-- Botones de Acción -->
       <form method="post" action="{{ confirm_url }}">
         {% csrf_token %}
         <div class="space-x-4">
