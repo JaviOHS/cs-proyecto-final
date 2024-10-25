@@ -12,6 +12,7 @@ class MonitoringSession(models.Model):
     detection_model = models.ForeignKey(Detection, verbose_name='Modelo de Detección', on_delete=models.CASCADE)
     crowding_threshold = models.IntegerField(default=10, verbose_name='Umbral de Aglomeración', help_text='Número de personas a partir del cual se considera aglomeración')
     camera_ip = models.CharField(max_length=255, null=True, blank=True, verbose_name='IP de la Cámara')
+    camera_status = models.BooleanField(default=True, verbose_name='Estado de la Cámara')
     
     class Meta:
         verbose_name = "Sesión de Monitoreo"

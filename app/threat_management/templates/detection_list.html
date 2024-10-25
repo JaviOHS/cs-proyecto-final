@@ -28,13 +28,13 @@
             <i class="{{ model.icon }} text-lg text-red-500 dark:text-white text-center"></i>
           </div>
           <h2 class="title-module-cards">{{ model.name }}</h2>
-          <p class="description-module-cards leading-5">
+          <div class="description-module-cards leading-5 space-y-2">
             {% if user.is_superuser %}
-            ID: {{ model.id }}<br><br>
+            <p>ID: {{ model.id }}</p>
             {% endif %}
-            {{ model.description }}<br><br>
-            {% trans "Creación:" %} <br>{{ model.created_at | date:"d/m/Y" }} {% trans "a las" %} {{ model.created_at | date:"H:i" }} {% trans "horas." %} <br>
-          </p>
+            <p>{{ model.description }}</p>
+            <p>{% trans "Creación:" %}<br>{{ model.created_at | date:"d/m/Y" }} {% trans "a las" %} {{ model.created_at | date:"H:i" }} {% trans "horas." %}</p>
+          </div>
           {% if user.is_superuser %}
           <div class="flex mt-3 space-x-2">
             <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
