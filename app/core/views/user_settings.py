@@ -23,13 +23,16 @@ class UserSettingsView(LoginRequiredMixin, UpdateView):
         if self.object.is_2fa_enabled:
             messages_list.append("Se ha habilitado la verificación de dos factores (2FA) para su cuenta.")
         else:
-            messages_list.append("Se ha deshabilitado la verificación de dos factores (2FA) para su cuenta.")  
+            messages_list.append("Se ha deshabilitado la verificación de dos factores (2FA) para su cuenta.")
+            
         if self.object.is_facial_recognition_enabled:
             messages_list.append("Se ha habilitado el reconocimiento facial para su cuenta.")
         else:
             messages_list.append("Se ha deshabilitado el reconocimiento facial para su cuenta.")
+        
         for message in messages_list:
-            messages.success(self.request, message)   
+            messages.success(self.request, message)
+            
         return response
 
     def get_context_data(self, **kwargs):

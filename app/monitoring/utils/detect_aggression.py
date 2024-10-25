@@ -17,7 +17,7 @@ model_path = os.path.join(current_directory, 'models/aggression_detection_model.
 model_loaded = joblib.load(model_path)
 
 NO_AGGRESSION_FRAMES_THRESHOLD = 35
-AGGRESSION_FRAMES_THRESHOLD = 15  # Se ajusta a 1 para detección inmediata
+AGGRESSION_FRAMES_THRESHOLD = 15 
 detection_interval = 5
 
 class AggressionDetector:
@@ -31,7 +31,7 @@ class AggressionDetector:
         self.hog = cv2.HOGDescriptor()
         self.hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
         self.executor = ThreadPoolExecutor(max_workers=4)
-        self.fps = 12  # Valor predeterminado que puede ajustarse en `detect_aggression`
+        self.fps = 12  
     
     def set_fps(self, fps):
         """Establecer los cuadros por segundo para ajustar los umbrales."""
@@ -68,15 +68,15 @@ class AggressionDetector:
             if prediction[0] == 1:
                 self.aggression_frames.append(frame)
 
-                # Iniciar el evento de agresión inmediatamente si no está activo
+                
                 if not self.aggression_event_active:
                     self.start_aggression_event(session, frame_index)
                 
-                # Reiniciar frames sin agresión ya que se ha detectado agresión
+                
                 self.frames_without_aggression = 0
 
             else:
-                # Si la agresión estaba activa y ahora no, aumentar el conteo de frames sin agresión
+                
                 if self.aggression_event_active:
                     self.frames_without_aggression += 1
                     print(f"{YELLOW_COLOR}Frame {frame_index} - Frames sin agresión: {self.frames_without_aggression}/{self.no_aggression_frames_threshold}{RESET_COLOR}")
@@ -118,7 +118,7 @@ class AggressionDetector:
         if self.fps != fps:
             self.set_fps(fps)
 
-        # Respetar el intervalo de detección desde la vista
+
         print(f"{YELLOW_COLOR}Procesando detección de agresión en el frame {frame_index}{RESET_COLOR}")
         self.executor.submit(self.process_detection, frame.copy(), session, frame_index)
         return frame
@@ -173,9 +173,9 @@ class AggressionDetector:
         except Exception as e:
             print(f"Error al intentar eliminar el archivo de video: {e}")
 
-# Instancia del detector
+
 detector = AggressionDetector()
 
-# Función para la detección
+
 def detect_aggression(frame, session, frame_index, fps):
     return detector.detect_aggression(frame, session, frame_index, fps)

@@ -13,7 +13,7 @@ from app.monitoring.utils.send_email import send_alert_email_video
 from app.threat_management.models import DetectionCounter
 
 THEFT_DETECTION_TIME = 1
-THEFT_THRESHOLD = 55  # Diagonal (35 - 45); Frontal (60 o más)
+THEFT_THRESHOLD = 55 
 
 mp_holistic = mp.solutions.holistic
 holistic = mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5)
@@ -87,7 +87,6 @@ def detect_suspicious_action(pose_landmarks, left_hand_landmarks, right_hand_lan
     return suspicious_score, left_hand_pos, right_hand_pos
 
 def detect_theft(frame, session, frame_index, fps):
-    # Cálculo de variables dependientes de fps
     FRAMES_BEFORE_AFTER = int(fps * 0.2)
     FRAMES_TO_SAVE = int(fps * 4)
     BUFFER_SIZE = int(fps * 4)
@@ -112,7 +111,6 @@ def detect_theft(frame, session, frame_index, fps):
     current_time = datetime.now()
     results = holistic.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
-    # Añadir el fotograma actual al buffer
     state['frame_buffer'].append((frame.copy(), current_time))
 
     if results.pose_landmarks:
@@ -173,7 +171,6 @@ def detect_theft(frame, session, frame_index, fps):
         state['prev_right_hand'] = right_hand_pos
         state['prev_time'] = current_time
 
-    # Manejar el guardado de fotogramas después del robo
     if state['theft_detected'] and state['post_theft_frame_count'] > 0:
         state['post_theft_frame_count'] -= 1
         if state['post_theft_frame_count'] == 0:
@@ -211,14 +208,11 @@ def save_theft_event(session, frame_buffer, theft_time, theft_number, fps):
         os.remove(video_path)
         print(f"{GREY_COLOR}Video {video_filename} eliminado después de enviar.{RESET_COLOR}")
 
-        # Alarm.stop_alarm()
 
     except Exception as e:
         print(f"{RED_COLOR}Error al guardar el evento de robo: {str(e)}{RESET_COLOR}")
-        # Alarm.stop_alarm()
 
 def create_video_from_frames(frame_buffer, output_video_path, fps):
-    # Asumimos que el buffer ya contiene frames en el orden correcto
     if not frame_buffer:
         print(f"{YELLOW_COLOR}No hay fotogramas en el buffer para crear el video.{RESET_COLOR}")
         return

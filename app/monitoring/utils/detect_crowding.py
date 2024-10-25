@@ -8,7 +8,7 @@ from app.monitoring.utils.send_email import send_alert_email
 from app.threat_management.models import DetectionCounter
 from concurrent.futures import ThreadPoolExecutor
 
-# Inicializar el cliente de Rekognition de AWS
+
 rekognition = boto3.client(
     'rekognition',
     aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
@@ -16,15 +16,15 @@ rekognition = boto3.client(
     region_name=settings.AWS_S3_REGION_NAME
 )
 
-# Variable para rastrear el tiempo del último correo enviado
+
 last_email_time = 0
-EMAIL_COOLDOWN = 10  # Enviar correos cada 10 segundos
+EMAIL_COOLDOWN = 10  
 executor = ThreadPoolExecutor(max_workers=4)
 
 def detect_crowding(frame, session, frame_index, fps):
     global last_email_time
 
-    # Convertir el frame a bytes
+
     _, buffer = cv2.imencode('.jpg', frame)
     frame_bytes = buffer.tobytes()
 
@@ -32,25 +32,25 @@ def detect_crowding(frame, session, frame_index, fps):
     num_people = 0
 
     try:
-        # Detectar personas en la imagen usando Rekognition
+        
         response = rekognition.detect_labels(
             Image={'Bytes': frame_bytes},
             MaxLabels=10,
             MinConfidence=80
         )
 
-        # Buscar la etiqueta 'Person'
+
         person_label = next((label for label in response['Labels'] if label['Name'] == 'Person'), None)
 
         if person_label:
-            # Obtener el número de instancias (personas)
+       
             num_people = len(person_label['Instances'])
 
-            # Dibujar un rectángulo y texto en el frame
+           
             cv2.putText(frame, f'Personas detectadas: {num_people}', (10, 30),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-            # Verificar si hay aglomeración
+          
             if num_people > session.crowding_threshold:
                 cv2.putText(frame, 'AGLOMERACION DETECTADA', (10, 70),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
@@ -59,19 +59,18 @@ def detect_crowding(frame, session, frame_index, fps):
     except ClientError as e:
         print(f"Error al llamar a Rekognition: {e}")
 
-    # Activar o detener la alarma según se detecte o no aglomeración
+
     try:
         if crowding_detected:
             detection = session.detection_model
             
-            # Incrementar el contador de detecciones
+          
             detection_counter, created = DetectionCounter.objects.get_or_create(
                 detection=detection,
                 user=session.user
             )
             detection_counter.increment()
             
-            # Intentar activar una alarma personalizada o reproducir una alarma por defecto
             alarm = Alarm.objects.filter(detection=detection, user=session.user, is_active=True).first()
             if not alarm:
                 alarm = Alarm()
@@ -80,7 +79,6 @@ def detect_crowding(frame, session, frame_index, fps):
                 executor.submit(alarm.activate)
             else:
                 print("No se pudo crear o encontrar la alarma.")
-            # Enviar un correo si ha pasado suficiente tiempo desde el último correo
             current_time = time.time()
             is_crowding = True
             if current_time - last_email_time > EMAIL_COOLDOWN:

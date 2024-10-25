@@ -1,4 +1,6 @@
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from app.core.views.home import HomeTemplateView
 from app.core.views.profile_view import ProfileView, UserProfileUpdateView
 from app.core.views.recuperation_email import PasswordResetView
@@ -13,7 +15,6 @@ from django.views.i18n import set_language
 from app.core.views.error_page import ErrorPageTemplate
 from app.core.views.open_api import OpenAIChatView
 from app.core.views.user_settings import UserSettingsView
-
 app_name = 'core'
 
 urlpatterns = [

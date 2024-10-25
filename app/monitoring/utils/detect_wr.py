@@ -55,11 +55,9 @@ def detect_objects_in_frame(frame, session, frame_index, fps):
                 detection_state.is_detecting = False
                 detection_state.frames_buffer = []
 
-        # Siempre añadimos el frame actual al buffer
         detection_state.frames_buffer.append((frame.copy(), time.time()))
         
-        # Limitamos el tamaño del buffer
-        max_buffer_size = int(fps * 10)  # Por ejemplo, 10 segundos de video
+        max_buffer_size = int(fps * 10)  
         if len(detection_state.frames_buffer) > max_buffer_size:
             detection_state.frames_buffer.pop(0)
 
@@ -106,10 +104,9 @@ def save_video_segment(frames, start_time, session, detected_items):
     out.release()
     print(f"{GREEN_COLOR}Segmento de video guardado: {video_filename}{RESET_COLOR}")
 
-    # Preparar la información de las armas detectadas
     weapons_info = f'{', '.join(item[0] for item in detected_items)}'
 
-    # Enviar el video por correo
+ 
     try:
         is_weapon = True
         recipient_email = session.user.email

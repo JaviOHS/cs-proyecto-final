@@ -341,7 +341,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   {% load i18n %}
   <footer>
     <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
@@ -437,7 +436,6 @@
     </svg>
   </footer>
 
-  <!-- Botón para volver al principio de la página -->
   <div class="fixed bottom-36 right-4 flex flex-col space-y-6 items-center">
     <div>
       <button id="goTopBtn" title="Ir arriba"
@@ -448,7 +446,6 @@
   </div>
 
   {% if user.is_authenticated %}
-  <!-- Icono de ChatBot -->
   <div id="chatbot-container" class="fixed bottom-5 left-8 z-50">
     <button id="open-chat"
       class="bg-blue-700 w-14 h-14 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
@@ -481,7 +478,7 @@
           class="transition-all duration-300 ease-in-out delay-150 path-0"></path>
       </svg>
 
-      <!-- Mostrar modelo seleccionado -->
+
       <div id="selected-model"
         class="text-center text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 my-0 py-2 rounded-lg mx-4 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200">
         <span>Modelo seleccionado: <span id="current-model">Ninguno</span></span>
@@ -489,7 +486,7 @@
 
       <div id="chat-messages"
         class="h-80 overflow-y-auto p-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 relative">
-        <!-- Ventana de selección de modelo -->
+
         <div id="model-selection"
           class="absolute top-0 z-50 left-3 rounded-2xl bg-white dark:bg-gray-800 shadow-lg border border-gray-300 dark:border-gray-700 py-2 overflow-hidden min-w-fit origin-center text-gray-700 dark:text-gray-300 hidden"
           role="menu" aria-orientation="vertical">
@@ -498,7 +495,6 @@
             <span class="text-gray-500 dark:text-gray-400">Seleccionar un modelo para iniciar</span>
           </div>
 
-          <!-- Modelo LLAMA-3 -->
           <div role="menuitem"
             class="model-option flex items-center m-1.5 p-2.5 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:bg-gray-100 dark:focus-visible:bg-gray-700 rounded-lg my-0 px-3 mx-2 gap-2.5 py-3">
             <div class="flex items-center gap-3 w-full">
@@ -511,7 +507,6 @@
             </div>
           </div>
 
-          <!-- Modelo ChatGPT-3 -->
           <div role="menuitem"
             class="model-option flex items-center m-1.5 p-2.5 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:bg-gray-100 dark:focus-visible:bg-gray-700 rounded-lg my-0 px-3 mx-2 gap-2.5 py-3">
             <div class="flex items-center gap-3 w-full">
@@ -526,7 +521,6 @@
 
           <div class="mx-5 my-1 h-px bg-gray-300 dark:bg-gray-600"></div>
 
-          <!-- Botón Volver a intentar -->
           <div id="retry-button" role="menuitem"
             class="flex items-center m-1.5 p-2.5 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:bg-gray-100 dark:focus-visible:bg-gray-700 rounded-lg my-0 px-3 mx-2 gap-2.5 py-3">
             <div class="flex items-center gap-3 w-full">
@@ -543,10 +537,8 @@
             </div>
           </div>
         </div>
-        <!-- Fin de la ventana de selección de modelo -->
-        <!-- Aquí se agregarán los mensajes del chat dinámicamente -->
       </div>
-      <!-- Enviar mensaje -->
+
       <div class="bg-gray-100 dark:bg-gray-700 p-4 flex items-center">
         <input id="chat-input" type="text"
           class="flex-grow mr-3 px-3 py-2 border rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 transition-all duration-300 dark:bg-gray-700 dark:text-gray-100"
@@ -568,7 +560,7 @@
   {% endif %}
 
   
-  <!-- Scripts -->
+
   {% block scripts %}
   {% include 'scripts.html' %}
   {% endblock scripts %}

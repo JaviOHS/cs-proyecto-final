@@ -1,4 +1,3 @@
-# Ya no necesitas importar Permission aquí.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from app.security.utils import validate_dni, phone_regex
@@ -33,7 +32,7 @@ class User(AbstractUser):
         return 'componentes/default_user.jpg'
 
     def save(self, *args, **kwargs):
-        if self.pk:  # Solo para actualizaciones
+        if self.pk: 
             old_user = User.objects.get(pk=self.pk)
             if old_user.image and old_user.image != self.image:
                 if old_user.image.name != 'componentes/default_user.jpg':
@@ -42,7 +41,7 @@ class User(AbstractUser):
 
     def set_group_session(self, request):
         if self.groups.exists():
-            group = self.groups.first()  # Obtener el primer grupo
+            group = self.groups.first()  
             request.session['group_id'] = group.id
             request.session['group_name'] = group.name
         else:

@@ -15,7 +15,7 @@ from app.threat_management.models import DetectionCounter
 import threading
 from django.db import transaction
 
-# Configuración del detector de objetos
+
 current_directory = os.path.dirname(__file__)
 options = vision.ObjectDetectorOptions(
     base_options=BaseOptions(model_asset_path=os.path.join(current_directory, "models/object_detection.tflite")),
@@ -25,16 +25,15 @@ options = vision.ObjectDetectorOptions(
 )
 detector = vision.ObjectDetector.create_from_options(options)
 
-# Parámetros de detección
-frames_interval = 4  # Intervalo de frames para la detección de objetos
-min_frames_stationary = 20  # Número mínimo de frames para considerar un objeto estacionario
-max_missing_frames = 5  # Máximo de frames en que un objeto puede desaparecer temporalmente
-object_history = {}  # Diccionario para almacenar el historial de objetos
-min_frames_to_confirm_new = 30  # Número de frames para confirmar un objeto como nuevo
-size_change_threshold = 0.3  # Acepta cambios de tamaño de hasta el 30%
-max_distance = 50  # Distancia máxima entre centros para considerar un objeto el mismo
 
-# Configuración del buffer de frames
+frames_interval = 4  
+min_frames_stationary = 20  
+max_missing_frames = 5  
+object_history = {}  
+min_frames_to_confirm_new = 30  
+size_change_threshold = 0.3  
+max_distance = 50  
+
 BUFFER_SIZE = 100
 frame_buffer = deque(maxlen=BUFFER_SIZE)
 
@@ -140,27 +139,22 @@ def detect_drop_items(frame, session, frame_index, fps):
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
             cv2.putText(frame, f"{status}", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
-            # Verificar si se trata de una nueva detección confirmada y enviar el video por correo.
             if info['is_new'] and info['frames_stationary'] >= min_frames_to_confirm_new:
                 executor.submit(save_and_send_video, session, list(frame_buffer), category, fps)
                 info['is_new'] = False
 
-            # Activar la alarma si no ha sido activada para este objeto recientemente.
             if not info['alarm_activated']:
                 new_detections = True
                 info['alarm_activated'] = True
 
-        # Restablecer `alarm_activated` y `is_new` si el objeto desaparece por un tiempo.
         if category not in current_objects:
             info['missing_frames'] += 1
             if info['missing_frames'] > max_missing_frames:
                 info['alarm_activated'] = False
                 info['is_new'] = True
 
-    # Limpiar objetos que han desaparecido por mucho tiempo.
     object_history = {k: v for k, v in object_history.items() if v['missing_frames'] <= max_missing_frames}
 
-    # Si hay nuevas detecciones, lanzar el hilo de manejo de alarmas.
     if new_detections:
         threading.Thread(target=handle_new_detections, args=(session,)).start()
 

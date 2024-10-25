@@ -2,7 +2,6 @@
 {% load static %}
 {% load i18n %}
 {% block title %}{{ title1 }}{% endblock title %}
-
 {% block content %}
 <div class="py-12 lg:py-14"></div>
 <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
@@ -15,65 +14,54 @@
     <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
     <p class="description-font text-center">{% trans 'Visualice las configuraciones de seguridad disponibles' %}</p><br>
   </div>
-  <form method="POST" class="space-y-8" data-aos="fade-up" data-aos-delay="300">
-    {% csrf_token %}
-    <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 transition-all hover:shadow-md">
-      <div class="flex items-center justify-between gap-4">
-        <div class="flex-1">
-          <label for="{{ form.is_2fa_enabled.id_for_label }}" class="text-lg font-medium text-gray-900 dark:text-white">
-            {% trans 'Habilitar 2FA para su cuenta' %}
-          </label>
-          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            {% trans 'Activa la función de verificación de Dos Factores (2FA), al habilitar esta función recibirás un
-            código de seis dígitos a tu correo registrado para poder iniciar sesión en la plataforma.' %}
-          </p>
-        </div>
-        <div class="relative">
-          <label class="inline-flex items-center cursor-pointer">
-            <input type="checkbox" name="{{ form.is_2fa_enabled.name }}" {% if form.is_2fa_enabled.value %}checked{%
-              endif %} class="sr-only peer">
-            <div
-              class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+      <form method="POST" class="space-y-8" data-aos="fade-up" data-aos-delay="300">
+        {% csrf_token %}
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 transition-all hover:shadow-md">
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex-1">
+              <label for="{{ form.is_2fa_enabled.id_for_label }}" class="text-lg font-medium text-gray-900 dark:text-white">
+                {% trans 'Habilitar 2FA para su cuenta' %}
+              </label>
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                {% trans 'Activa la función de verificación de Dos Factores (2FA), al habilitar esta función recibirás un código de seis dígitos a tu correo registrado para poder iniciar sesión en la plataforma.' %}
+              </p>
             </div>
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 transition-all hover:shadow-md">
-      <div class="flex items-center justify-between gap-4">
-        <div class="flex-1">
-          <label for="{{ form.is_facial_recognition_enabled.id_for_label }}"
-            class="text-lg font-medium text-gray-900 dark:text-white">
-            {% trans 'Habilitar Reconocimiento Facial' %}
-          </label>
-          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            {% trans 'Activa la función de reconocimiento facial para poder iniciar sesión utilizando tu rostro como método de autenticación. Recuerda que debes cargar una imagen de perfil en la sección de Perfil del usuario.' %}
-          </p>
-        </div>
-        <div class="relative">
-          <label class="inline-flex items-center cursor-pointer">
-            <input type="checkbox" name="{{ form.is_facial_recognition_enabled.name }}" {% if
-              form.is_facial_recognition_enabled.value %}checked{% endif %} class="sr-only peer">
-            <div
-              class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+            <div class="relative">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" name="{{ form.is_2fa_enabled.name }}" {% if form.is_2fa_enabled.value %}checked{% endif %} class="sr-only peer">
+                <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              </label>
             </div>
-          </label>
+          </div>
         </div>
-      </div>
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 transition-all hover:shadow-md">
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex-1">
+              <label for="{{ form.is_facial_recognition_enabled.id_for_label }}" class="text-lg font-medium text-gray-900 dark:text-white">
+                {% trans 'Habilitar Reconocimiento Facial' %}
+              </label>
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                {% trans 'Activa la función de reconocimiento facial para poder iniciar sesión utilizando tu rostro como método de autenticación. Recuerda que debes cargar una imagen de perfil en la sección de Perfil del usuario.' %}
+              </p>
+            </div>
+            <div class="relative">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" name="{{ form.is_facial_recognition_enabled.name }}" {% if form.is_facial_recognition_enabled.value %}checked{% endif %} class="sr-only peer">
+                <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center justify-center pt-6">
+          <button type="submit" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+            </svg>
+            {% trans 'Guardar Configuración' %}
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="flex items-center justify-center pt-6">
-      <button type="submit"
-        class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
-        </svg>
-        {% trans 'Guardar Configuración' %}
-      </button>
-    </div>
-  </form>
-  </div>
   </div>
 </section>
 </div>
