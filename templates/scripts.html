@@ -40,69 +40,6 @@
   });
 </script>
 
-<!-- Script para cambiar el tema -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const themeToggleBtn = document.getElementById('themeIconContainer');
-    const themeIcon = document.getElementById('themeIcon');
-
-    // Función para cambiar el ícono del tema
-    function toggleThemeIcon() {
-      if (themeIcon) {
-        if (document.documentElement.classList.contains('dark')) {
-          themeIcon.classList.remove('fa-moon');
-          themeIcon.classList.add('fa-sun');
-        } else {
-          themeIcon.classList.remove('fa-sun');
-          themeIcon.classList.add('fa-moon');
-        }
-      }
-    }
-
-    // Función para aplicar un tema y actualizar el ícono
-    function setTheme(theme) {
-      document.documentElement.className = theme;
-      localStorage.setItem('theme', theme); // Guarda el tema seleccionado en localStorage para persistencia
-
-      // Mostrar u ocultar la imagen de fondo según el tema seleccionado (si es necesario)
-      const heroSection = document.getElementById('hero-section');
-      if (heroSection) {
-        if (theme === 'theme1') {
-          heroSection.classList.remove('no-background');
-        } else {
-          heroSection.classList.add('no-background');
-        }
-      }
-
-      // Cambia el ícono del tema
-      toggleThemeIcon();
-    }
-
-    // Verifica si hay un tema guardado en el almacenamiento local
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    setTheme(savedTheme);
-
-    // Cambiar el ícono del tema al cargar la página
-    toggleThemeIcon();
-
-    // Agrega un listener para el evento 'click' en el botón
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', function (event) {
-        event.preventDefault(); // Previene el comportamiento predeterminado del ícono
-        // Cambia entre temas light y dark
-        if (document.documentElement.classList.contains('dark')) {
-          setTheme('light');
-        } else {
-          setTheme('dark');
-        }
-      });
-    }
-
-    // Exponer setTheme globalmente para usarlo en el menú de temas
-    window.setTheme = setTheme;
-  });
-</script>
-
 <!-- Script para hacer blur la navbar -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -223,7 +160,7 @@
     transform: translateY(10px);
     opacity: 0;
     visibility: hidden;
-    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+    transition: transform 0.3s ease, opacity 0s ease, visibility 0.3s;
   }
 
   #dropdown.show {
@@ -306,678 +243,6 @@
   }
 </script>
 
-<!-- Script Chatbot -->
-<script type="module">
-  import { CreateWebWorkerMLCEngine } from "https://esm.run/@mlc-ai/web-llm"
-
-  const $ = el => document.querySelector(el)
-  const $openChat = $('#open-chat')
-  const $closeChat = $('#close-chat')
-  const $chatbot = $('#chatbot')
-  const $chatMessages = $('#chat-messages')
-  const $chatInput = $('#chat-input')
-  const $sendMessage = $('#send-message')
-  const $modelSelection = $('#model-selection')
-  const $currentModel = $('#current-model')
-  const $selectedModelDiv = $('#selected-model')
-
-  let messages = []
-  let engine = null
-  let jsonData = []
-  let isEngineInitializing = false
-  let selectedModel = null
-
-  // Cargar los datos del JSON
-  async function loadJSONData() {
-    if (jsonData.length === 0) {
-      try {
-        const response = await fetch('/static/chatbot_training_data.json');
-        jsonData = await response.json();
-      } catch (error) {
-        console.error('Error loading JSON data:', error);
-      }
-    }
-  }
-
-  // Buscar una respuesta en el JSON
-  function findAnswerInJSON(question) {
-    const lowerQuestion = question.toLowerCase();
-    const match = jsonData.find(item =>
-      lowerQuestion.includes(item.question.toLowerCase())
-    );
-    return match ? match.answer : null;
-  }
-
-  // Inicializar el chatbot y cargar el modelo
-  async function initializeChatbot() {
-    await loadJSONData();
-  
-    $modelSelection.classList.add('hidden');
-  
-    // Resetea el modelo mostrado
-    $currentModel.textContent = 'Ninguno';
-  
-    selectedModel = await showModelOptions();
-    
-    // Opciones principales del menú
-    const mainMenuOptions = [
-      "¿Quién eres?",
-      "Información sobre autenticación",
-      "Información sobre el sistema",
-      "Perfil del Usuario",
-      "Información sobre alertas",
-      "Información sobre monitoreo",
-      "Información sobre reportes"
-    ];
-  
-    // Mensaje de bienvenida personalizado con emojis relevantes
-    const welcomeMessage = [
-      "¡Hola 👋! Soy Alexis, tu ChatBot personal.",
-      "Estoy aquí para ayudarte con cualquier duda al momento de usar nuestro software.",
-      "¿En qué puedo ayudarte 😊?"
-    ].join("\n");
-  
-    await addMessageWithOptions(
-      welcomeMessage,
-      mainMenuOptions,
-      'bot'
-    );
-  
-    // Pequeña pausa para mejor experiencia de usuario
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  
-    enableChat();
-  }
-
-  // Nueva función para crear una opción seleccionable
-  function createOption(text) {
-    const option = document.createElement('div');
-    option.className = 'text-center text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 my-2 py-2 rounded-lg mx-4 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200';
-    option.innerHTML = `<span>${text}</span>`;
-    
-    option.addEventListener('click', async () => {
-      // Agregar la selección como mensaje del usuario
-      await addMessage(text, 'user');
-      
-      // Procesar la respuesta basada en la opción seleccionada
-      handleOptionSelection(text);
-    });
-    
-    return option;
-  }
-
-  // Nueva función para agregar mensaje con opciones
-  async function addMessageWithOptions(text, options = [], sender) {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('mb-4', 'p-3', 'rounded-lg', 'flex', 'flex-col');
-
-    if (sender === 'bot') {
-      messageElement.classList.add(
-        'bg-gray-100',
-        'dark:bg-[#0f1e41]',
-        'mr-auto',
-        'px-4',
-        'py-2',
-        'rounded-lg',
-        'w-full',
-        'max-w-[80%]',
-        'font-semibold'
-      );
-
-      const botTextElement = document.createElement('p');
-      botTextElement.classList.add('text-sm');
-      messageElement.appendChild(botTextElement);
-
-      $chatMessages.appendChild(messageElement);
-      await typeMessage(botTextElement, text);
-
-      // Agregar opciones después del mensaje
-      if (options.length > 0) {
-        const optionsContainer = document.createElement('div');
-        optionsContainer.classList.add('mt-4');
-        options.forEach(optionText => {
-          optionsContainer.appendChild(createOption(optionText));
-        });
-        $chatMessages.appendChild(optionsContainer);
-      }
-    } else {
-      messageElement.classList.add(
-        'bg-blue-700',
-        'dark:bg-indigo-700',
-        'text-white',
-        'ml-auto',
-        'inline-block',
-        'px-4',
-        'py-2',
-        'rounded-lg',
-        'max-w-[60%]',
-        'text-left',
-        'font-semibold'
-      );
-      messageElement.innerHTML = `<p class="text-sm">${text}</p>`;
-      $chatMessages.appendChild(messageElement);
-    }
-
-    $chatMessages.scrollTop = $chatMessages.scrollHeight;
-  }
-
-  // Nueva función para manejar la selección de opciones
-  async function handleOptionSelection(option) {
-    let response;
-    let nextOptions = [];
-  
-    switch (option) {
-      // Menú Principal
-      case "Volver al menú principal":
-        response = "¿En qué más puedo ayudarte?";
-        nextOptions = [
-          "¿Quién eres?",
-          "Información sobre autenticación",
-          "Información sobre el sistema",
-          "Perfil del Usuario",
-          "Información sobre alertas",
-          "Información sobre monitoreo",
-          "Información sobre reportes"
-        ];
-        break;
-      // Perfil del Usuario (Nueva sección)
-      case "Perfil del Usuario":
-        response = "¿Qué te gustaría saber sobre tu perfil de usuario?";
-        nextOptions = [
-          "Información personal",
-          "Preferencias del sistema",
-          "Permisos y roles",
-          "Volver al menú principal"
-        ];
-        break;
-
-      case "Información personal":
-        response = "¿Qué información personal necesitas gestionar?";
-        nextOptions = [
-          "¿Cómo actualizo mis datos personales?",
-          "¿Puedo cambiar mi correo electrónico?",
-          "Volver al menú principal"
-        ];
-        break;
-
-      case "Preferencias del sistema":
-        response = "¿Qué preferencias del sistema te gustaría configurar?";
-        nextOptions = [
-          "¿Cómo cambio el tema de la interfaz?",
-          "Volver al menú principal"
-        ];
-        break;
-
-      case "Permisos y roles":
-        response = "¿Qué necesitas saber sobre tus permisos y roles?";
-        nextOptions = [
-          "¿Qué permisos tengo actualmente?",
-          "¿Cómo solicito permisos adicionales?",
-          "¿Cuáles son los diferentes roles disponibles?",
-          "Volver al menú principal"
-        ];
-      break;
-      // Autenticación
-      case "Información sobre autenticación":
-        response = "Tenemos varias opciones de autenticación. ¿Qué te gustaría conocer?";
-        nextOptions = [
-          "Métodos de autenticación disponibles",
-          "Gestión de contraseña",
-          "Configuración de perfil",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      case "Métodos de autenticación disponibles":
-        response = "El sistema ofrece registro y login tradicionales, reconocimiento facial, y gestión de contraseñas.";
-        nextOptions = [
-          "¿Tengo que usar contraseña siempre?",
-          "¿Cómo funciona el reconocimiento facial?",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      case "Gestión de contraseña":
-        response = "¿Qué necesitas saber sobre la gestión de tu contraseña?";
-        nextOptions = [
-          "¿Cómo cambio mi contraseña?",
-          "¿Qué pasa si me roban el celular? ¿Pueden entrar a mi cuenta?",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      case "Configuración de perfil":
-        response = "¿Qué te gustaría configurar en tu perfil?";
-        nextOptions = [
-          "¿Qué opciones tienen los usuarios en su perfil?",
-          "Oye, ¿y si quiero cambiar mi foto de perfil?",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      // Sistema
-      case "Información sobre el sistema":
-        response = "¿Qué aspecto del sistema te gustaría conocer?";
-        nextOptions = [
-          "Rendimiento y acceso",
-          "Configuración general",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      case "Rendimiento y acceso":
-        response = "¿Qué información necesitas sobre el rendimiento y acceso?";
-        nextOptions = [
-          "¿Qué tan rápido funciona todo esto?",
-          "¿Puedo usar esto desde mi celular?",
-          "Todo esto suena genial, pero ¿qué pasa si se va la luz?",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      case "Configuración general":
-        response = "¿Qué necesitas saber sobre la configuración?";
-        nextOptions = [
-          "¿Qué tan difícil es configurar todo esto?",
-          "¿Esto funciona solo para empresas grandes?",
-          "¿Qué pasa con las actualizaciones? ¿Tengo que hacer algo?",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      // Alertas
-      case "Información sobre alertas":
-        response = "¿Qué te gustaría saber sobre nuestro sistema de alertas?";
-        nextOptions = [
-          "Tipos de amenazas",
-          "Configuración de alertas",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      case "Tipos de amenazas":
-        response = "¿Qué información necesitas sobre las amenazas?";
-        nextOptions = [
-          "¿Cómo detecta el sistema comportamientos sospechosos?",
-          "Eso de las amenazas suena intenso. ¿Qué tipo de cosas detecta el sistema?",
-          "Me da cosa eso de las amenazas. ¿Cómo sé si está pasando algo raro?",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      case "Configuración de alertas":
-        response = "¿Qué necesitas saber sobre la configuración de alertas?";
-        nextOptions = [
-          "¿Cómo configuro una alerta personalizada?",
-          "¿Qué tipos de alertas ofrece el sistema?",
-          "¿Y si quiero que me avise de algo específico?",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      // Monitoreo
-      case "Información sobre monitoreo":
-        response = "¿Qué te gustaría saber sobre el monitoreo?";
-        nextOptions = [
-          "¿Cómo creo una nueva sesión de monitoreo?",
-          "¿Puedo ver lo que está pasando en tiempo real?",
-          "¿Y si pasa algo cuando no estoy mirando?",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      // Reportes
-      case "Información sobre reportes":
-        response = "¿Qué información necesitas sobre los reportes?";
-        nextOptions = [
-          "Me interesa eso de las estadísticas. ¿Qué tipo de info puedo ver?",
-          "¿Puedo compartir los reportes con mi equipo?",
-          "Esto de la privacidad... ¿mis datos están seguros?",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      // Identificación
-      case "¿Quién eres?":
-        response = "Hola, soy Alexis, el asistente personal de la empresa PASYS ALERTE, mi misión es responder cualquier duda que tengas al momento de usar nuestro Software 😊.";
-        nextOptions = [
-          "¿Y si necesito ayuda con algo?",
-          "Volver al menú principal"
-        ];
-        break;
-  
-      default:
-        // Buscar en el JSON de respuestas
-        const jsonResponse = findAnswerInJSON(option);
-        if (jsonResponse) {
-          response = jsonResponse;
-        } else {
-          response = "¿Hay algo más en lo que pueda ayudarte?";
-        }
-        nextOptions = ["Volver al menú principal"];
-    }
-  
-    // Esperar un momento antes de mostrar la respuesta
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await addMessageWithOptions(response, nextOptions, 'bot');
-  }
-
-  // Función para mostrar opciones de modelo
-  function showModelOptions() {
-    return new Promise((resolve) => {
-      $modelSelection.classList.remove('hidden');
-
-      const modelOptions = $modelSelection.querySelectorAll('.model-option');
-      const retryButton = $('#retry-button');
-
-      function handleModelChoice(event) {
-        const choice = event.target.closest('.model-option, #retry-button');
-        if (choice) {
-          $modelSelection.classList.add('hidden');
-          modelOptions.forEach(option => option.removeEventListener('click', handleModelChoice));
-          retryButton.removeEventListener('click', handleModelChoice);
-
-          if (choice.textContent.includes('LLaMA 3') || choice === retryButton) {
-            selectedModel = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
-            $currentModel.textContent = 'LLaMA 3';
-          } else if (choice.textContent.includes('ChatGPT-3.5-turbo')) {
-            selectedModel = 'gpt-3.5-turbo';
-            $currentModel.textContent = 'ChatGPT-3.5-turbo';
-          }
-
-          resolve(selectedModel);
-        }
-      }
-
-      modelOptions.forEach(option => option.addEventListener('click', handleModelChoice));
-      retryButton.addEventListener('click', handleModelChoice);
-    });
-  }
-
-  // Función para cambiar el modelo
-  async function changeModel() {
-    // Desactivar la entrada de chat mientras se cambia el modelo
-    $chatInput.setAttribute('disabled', '');
-    $sendMessage.setAttribute('disabled', '');
-
-    selectedModel = await showModelOptions();
-
-    // Reinicializar el engine
-    engine = null;
-    isEngineInitializing = false;
-
-    // Limpiar los mensajes anteriores
-    messages = [];
-    $chatMessages.innerHTML = '';
-
-    await addMessage("He cambiado al modelo " + $currentModel.textContent + ". ¿En qué puedo ayudarte?", 'bot');
-
-    // Reactivar la entrada de chat
-    enableChat();
-  }
-
-  // Inicializar el engine de forma perezosa
-  async function initializeEngine() {
-    if (engine && engine.model === selectedModel) return engine;
-    if (isEngineInitializing) {
-      while (isEngineInitializing) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-      return engine;
-    }
-
-    isEngineInitializing = true;
-    showLoadingIndicator();
-
-    try {
-      if (selectedModel === 'Llama-3.2-1B-Instruct-q4f32_1-MLC') {
-        engine = await CreateWebWorkerMLCEngine(
-          new Worker('/static/js/worker.js', { type: 'module' }),
-          selectedModel,
-          {
-            initProgressCallback: (info) => {
-              console.log('Init progress:', info);
-              updateLoadingIndicator(info.text);
-            }
-          }
-        );
-      } else {
-        // Para ChatGPT, no necesitamos inicializar un engine local
-        engine = { model: 'gpt-3.5-turbo' };
-      }
-    } catch (error) {
-      console.error('Error initializing engine:', error);
-      addMessage("Lo siento, ha ocurrido un error al inicializar el chatbot. Por favor, intenta recargar la página.", 'bot');
-    } finally {
-      isEngineInitializing = false;
-      hideLoadingIndicator();
-    }
-
-    return engine;
-  }
-
-  // Funciones para manejar el indicador de carga
-  function showLoadingIndicator() {
-    const progressText = $('#init-progress-text');
-    progressText.textContent = "Cargando el modelo, por favor espera...";
-    progressText.classList.remove('hidden');
-  }
-
-  function updateLoadingIndicator(text) {
-    const progressText = $('#init-progress-text');
-    progressText.textContent = text;
-  }
-
-  function hideLoadingIndicator() {
-    const progressText = $('#init-progress-text');
-    progressText.textContent = "Carga completada";
-    setTimeout(() => {
-      progressText.classList.add('hidden');
-    }, 3000);
-  }
-
-  // Habilitar el chat cuando el modelo esté listo
-  function enableChat() {
-    $chatInput.removeAttribute('disabled');
-    $sendMessage.removeAttribute('disabled');
-  }
-
-  async function addMessage(text, sender) {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('mb-4', 'p-3', 'rounded-lg', 'flex', 'flex-col');
-
-    if (sender === 'user') {
-      messageElement.classList.add(
-        'bg-blue-700',
-        'dark:bg-indigo-700',
-        'text-white',
-        'ml-auto',
-        'inline-block',
-        'px-4',
-        'py-2',
-        'rounded-lg',
-        'max-w-[60%]',
-        'text-left',
-        'font-semibold'
-      );
-      messageElement.innerHTML = `<p class="text-sm">${text}</p>`;
-      $chatMessages.appendChild(messageElement);
-    } else {
-      messageElement.classList.add(
-        'bg-gray-100',
-        'dark:bg-[#0f1e41]',
-        'mr-auto',
-        'px-4',
-        'py-2',
-        'rounded-lg',
-        'w-full',
-        'max-w-[80%]',
-        'font-semibold'
-      );
-
-      const botTextElement = document.createElement('p');
-      botTextElement.classList.add('text-sm');
-      messageElement.appendChild(botTextElement);
-
-      $chatMessages.appendChild(messageElement);
-      $chatMessages.scrollTop = $chatMessages.scrollHeight;
-
-      await typeMessage(botTextElement, text);
-    }
-
-    $chatMessages.scrollTop = $chatMessages.scrollHeight;
-  }
-
-  // Función para animar el texto letra por letra
-  function typeMessage(element, text, delay = 50) {
-    return new Promise((resolve) => {
-      let index = 0;
-
-      function typeNextLetter() {
-        if (index < text.length) {
-          element.textContent += text.charAt(index);
-          index++;
-          setTimeout(typeNextLetter, delay);
-        } else {
-          resolve();
-        }
-      }
-
-      typeNextLetter();
-    });
-  }
-
-  // Función para llamar a la API de OpenAI (versión actual)
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        // Comprueba si este cookie comienza con el nombre que buscamos
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
-
-  async function callOpenAIAPI(messages) {
-    const csrfToken = getCookie('csrftoken');  // Obtén el token CSRF
-
-    const response = await fetch('/core/api/chat/', {
-      method: 'POST', // Asegúrate de usar el método POST
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken,  // Incluye el token CSRF aquí
-      },
-      body: JSON.stringify({
-        messages: messages,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al llamar a la API de OpenAI');
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
-  }
-
-  // Enviar el mensaje del usuario
-  async function sendMessage() {
-    const messageText = $chatInput.value.trim();
-    if (messageText === '') return;
-
-    $chatInput.value = '';
-    await addMessage(messageText, 'user');
-    $chatInput.setAttribute('disabled', '');
-    $sendMessage.setAttribute('disabled', '');
-
-    const userMessage = { role: 'user', content: messageText };
-    messages.push(userMessage);
-
-    try {
-      // Primero, buscar en el JSON
-      let reply = findAnswerInJSON(messageText);
-
-      if (reply) {
-        // Si se encuentra una respuesta en el JSON, usarla directamente
-        await addMessage(reply, 'bot');
-      } else {
-        // Si no se encuentra en el JSON, usar el modelo seleccionado
-        engine = await initializeEngine();
-
-        if (selectedModel === 'Llama-3.2-1B-Instruct-q4f32_1-MLC') {
-          const chunks = await engine.chat.completions.create({
-            messages,
-            stream: true
-          });
-
-          reply = '';
-
-          const botMessageElement = document.createElement('div');
-          botMessageElement.classList.add('mb-4', 'p-3', 'rounded-lg', 'flex', 'flex-col', 'bg-gray-100', 'dark:bg-[#0f1e41]', 'mr-auto', 'px-4', 'py-2', 'rounded-lg', 'w-full', 'max-w-[80%]', 'font-semibold');
-          const botTextElement = document.createElement('p');
-          botTextElement.classList.add('text-sm');
-          botMessageElement.appendChild(botTextElement);
-          $chatMessages.appendChild(botMessageElement);
-          $chatMessages.scrollTop = $chatMessages.scrollHeight;
-
-          for await (const chunk of chunks) {
-            const content = chunk.choices[0]?.delta?.content ?? '';
-            reply += content;
-            botTextElement.textContent += content;
-            $chatMessages.scrollTop = $chatMessages.scrollHeight;
-          }
-        } else if (selectedModel === 'gpt-3.5-turbo') {
-          reply = await callOpenAIAPI(messages);
-          await addMessage(reply, 'bot');
-        }
-      }
-
-      messages.push({ role: 'assistant', content: reply });
-    } catch (error) {
-      console.error('Error generating response:', error);
-      addMessage("Lo siento, ha ocurrido un error al generar la respuesta. Por favor, intenta de nuevo.", 'bot');
-    }
-
-    $chatInput.removeAttribute('disabled');
-    $sendMessage.removeAttribute('disabled');
-    $chatInput.focus();
-  }
-
-  // Event Listeners
-  if ($openChat && $closeChat) {
-    $openChat.addEventListener('click', () => {
-      $chatbot.classList.remove('hidden', 'opacity-0', 'translate-y-5');
-      $openChat.classList.add('hidden');
-      initializeChatbot();
-    });
-
-    $closeChat.addEventListener('click', () => {
-      $chatbot.classList.add('hidden', 'opacity-0', 'translate-y-5');
-      $openChat.classList.remove('hidden');
-      $chatMessages.innerHTML = '';
-      messages = [];
-      selectedModel = null;
-      engine = null;
-      $currentModel.textContent = 'Ninguno';  // Resetea el modelo mostrado
-    });
-
-    $sendMessage.addEventListener('click', sendMessage);
-    $chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
-
-    // Nuevo event listener para cambiar el modelo
-    $selectedModelDiv.addEventListener('click', changeModel);
-  }
-</script>
-
 <!-- Script para el sidebar de los temas -->
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
@@ -1004,6 +269,69 @@
       closeButton.addEventListener('click', closeSidebar);
       overlay.addEventListener('click', closeSidebar);
     }
+  });
+</script>
+
+<!-- Script para cambiar el tema -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const themeToggleBtn = document.getElementById('themeIconContainer');
+    const themeIcon = document.getElementById('themeIcon');
+
+    // Función para cambiar el ícono del tema
+    function toggleThemeIcon() {
+      if (themeIcon) {
+        if (document.documentElement.classList.contains('dark')) {
+          themeIcon.classList.remove('fa-moon');
+          themeIcon.classList.add('fa-sun');
+        } else {
+          themeIcon.classList.remove('fa-sun');
+          themeIcon.classList.add('fa-moon');
+        }
+      }
+    }
+
+    // Función para aplicar un tema y actualizar el ícono
+    function setTheme(theme) {
+      document.documentElement.className = theme;
+      localStorage.setItem('theme', theme); // Guarda el tema seleccionado en localStorage para persistencia
+
+      // Mostrar u ocultar la imagen de fondo según el tema seleccionado (si es necesario)
+      const heroSection = document.getElementById('hero-section');
+      if (heroSection) {
+        if (theme === 'theme1') {
+          heroSection.classList.remove('no-background');
+        } else {
+          heroSection.classList.add('no-background');
+        }
+      }
+
+      // Cambia el ícono del tema
+      toggleThemeIcon();
+    }
+
+    // Verifica si hay un tema guardado en el almacenamiento local
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+
+    // Cambiar el ícono del tema al cargar la página
+    toggleThemeIcon();
+
+    // Agrega un listener para el evento 'click' en el botón
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', function (event) {
+        event.preventDefault(); // Previene el comportamiento predeterminado del ícono
+        // Cambia entre temas light y dark
+        if (document.documentElement.classList.contains('dark')) {
+          setTheme('light');
+        } else {
+          setTheme('dark');
+        }
+      });
+    }
+
+    // Exponer setTheme globalmente para usarlo en el menú de temas
+    window.setTheme = setTheme;
   });
 </script>
 

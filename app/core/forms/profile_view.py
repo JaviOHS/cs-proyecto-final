@@ -27,8 +27,7 @@ class UserProfileForm(forms.ModelForm):
             }),
             'dni': forms.TextInput(attrs={
                 'id': 'id_dni',
-                'class': 'inputs',
-                'readonly': 'readonly'
+                'class': 'inputs'
             }),
             'image': forms.FileInput(attrs={
                 'id': 'id_image',
@@ -37,8 +36,7 @@ class UserProfileForm(forms.ModelForm):
             }),
             'username': forms.TextInput(attrs={
                 'id': 'id_username',
-                'class': 'inputs',
-                'readonly': 'readonly'
+                'class': 'inputs'
             }),
         }
         
