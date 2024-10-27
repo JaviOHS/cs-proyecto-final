@@ -208,8 +208,7 @@
         {{ pie_chart|safe }}
         <p class="text-gray-700 text-sm mt-2">
           El gráfico de pastel representa la distribución porcentual de los tipos de amenazas. La mayoría de las
-          amenazas corresponden a <strong>{{ threat_details.0.name }}</strong> con un <strong>{{
-            threat_details.0.percentage }}%</strong> del total de Amenazas Detectadas.
+          amenazas corresponden a <strong>{{ threat_details.0.name }}</strong> con un <strong>{{ threat_details.0.percentage }}%</strong> del total de Amenazas Detectadas.
         </p>
       </div>
     </div>
@@ -223,8 +222,7 @@
     </div>
     {% else %}
     <p class="text-gray-500">
-      {% trans "No hay datos por mostrar." %} <span class="text-green-500 font-bold">{% trans "¿Por qué no generar
-        nuevos datos?" %}</span>
+      {% trans "No hay datos por mostrar." %} <span class="text-green-500 font-bold">{% trans "¿Por qué no generar nuevos datos?" %}</span>
     </p>
     {% endif %}
   </div>

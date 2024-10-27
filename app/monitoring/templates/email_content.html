@@ -24,7 +24,7 @@
       <p>Detalles del monitoreo:</p>
       <ul>
         <li><strong>Nombre de Sesión:</strong> {{ session.name }}</li>
-        <li><strong>Modelo de Detección:</strong> {{ session.detection_models.first }}</li>
+        <li><strong>Modelo de Detección:</strong> {{ session.detection_model }}</li>
         <li><strong>Descripción:</strong> {{ session.description }}</li>
         {% if is_crowding %}
         <li><strong>Número de Personas:</strong> {{ num_people }}</li>
