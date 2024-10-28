@@ -669,3 +669,147 @@
     $selectedModelDiv.addEventListener('click', changeModel);
   }
 </script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Elementos del DOM
+    const openChatBtn = document.getElementById('open-chat');
+    const closeChatBtn = document.getElementById('close-chat');
+    const chatbot = document.getElementById('chatbot');
+    const chatInput = document.getElementById('chat-input');
+    const sendMessageBtn = document.getElementById('send-message');
+    const voiceInputBtn = document.getElementById('voice-input');
+    const recordingIndicator = document.getElementById('recording-indicator');
+  
+    // Variables para el reconocimiento de voz
+    let recognition = null;
+    let isRecording = false;
+  
+    // Inicializar el reconocimiento de voz
+    function initializeSpeechRecognition() {
+      if ('webkitSpeechRecognition' in window) {
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'es-ES'; // Configura el idioma según necesites
+  
+        // Configurar eventos del reconocimiento de voz
+        recognition.onstart = function() {
+          isRecording = true;
+          voiceInputBtn.innerHTML = '<i class="fas fa-stop text-red-500"></i>';
+          recordingIndicator.classList.remove('hidden');
+          chatInput.placeholder = 'Escuchando...';
+        };
+  
+        recognition.onend = function() {
+          isRecording = false;
+          voiceInputBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+          recordingIndicator.classList.add('hidden');
+          chatInput.placeholder = 'Escribe tu mensaje...';
+        };
+  
+        recognition.onresult = function(event) {
+          const transcript = event.results[0][0].transcript;
+          chatInput.value = transcript;
+          // Habilitar el botón de enviar si hay texto
+          sendMessageBtn.disabled = !chatInput.value.trim();
+        };
+  
+        recognition.onerror = function(event) {
+          console.error('Error en el reconocimiento de voz:', event.error);
+          stopRecording();
+          // Mostrar mensaje de error al usuario
+          showErrorToast('Error en el reconocimiento de voz. Por favor, intenta de nuevo.');
+        };
+      } else {
+        voiceInputBtn.style.display = 'none';
+        showErrorToast('Tu navegador no soporta el reconocimiento de voz.');
+      }
+    }
+  
+    // Función para mostrar mensajes de error
+    function showErrorToast(message) {
+      // Implementa tu propio sistema de notificaciones aquí
+      console.error(message);
+    }
+  
+    // Función para iniciar/detener la grabación
+    function toggleRecording() {
+      if (!recognition) {
+        initializeSpeechRecognition();
+      }
+  
+      if (isRecording) {
+        stopRecording();
+      } else {
+        startRecording();
+      }
+    }
+  
+    function startRecording() {
+      try {
+        recognition.start();
+      } catch (error) {
+        console.error('Error al iniciar la grabación:', error);
+      }
+    }
+  
+    function stopRecording() {
+      try {
+        recognition.stop();
+      } catch (error) {
+        console.error('Error al detener la grabación:', error);
+      }
+    }
+  
+    // Event Listeners
+    voiceInputBtn.addEventListener('click', toggleRecording);
+  
+    // Funcionalidad del chat
+    openChatBtn.addEventListener('click', () => {
+      chatbot.classList.remove('hidden');
+      setTimeout(() => {
+        chatbot.classList.remove('opacity-0', 'translate-y-5');
+      }, 50);
+    });
+  
+    closeChatBtn.addEventListener('click', () => {
+      chatbot.classList.add('opacity-0', 'translate-y-5');
+      setTimeout(() => {
+        chatbot.classList.add('hidden');
+      }, 300);
+      // Detener la grabación si está activa
+      if (isRecording) {
+        stopRecording();
+      }
+    });
+  
+    // Habilitar/deshabilitar botón de enviar según el contenido del input
+    chatInput.addEventListener('input', function() {
+      sendMessageBtn.disabled = !this.value.trim();
+    });
+  
+    // Manejar el envío de mensajes
+    function handleSendMessage() {
+      const message = chatInput.value.trim();
+      if (message) {
+        // Aquí va tu lógica para enviar el mensaje
+        console.log('Mensaje enviado:', message);
+        chatInput.value = '';
+        sendMessageBtn.disabled = true;
+      }
+    }
+  
+    sendMessageBtn.addEventListener('click', handleSendMessage);
+    chatInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSendMessage();
+      }
+    });
+  
+    // Inicializar el reconocimiento de voz al cargar
+    initializeSpeechRecognition();
+  });
+  </script>

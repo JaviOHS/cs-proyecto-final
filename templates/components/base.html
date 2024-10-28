@@ -445,23 +445,33 @@
 
   {% if user.is_authenticated %}
   <div id="chatbot-container" class="fixed bottom-5 left-8 z-50">
-    <button id="open-chat"
-      class="bg-blue-700 w-14 h-14 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
-      <i class="fas fa-message text-xl"></i>
+    <!-- Botón de apertura con animación suave -->
+    <button id="open-chat" class="group bg-gradient-to-r from-blue-600 to-blue-800 w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+      <i class="fas fa-message text-2xl text-white group-hover:rotate-12 transition-transform duration-300"></i>
     </button>
-    <div id="chatbot"
-      class="hidden opacity-0 translate-y-5 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden transition-all duration-300 ease-out">
-      <div class="bg-gradient-to-l from-blue-700 to-blue-400 text-white p-4 flex items-center justify-between">
-        <div class="flex items-center">
-          <img src="{% static 'img/components/icon.png' %}" alt="ChatBot Profile" class="w-10 h-10 rounded-full mr-3">
-          <span class="font-semibold">ChatBot - Alexis</span>
-          <span class="ml-2 w-2 h-2 bg-green-500 rounded-full"></span>
+  
+    <!-- Contenedor principal del chat -->
+    <div id="chatbot" class="hidden opacity-0 translate-y-5 w-96 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ease-out border border-gray-200 dark:border-gray-700">
+      <!-- Encabezado con diseño moderno -->
+      <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <img src="{% static 'img/components/icon.png' %}" alt="ChatBot Profile" class="w-12 h-12 rounded-full border-2 border-white shadow-md">
+              <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">Alexis AI</h3>
+              <p class="text-sm text-blue-100">Asistente Virtual</p>
+            </div>
+          </div>
+          <button id="close-chat" class="p-2 hover:bg-white/10 rounded-full transition-colors duration-300">
+            <i class="fas fa-times text-lg"></i>
+          </button>
         </div>
-        <button id="close-chat" class="text-white hover:text-gray-200 focus:outline-none">
-          <i class="fas fa-times"></i>
-        </button>
       </div>
-
+  
+      <!-- SVG Wave Animation -->
       <svg width="100%" height="25%" id="svg" viewBox="0 0 1440 490" xmlns="http://www.w3.org/2000/svg"
         class="rotate-180 mt-0 transition duration-300 ease-in-out delay-150">
         <defs>
@@ -473,85 +483,117 @@
         <path
           d="M 0,500 C 0,500 0,333 0,333 C 77.34928229665073,329.6794258373206 154.69856459330146,326.3588516746412 247,319 C 339.30143540669854,311.6411483253588 446.555023923445,300.24401913875596 540,316 C 633.444976076555,331.75598086124404 713.0813397129187,374.6650717703349 820,394 C 926.9186602870813,413.3349282296651 1061.1196172248804,409.0956937799043 1169,395 C 1276.8803827751196,380.9043062200957 1358.44019138756,356.95215311004785 1440,333 C 1440,333 1440,500 1440,500 Z"
           stroke="none" stroke-width="0" fill="url(#gradient_chat)" fill-opacity="1"
-          class="transition-all duration-300 ease-in-out delay-150 path-0"></path>
+          class="transition-all duration-300 ease-in-out delay-150 path-0">
+        </path>
       </svg>
-
-
-      <div id="selected-model"
-        class="text-center text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 my-0 py-2 rounded-lg mx-4 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200">
-        <span>Modelo seleccionado: <span id="current-model">Ninguno</span></span>
+  
+      <!-- Selector de modelo con diseño mejorado -->
+      <div id="selected-model" class="mx-6 my-4">
+        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+              <i class="fas fa-robot text-blue-600 dark:text-blue-400"></i>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Modelo actual</p>
+              <p id="current-model" class="text-xs text-gray-500 dark:text-gray-400">Ninguno</p>
+            </div>
+          </div>
+          <button class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
+            <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
       </div>
-
-      <div id="chat-messages"
-        class="h-80 overflow-y-auto p-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 relative">
-
-        <div id="model-selection"
-          class="absolute top-0 z-50 left-3 rounded-2xl bg-white dark:bg-gray-800 shadow-lg border border-gray-300 dark:border-gray-700 py-2 overflow-hidden min-w-fit origin-center text-gray-700 dark:text-gray-300 hidden"
-          role="menu" aria-orientation="vertical">
-          <div role="menuitem"
-            class="flex items-center m-1.5 p-2.5 text-sm focus-visible:bg-gray-100 dark:focus-visible:bg-gray-700 rounded-md my-0 px-3 mx-2 gap-2.5 py-3 pb-0 pt-2">
+  
+      <!-- Área de mensajes con scroll suave -->
+      <div id="chat-messages" class="h-96 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-800/50 space-y-4 relative">
+        <!-- Panel de selección de modelo -->
+        <div id="model-selection" class="hidden absolute top-0 left-3 z-50 bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-300 dark:border-gray-700 w-[calc(100%-24px)] transform transition-all duration-300">
+          <div role="menuitem" class="p-4 border-b border-gray-200 dark:border-gray-700">
             <span class="text-gray-500 dark:text-gray-400">Seleccionar un modelo para iniciar</span>
           </div>
-
-          <div role="menuitem"
-            class="model-option flex items-center m-1.5 p-2.5 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:bg-gray-100 dark:focus-visible:bg-gray-700 rounded-lg my-0 px-3 mx-2 gap-2.5 py-3">
-            <div class="flex items-center gap-3 w-full">
-              <span class="icon-sm text-gray-400 dark:text-gray-500"></span>
+  
+          <!-- LLaMA 3 Option -->
+          <div role="menuitem" class="model-option hover:bg-gray-50 dark:hover:bg-gray-700 p-4 cursor-pointer transition-colors duration-200">
+            <div class="flex items-center space-x-4">
+              <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                <i class="fas fa-brain text-blue-600 dark:text-blue-400"></i>
+              </div>
               <div>
-                <div>LLaMA 3</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">Modelo funcional con WebLLM <br> Ideal para la
-                  mayoría de las tareas</div>
+                <h4 class="font-medium text-gray-900 dark:text-gray-100">LLaMA 3</h4>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Modelo funcional con WebLLM<br>Ideal para la mayoría de las tareas</p>
               </div>
             </div>
           </div>
-
-          <div role="menuitem"
-            class="model-option flex items-center m-1.5 p-2.5 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:bg-gray-100 dark:focus-visible:bg-gray-700 rounded-lg my-0 px-3 mx-2 gap-2.5 py-3">
-            <div class="flex items-center gap-3 w-full">
-              <span class="icon-sm text-gray-400 dark:text-gray-500"></span>
+  
+          <!-- ChatGPT Option -->
+          <div role="menuitem" class="model-option hover:bg-gray-50 dark:hover:bg-gray-700 p-4 cursor-pointer transition-colors duration-200">
+            <div class="flex items-center space-x-4">
+              <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                <i class="fas fa-bolt text-green-600 dark:text-green-400"></i>
+              </div>
               <div>
-                <div>ChatGPT-3.5-turbo</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">Modelo funcional con API <br> Más rápido para las
-                  tareas cotidianas</div>
+                <h4 class="font-medium text-gray-900 dark:text-gray-100">ChatGPT-3.5-turbo</h4>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Modelo funcional con API<br>Más rápido para las tareas cotidianas</p>
               </div>
             </div>
           </div>
-
+  
+          <!-- Divider -->
           <div class="mx-5 my-1 h-px bg-gray-300 dark:bg-gray-600"></div>
-
-          <div id="retry-button" role="menuitem"
-            class="flex items-center m-1.5 p-2.5 text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:bg-gray-100 dark:focus-visible:bg-gray-700 rounded-lg my-0 px-3 mx-2 gap-2.5 py-3">
-            <div class="flex items-center gap-3 w-full">
-              <svg class="icon-sm text-gray-400 dark:text-gray-500" width="24" height="24" viewBox="0 0 24 24"
-                fill="none">
-                <path
-                  d="M3.06957 10.8763C3.62331 6.43564 7.40967 3 12 3C14.2824 3 16.4028 3.85067 18.0118 5.25439V4C18.0118 3.44772 18.4595 3 19.0118 3C19.5641 3 20.0118 3.44772 20.0118 4V8C20.0118 8.55228 19.5641 9 19.0118 9H15C14.4477 9 14 8.55228 14 8C14 7.44772 14.4477 7 15 7H16.9571C15.6757 5.76379 13.9101 5 12 5C8.43108 5 5.48466 7.67174 5.0542 11.1237C4.98586 11.6718 4.48619 12.0607 3.93815 11.9923C3.39011 11.924 3.00123 11.4243 3.06957 10.8763ZM20.0618 12.0077C20.6099 12.076 20.9988 12.5757 20.9304 13.1237C20.3767 17.5644 16.5903 21 12 21C9.72322 21 7.60762 20.1535 5.99999 18.7559V20C5.99999 20.5523 5.55228 21 4.99999 21C4.44771 21 3.99999 20.5523 3.99999 20V16C3.99999 15.4477 4.44771 15 4.99999 15H8.99999C9.55228 15 9.99999 15.4477 9.99999 16C9.99999 16.5523 9.55228 17 8.99999 17H7.04285C8.32433 18.2362 10.0899 19 12 19C15.5689 19 18.5153 16.3283 18.9458 12.8763C19.0141 12.3282 19.5138 11.9393 20.0618 12.0077Z"
-                  fill="currentColor"></path>
-              </svg>
+  
+          <!-- Retry Button -->
+          <div id="retry-button" role="menuitem" class="hover:bg-gray-50 dark:hover:bg-gray-700 p-4 cursor-pointer transition-colors duration-200">
+            <div class="flex items-center space-x-4">
+              <div class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                <svg class="text-gray-400 dark:text-gray-500" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M3.06957 10.8763C3.62331 6.43564 7.40967 3 12 3C14.2824 3 16.4028 3.85067 18.0118 5.25439V4C18.0118 3.44772 18.4595 3 19.0118 3C19.5641 3 20.0118 3.44772 20.0118 4V8C20.0118 8.55228 19.5641 9 19.0118 9H15C14.4477 9 14 8.55228 14 8C14 7.44772 14.4477 7 15 7H16.9571C15.6757 5.76379 13.9101 5 12 5C8.43108 5 5.48466 7.67174 5.0542 11.1237C4.98586 11.6718 4.48619 12.0607 3.93815 11.9923C3.39011 11.924 3.00123 11.4243 3.06957 10.8763ZM20.0618 12.0077C20.6099 12.076 20.9988 12.5757 20.9304 13.1237C20.3767 17.5644 16.5903 21 12 21C9.72322 21 7.60762 20.1535 5.99999 18.7559V20C5.99999 20.5523 5.55228 21 4.99999 21C4.44771 21 3.99999 20.5523 3.99999 20V16C3.99999 15.4477 4.44771 15 4.99999 15H8.99999C9.55228 15 9.99999 15.4477 9.99999 16C9.99999 16.5523 9.55228 17 8.99999 17H7.04285C8.32433 18.2362 10.0899 19 12 19C15.5689 19 18.5153 16.3283 18.9458 12.8763C19.0141 12.3282 19.5138 11.9393 20.0618 12.0077Z" fill="currentColor"></path>
+                </svg>
+              </div>
               <div>
-                <div>Volver a intentar</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">LLaMA 3</div>
+                <h4 class="font-medium text-gray-900 dark:text-gray-100">Volver a intentar</h4>
+                <p class="text-sm text-gray-500 dark:text-gray-400">LLaMA 3</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="bg-gray-100 dark:bg-gray-700 p-4 flex items-center">
-        <input id="chat-input" type="text"
-          class="flex-grow mr-3 px-3 py-2 border rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 transition-all duration-300 dark:bg-gray-700 dark:text-gray-100"
-          placeholder="Escribe tu mensaje..." disabled>
-        <button id="send-message"
-          class="ml-3 w-10 h-10 bg-gradient-to-r from-blue-700 to-blue-400 text-white rounded-full flex items-center justify-center hover:bg-blue-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
-          disabled>
-          <i class="fas fa-paper-plane"></i>
-        </button>
+  
+      <!-- Área de entrada de mensaje con diseño moderno -->
+      <div class="bg-white dark:bg-gray-800 p-6 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex items-center space-x-4">
+          <div class="flex-1 relative">
+            <input id="chat-input" type="text" 
+              class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-transparent transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500"
+              placeholder="Escribe tu mensaje..." disabled>
+            <button id="voice-input" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
+              <i class="fas fa-microphone"></i>
+            </button>
+            <!-- Indicador de grabación -->
+            <div id="recording-indicator" class="hidden absolute right-14 top-1/2 -translate-y-1/2">
+              <div class="animate-pulse flex items-center">
+                <div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                <span class="text-sm text-red-500">Grabando...</span>
+              </div>
+            </div>
+          </div>
+          <button id="send-message" 
+            class="flex-shrink-0 bg-gradient-to-r from-blue-600 to-blue-800 p-4 rounded-xl text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            disabled>
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
       </div>
-      <div class="bg-gray-100 dark:bg-gray-700 p-2 flex justify-center items-center">
-        <span class="text-sm text-gray-500 dark:text-gray-400 block">Las respuestas del ChatBot son confiables</span>
-      </div>
-      <div class="bg-gray-100 dark:bg-gray-700 p-2 flex justify-center items-center">
-        <span id="init-progress-text" class="text-sm text-gray-500 dark:text-gray-400 ml-2 block mt-2"></span>
+  
+      <!-- Footer con información adicional -->
+      <div class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex flex-col items-center space-y-2">
+          <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+            <i class="fas fa-shield-alt"></i>
+            <span>Las respuestas del ChatBot son confiables</span>
+          </div>
+          <span id="init-progress-text" class="text-xs text-gray-400 dark:text-gray-500"></span>
+        </div>
       </div>
     </div>
   </div>
