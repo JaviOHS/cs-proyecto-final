@@ -813,3 +813,46 @@
     initializeSpeechRecognition();
   });
   </script>
+
+  <!-- Script para la funcionalidad del selector de emojis -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const emojiButton = document.getElementById('emoji-button');
+    const emojiPicker = document.getElementById('emoji-picker');
+    const closeEmoji = document.getElementById('close-emoji');
+    const chatInput = document.getElementById('chat-input');
+    
+    // Mostrar/ocultar el selector de emojis
+    emojiButton.addEventListener('click', () => {
+      emojiPicker.classList.toggle('hidden');
+    });
+    
+    // Cerrar el selector de emojis
+    closeEmoji.addEventListener('click', () => {
+      emojiPicker.classList.add('hidden');
+    });
+    
+    // Añadir emoji al input cuando se selecciona
+    const emojiButtons = emojiPicker.querySelectorAll('.grid button');
+    emojiButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const emoji = button.textContent;
+        const cursorPos = chatInput.selectionStart;
+        const textBefore = chatInput.value.substring(0, cursorPos);
+        const textAfter = chatInput.value.substring(cursorPos);
+        chatInput.value = textBefore + emoji + textAfter;
+        chatInput.focus();
+        // Mover el cursor después del emoji insertado
+        const newCursorPos = cursorPos + emoji.length;
+        chatInput.setSelectionRange(newCursorPos, newCursorPos);
+      });
+    });
+    
+    // Cerrar el selector de emojis al hacer clic fuera
+    document.addEventListener('click', (e) => {
+      if (!emojiPicker.contains(e.target) && !emojiButton.contains(e.target)) {
+        emojiPicker.classList.add('hidden');
+      }
+    });
+  });
+  </script>
