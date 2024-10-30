@@ -485,14 +485,11 @@
 
   {% if user.is_authenticated %}
   <div id="chatbot-container" class="fixed bottom-5 left-8 z-50">
-    <!-- Botón de apertura con animación suave -->
     <button id="open-chat" class="group bg-gradient-to-r from-blue-600 to-blue-800 w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
       <i class="fas fa-message text-2xl text-white group-hover:rotate-12 transition-transform duration-300"></i>
     </button>
   
-    <!-- Contenedor principal del chat -->
     <div id="chatbot" class="hidden opacity-0 translate-y-5 w-96 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 ease-out border border-gray-200 dark:border-gray-700">
-      <!-- Encabezado con diseño moderno -->
       <div class="text-white p-3" style="background: linear-gradient(to right, #60a5fa, #1d4ed8);">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
@@ -511,7 +508,6 @@
         </div>
       </div>
   
-      <!-- SVG Wave Animation -->
       <svg width="100%" height="25%" id="svg" viewBox="0 0 1440 490" xmlns="http://www.w3.org/2000/svg"
         class="rotate-180 mt-0 transition duration-300 ease-in-out delay-150">
         <defs>
@@ -527,7 +523,6 @@
         </path>
       </svg>
   
-      <!-- Selector de modelo con diseño mejorado -->
       <div id="selected-model" class="mx-6 my-4">
         <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200">
           <div class="flex items-center space-x-3">
@@ -545,15 +540,12 @@
         </div>
       </div>
   
-      <!-- Área de mensajes con scroll suave -->
       <div id="chat-messages" class="h-80 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-800/50 space-y-4 relative">
-        <!-- Panel de selección de modelo -->
         <div id="model-selection" class="hidden absolute top-0 left-3 z-50 bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-300 dark:border-gray-700 w-[calc(100%-24px)] transform transition-all duration-300">
           <div role="menuitem" class="p-3 border-b border-gray-200 dark:border-gray-700">
             <p class="text-sm text-gray-500 dark:text-gray-400">Seleccionar un modelo para iniciar</p>
           </div>
   
-          <!-- LLaMA 3 Option -->
           <div role="menuitem" class="model-option hover:bg-gray-50 dark:hover:bg-gray-700 p-3 cursor-pointer transition-colors duration-200">
             <div class="flex items-center space-x-4">
               <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
@@ -566,7 +558,6 @@
             </div>
           </div>
   
-          <!-- ChatGPT Option -->
           <div role="menuitem" class="model-option hover:bg-gray-50 dark:hover:bg-gray-700 p-3 cursor-pointer transition-colors duration-200">
             <div class="flex items-center space-x-4">
               <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
@@ -579,10 +570,8 @@
             </div>
           </div>
   
-          <!-- Divider -->
           <div class="mx-5 my-1 h-px bg-gray-300 dark:bg-gray-600"></div>
   
-          <!-- Retry Button -->
           <div id="retry-button" role="menuitem" class="hover:bg-gray-50 dark:hover:bg-gray-700 p-4 cursor-pointer transition-colors duration-200">
             <div class="flex items-center space-x-4">
               <div class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
@@ -599,7 +588,6 @@
         </div>
       </div>
   
-      <!-- Área de entrada de mensaje con diseño moderno -->
       <div class="bg-white dark:bg-gray-800 p-3 border-t border-gray-200 dark:border-gray-700">
         <div class="flex items-center space-x-4">
           <div class="flex-1 relative">
@@ -608,17 +596,14 @@
               placeholder="Escribe tu mensaje..." disabled>
             
             <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-3">
-              <!-- Botón de emojis -->
               <button id="emoji-button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
                 <i class="far fa-smile text-xl"></i>
               </button>
               
-              <!-- Botón de micrófono -->
               <button id="voice-input" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
                 <i class="fas fa-microphone"></i>
               </button>
               
-              <!-- Indicador de grabación -->
               <div id="recording-indicator" class="hidden absolute right-14 top-1/2 -translate-y-1/2">
                 <div class="animate-pulse flex items-center">
                   <div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
@@ -628,7 +613,6 @@
             </div>
           </div>
           
-          <!-- Botón de envío de mensaje -->
           <button id="send-message" 
             class="flex-shrink-0 bg-gradient-to-r from-blue-600 to-blue-800 p-3 rounded-xl text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             disabled>
@@ -636,7 +620,6 @@
           </button>
         </div>
 
-        <!-- Selector de emojis -->
         <div id="emoji-picker" class="hidden absolute bottom-24 left-0 bg-white dark:bg-gray-700 rounded-xl shadow-xl border border-gray-200 dark:border-gray-600 p-4 transition-all duration-300">
           <div class="flex items-center justify-between mb-4">
             <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">Emojis</h4>
@@ -645,7 +628,6 @@
             </button>
           </div>
           <div class="grid grid-cols-8 gap-2 max-h-48 overflow-y-auto">
-            <!-- Categorías de emojis -->
             <div class="col-span-8 flex space-x-2 mb-2 pb-2 border-b border-gray-200 dark:border-gray-600">
               <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">
                 <i class="far fa-smile text-yellow-500"></i>
@@ -660,7 +642,6 @@
                 <i class="far fa-flag text-green-500"></i>
               </button>
             </div>
-            <!-- Grid de emojis -->
             <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">😀</button>
             <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">😂</button>
             <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition-colors">🥰</button>
@@ -681,7 +662,6 @@
         </div>
       </div>
   
-      <!-- Footer con información adicional -->
       <div class="bg-gray-50 dark:bg-gray-800 px-6 py-3 border-t border-gray-200 dark:border-gray-700">
         <div class="flex flex-col items-center space-y-2">
           <div class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
