@@ -197,6 +197,115 @@
   </div>
 </section>
 
+<section id="equipo" class="secondary-container-bg py-20 dark:bg-gray-900">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" data-aos="fade-up" data-aos-delay="300">
+    <div class="flex flex-col items-center justify-center">
+      <span class="information [.theme1_&]:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
+        {% trans 'Nuestro Equipo' %}
+      </span>
+    </div>
+    <h2 class="title-font text-3xl text-center my-4 [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
+      {% trans 'Profesionales Detrás del Proyecto' %}
+    </h2>
+    <p class="description-font text-center [.theme1_&]:text-theme1-700 [.theme2_&]:text-theme2-700">
+      {% trans 'Conoce al talentoso equipo que hace posible nuestra visión.' %}
+    </p>
+
+    <div class="flex justify-center items-stretch gap-12 flex-wrap mt-6">
+
+      <div class="group flex-1 basis-96 max-w-md relative overflow-hidden 
+        primary-container-bg rounded-3xl shadow-lg transition-all duration-500 
+        hover:shadow-2xl hover:-translate-y-2 
+        bg-white/90 dark:bg-gray-800/90 
+        backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+        <div class="relative overflow-hidden h-80">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+          <img src="{% static 'img/components/equipo_trabajo.png' %}" alt="Foto de Perfil" 
+            class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"/>
+          <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
+            <h3 class="text-2xl font-bold mb-2 text-white">
+              Javier Omar Haro Soledispa
+            </h3>
+            <p class="text-lg font-medium text-gray-200">
+              {% trans 'Líder Proyecto / Programador' %}
+            </p>
+          </div>
+        </div>
+        <div class="p-8 relative">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br 
+            [.theme1_&]:from-theme1-500/20 [.theme2_&]:from-theme2-500/20 
+            to-transparent rounded-bl-full -z-10"></div>
+          
+          <p class="text-base [.theme1_&]:text-theme1-700 [.theme2_&]:text-theme2-700 
+            dark:text-gray-300 mb-6 leading-relaxed">
+            {% trans 'Especialista en el uso de tecnologías como Django, Python, Amazon Web Services, OpenCV Tailwind CSS, JS, HTML con más de 1 año de experiencia.' %}
+          </p>
+          
+          <div class="flex space-x-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <a href="https://github.com/JaviOHS" target="_blank" rel="noopener noreferrer" 
+              class="group/icon flex items-center space-x-2 text-gray-600 hover:text-blue-500 
+              dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
+              <i class="fa-brands fa-github text-2xl group-hover/icon:scale-110 transition-transform"></i>
+              <span class="text-sm opacity-0 group-hover/icon:opacity-100 transition-opacity">GitHub</span>
+            </a>
+            <a href="mailto:jharos@unemi.edu.ec"
+              class="group/icon flex items-center space-x-2 text-gray-600 hover:text-blue-500 
+              dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
+              <i class="fa-solid fa-envelope text-2xl group-hover/icon:scale-110 transition-transform"></i>
+              <span class="text-sm opacity-0 group-hover/icon:opacity-100 transition-opacity">Email</span>
+            </a> 
+          </div>
+        </div>
+      </div>
+
+      <div class="group flex-1 basis-96 max-w-md relative overflow-hidden 
+        primary-container-bg rounded-3xl shadow-lg transition-all duration-500 
+        hover:shadow-2xl hover:-translate-y-2 
+        bg-white/90 dark:bg-gray-800/90 
+        backdrop-blur-sm border border-gray-100 dark:border-gray-700">
+        <div class="relative overflow-hidden h-80">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+          <img src="{% static 'img/components/equipo_trabajo.png' %}" alt="Foto de Perfil" 
+            class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"/>
+          <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
+            <h3 class="text-2xl font-bold mb-2 text-white">
+              Steven Alexander Nieto Durán
+            </h3>
+            <p class="text-lg font-medium text-gray-200">
+              {% trans 'Diseñador Web / Programador' %}
+            </p>
+          </div>
+        </div>
+        <div class="p-8 relative">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br 
+            [.theme1_&]:from-theme1-500/20 [.theme2_&]:from-theme2-500/20 
+            to-transparent rounded-bl-full -z-10"></div>
+          
+          <p class="text-base [.theme1_&]:text-theme1-700 [.theme2_&]:text-theme2-700 
+            dark:text-gray-300 mb-6 leading-relaxed">
+            {% trans 'Especialista en el uso de tecnologías como Django, Python, Amazon Web Services, OpenCV Tailwind CSS, JS, HTML con más de 1 año de experiencia.' %}
+          </p>
+          
+          <div class="flex space-x-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <a href="https://github.com/AlexisJr2004" target="_blank" rel="noopener noreferrer"
+              class="group/icon flex items-center space-x-2 text-gray-600 hover:text-blue-500 
+              dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
+              <i class="fa-brands fa-github text-2xl group-hover/icon:scale-110 transition-transform"></i>
+              <span class="text-sm opacity-0 group-hover/icon:opacity-100 transition-opacity">GitHub</span>
+            </a>
+            <a href="mailto:snietod@unemi.edu.ec"
+              class="group/icon flex items-center space-x-2 text-gray-600 hover:text-blue-500 
+              dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
+              <i class="fa-solid fa-envelope text-2xl group-hover/icon:scale-110 transition-transform"></i>
+              <span class="text-sm opacity-0 group-hover/icon:opacity-100 transition-opacity">Email</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% include 'light_effect.html' %}
 
 {% endblock content %}
