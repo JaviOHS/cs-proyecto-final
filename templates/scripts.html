@@ -567,3 +567,51 @@
     window.speechSynthesis.speak(utterance);
 }
 </script>
+
+ <!-- Script del modal de 'Sobre Nosotros' -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('static-modal');
+    const modalContent = modal.querySelector('.transform');
+    
+    function openModal() {
+        // Mostrar el modal
+        modal.classList.remove('pointer-events-none', 'opacity-0');
+        // Animar el contenido
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+        // Deshabilitar scroll
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+        // Ocultar el modal
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        // Animar el contenido
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        // Habilitar scroll después de la animación
+        setTimeout(() => {
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
+    
+    // Abrir modal
+    document.querySelector('[data-modal-toggle]').addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+    });
+    
+    // Cerrar modal (todos los botones de cierre)
+    modal.querySelectorAll('[data-modal-close]').forEach(button => {
+        button.addEventListener('click', closeModal);
+    });
+    
+    // Cerrar con ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('opacity-0')) {
+            closeModal();
+        }
+    });
+  });
+</script>
