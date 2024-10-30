@@ -9,4 +9,5 @@ urlpatterns = [
     path('signout/', auth.SignoutView.as_view(), name='signout'),
     path('verify-2fa/', verify_2fa.Verify2FAView.as_view(), name='verify_2fa'),
     path('verify-signup-2fa/', verify_2fa.VerifySignup2FAView.as_view(), name='verify_signup_2fa'),
+    path('extend-session/', auth.ExtendSessionView.as_view(), name='extend_session'),
 ]

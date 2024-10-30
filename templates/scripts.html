@@ -229,18 +229,132 @@
 
 <!-- Script para cerrar la sesión -->
 <script>
-  document.addEventListener('keydown', function (event) {
-    // Detecta Ctrl + Espacio como combinación de teclas para cerrar sesión
-    if (event.ctrlKey && event.code === 'Space') {
-      // Acción de cierre de sesión
-      logoutUser();
-    }
-  });
+  // Agregamos una variable global que se establecerá desde el backend
+  let isAuthenticated = document.body.dataset.authenticated === 'true';
 
-  function logoutUser() {
-    // Redirige al usuario a la URL de cierre de sesión
-    window.location.href = "{% url 'security:signout' %}";
+  // Configuración de tiempo en milisegundos
+  const SESSION_DURATION = 1800 * 1000;    // 1 minuto en milisegundos
+  const WARNING_BEFORE = 300 * 1000;      // 30 segundos en milisegundos
+  let timeoutId;
+  let warningId;
+  let warningShown = false;
+
+  // Función para inicializar el controlador de sesión
+  function initSessionHandler() {
+      // Solo inicializar si el usuario está autenticado
+      if (!isAuthenticated) {
+          return;
+      }
+
+      // Reiniciar los temporizadores
+      resetTimers();
+      
+      // Agregar listeners para actividad del usuario
+      ['click', 'keypress', 'scroll', 'mousemove'].forEach(event => {
+          document.addEventListener(event, () => {
+              // Solo reiniciar si no se ha mostrado la advertencia y el usuario está autenticado
+              if (!warningShown && isAuthenticated) {
+                  resetTimers();
+              }
+          });
+      });
   }
+
+  // Función para reiniciar los temporizadores
+  function resetTimers() {
+      clearTimeout(timeoutId);
+      clearTimeout(warningId);
+      
+      // Establecer la advertencia
+      warningId = setTimeout(showWarning, SESSION_DURATION - WARNING_BEFORE);
+      
+      // Establecer el timeout de sesión
+      timeoutId = setTimeout(forceLogout, SESSION_DURATION);
+  }
+
+  // Función para mostrar la advertencia
+  function showWarning() {
+      // Verificar si el usuario sigue autenticado
+      if (!isAuthenticated) {
+          return;
+      }
+
+      warningShown = true;
+      
+      Swal.fire({
+          title: '¿Deseas extender tu sesión?',
+          text: 'Tu sesión expirará en 30 segundos',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, extender sesión',
+          cancelButtonText: 'No, cerrar sesión',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          timer: WARNING_BEFORE,
+          timerProgressBar: true
+      }).then((result) => {
+          if (result.isConfirmed && isAuthenticated) {
+              warningShown = false;
+              resetTimers();
+              fetch('/security/extend-session/', {
+                  method: 'POST',
+                  headers: {
+                      'X-CSRFToken': getCookie('csrftoken'),
+                  },
+              });
+          } else {
+              forceLogout();
+          }
+      });
+  }
+
+  // Función para forzar el cierre de sesión
+  async function forceLogout() {
+      try {
+          // Marcar como no autenticado primero
+          isAuthenticated = false;
+          
+          // Limpiar todos los temporizadores
+          clearTimeout(timeoutId);
+          clearTimeout(warningId);
+          
+          // Hacer la petición de logout
+          const response = await fetch('/security/signout/', {
+              method: 'GET',
+              credentials: 'same-origin',
+              headers: {
+                  'X-CSRFToken': getCookie('csrftoken'),
+              },
+          });
+          
+          // Redirigir al home
+          window.location.href = '/';
+          
+      } catch (error) {
+          console.error('Error during logout:', error);
+          // En caso de error, redirigir al home de todas formas
+          window.location.href = '/';
+      }
+  }
+
+  // Función auxiliar para obtener el valor de una cookie
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+
+  // Inicializar el manejador de sesión cuando se carga la página
+  document.addEventListener('DOMContentLoaded', initSessionHandler);
 </script>
 
 <!-- Script para el sidebar de los temas -->
