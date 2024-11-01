@@ -19,6 +19,19 @@
   let isEngineInitializing = false
   let selectedModel = null
 
+  // Nueva función para guardar el modelo seleccionado
+  function saveSelectedModel(model) {
+    localStorage.setItem('selectedChatbotModel', model);
+    localStorage.setItem('selectedChatbotModelName', $currentModel.textContent);
+  }
+
+  // Nueva función para recuperar el modelo guardado
+  function getSavedModel() {
+    const savedModel = localStorage.getItem('selectedChatbotModel');
+    const savedModelName = localStorage.getItem('selectedChatbotModelName');
+    return { model: savedModel, name: savedModelName };
+  }
+
   // Cargar los datos del JSON
   async function loadJSONData() {
     if (jsonData.length === 0) {
@@ -43,8 +56,30 @@
   // Inicializar el chatbot y cargar el modelo
   async function initializeChatbot() {
     await loadJSONData();
+
+    const $modelSelection = document.querySelector('#model-selection');
+    const $currentModel = document.querySelector('#current-model');
+  
+    if (!$modelSelection || !$currentModel) {
+      console.error('Required elements for model selection not found');
+      return;
+    }
   
     $modelSelection.classList.add('hidden');
+  
+    // Revisar si hay un modelo guardado
+    const savedModel = getSavedModel();
+    
+    if (savedModel.model) {
+      // Si hay un modelo guardado, usarlo
+      selectedModel = savedModel.model;
+      $currentModel.textContent = savedModel.name || 'LLaMA 3';
+    } else {
+      // Si no hay modelo guardado, usar un modelo por defecto
+      selectedModel = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
+      $currentModel.textContent = 'LLaMA 3';
+      saveSelectedModel(selectedModel);
+    }
   
     // Resetea el modelo mostrado
     $currentModel.textContent = 'Ninguno';
@@ -358,18 +393,33 @@
   // Función para mostrar opciones de modelo
   function showModelOptions() {
     return new Promise((resolve) => {
+      const $modelSelection = document.querySelector('#model-selection');
+      const $currentModel = document.querySelector('#current-model');
+      
+      if (!$modelSelection) {
+        console.error('Model selection element not found');
+        resolve('Llama-3.2-1B-Instruct-q4f32_1-MLC'); // Default model
+        return;
+      }
+  
       $modelSelection.classList.remove('hidden');
-
+  
       const modelOptions = $modelSelection.querySelectorAll('.model-option');
-      const retryButton = $('#retry-button');
-
+      const retryButton = $modelSelection.querySelector('#retry-button');
+  
+      if (!retryButton || modelOptions.length === 0) {
+        console.error('Model options or retry button not found');
+        resolve('Llama-3.2-1B-Instruct-q4f32_1-MLC'); // Default model
+        return;
+      }
+  
       function handleModelChoice(event) {
         const choice = event.target.closest('.model-option, #retry-button');
         if (choice) {
           $modelSelection.classList.add('hidden');
           modelOptions.forEach(option => option.removeEventListener('click', handleModelChoice));
           retryButton.removeEventListener('click', handleModelChoice);
-
+  
           if (choice.textContent.includes('LLaMA 3') || choice === retryButton) {
             selectedModel = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
             $currentModel.textContent = 'LLaMA 3';
@@ -377,11 +427,11 @@
             selectedModel = 'gpt-3.5-turbo';
             $currentModel.textContent = 'ChatGPT-3.5-turbo';
           }
-
+  
           resolve(selectedModel);
         }
       }
-
+  
       modelOptions.forEach(option => option.addEventListener('click', handleModelChoice));
       retryButton.addEventListener('click', handleModelChoice);
     });
@@ -389,21 +439,36 @@
 
   // Función para cambiar el modelo
   async function changeModel() {
+    await loadJSONData();
+
+    $modelSelection.classList.add('hidden');
+
     // Desactivar la entrada de chat mientras se cambia el modelo
     $chatInput.setAttribute('disabled', '');
     $sendMessage.setAttribute('disabled', '');
 
+    // Opciones principales del menú
+    const mainMenuOptions = [
+      "¿Quién eres?",
+      "Información sobre autenticación", 
+      "Información sobre el sistema",
+      "Perfil del Usuario",
+      "Información sobre alertas",
+      "Información sobre monitoreo",
+      "Información sobre reportes"
+    ];
+
     selectedModel = await showModelOptions();
+    saveSelectedModel(selectedModel);
 
-    // Reinicializar el engine
-    engine = null;
-    isEngineInitializing = false;
-
-    // Limpiar los mensajes anteriores
-    messages = [];
-    $chatMessages.innerHTML = '';
-
-    await addMessage("He cambiado al modelo " + $currentModel.textContent + ". ¿En qué puedo ayudarte?", 'bot');
+    // Mensaje de cambio de modelo con las opciones del menú
+    const changeModelMessage = "He cambiado al modelo " + $currentModel.textContent + ". ¿En qué puedo ayudarte?";
+    
+    await addMessageWithOptions(
+      changeModelMessage,
+      mainMenuOptions,
+      'bot'
+    );
 
     // Reactivar la entrada de chat
     enableChat();
@@ -643,31 +708,41 @@
   }
 
   // Event Listeners
-  if ($openChat && $closeChat) {
-    $openChat.addEventListener('click', () => {
-      $chatbot.classList.remove('hidden', 'opacity-0', 'translate-y-5');
-      $openChat.classList.add('hidden');
-      initializeChatbot();
-    });
+  document.addEventListener('DOMContentLoaded', () => {
+    const $openChat = document.querySelector('#open-chat');
+    const $closeChat = document.querySelector('#close-chat');
+    const $chatbot = document.querySelector('#chatbot');
+    const $chatMessages = document.querySelector('#chat-messages');
+    const $chatInput = document.querySelector('#chat-input');
+    const $sendMessage = document.querySelector('#send-message');
+    const $selectedModelDiv = document.querySelector('#selected-model');
 
-    $closeChat.addEventListener('click', () => {
-      $chatbot.classList.add('hidden', 'opacity-0', 'translate-y-5');
-      $openChat.classList.remove('hidden');
-      $chatMessages.innerHTML = '';
-      messages = [];
-      selectedModel = null;
-      engine = null;
-      $currentModel.textContent = 'Ninguno';  // Resetea el modelo mostrado
-    });
+    if ($openChat && $closeChat && $chatbot && $chatMessages && $chatInput && $sendMessage && $selectedModelDiv) {
+      $openChat.addEventListener('click', () => {
+        $chatbot.classList.remove('hidden', 'opacity-0', 'translate-y-5');
+        $openChat.classList.add('hidden');
+        initializeChatbot();
+      });
 
-    $sendMessage.addEventListener('click', sendMessage);
-    $chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
-    });
+      $closeChat.addEventListener('click', () => {
+        $chatbot.classList.add('hidden', 'opacity-0', 'translate-y-5');
+        $openChat.classList.remove('hidden');
+        $chatMessages.innerHTML = '';
+        messages = [];
+        engine = null;
+      });
 
-    // Nuevo event listener para cambiar el modelo
-    $selectedModelDiv.addEventListener('click', changeModel);
-  }
+      $sendMessage.addEventListener('click', sendMessage);
+      $chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+      });
+
+      // Nuevo event listener para cambiar el modelo
+      $selectedModelDiv.addEventListener('click', changeModel);
+    } else {
+      console.error('Some required chat elements are missing');
+    }
+  });
 </script>
 
 

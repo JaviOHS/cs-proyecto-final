@@ -118,6 +118,9 @@ msgstr "Specialist in the use of technologies such as Django, Python, Amazon Web
 msgid "Diseñador Web / Programador"
 msgstr "Web Designer / Programmer"
 
+msgid "Cuenta"
+msgstr "Account"
+
 
 
 # TRADUCCIOÓN DE home.html -------------------------------------------------------------------------------

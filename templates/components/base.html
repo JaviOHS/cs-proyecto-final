@@ -33,7 +33,7 @@
           <span class="sr-only">Open main menu</span>
           <i class="fas fa-bars"></i>
         </button>
-        <div class="hidden w-full md:flex md:w-auto" id="navbar-menu">
+        <div class="hidden w-full md:flex md:w-auto">
           <ul class="items-center bg-center flex flex-col md:flex-row md:space-x-8 p-4 md:p-0 font-medium rounded-lg">
             <li class="py-2 md:py-0">
               <a href="{% url 'home' %}" class="nav-font-color" aria-current="page">{% trans "Inicio" %}</a>
@@ -173,14 +173,160 @@
       </div>
     </nav>
   </header>
-  <div id="progress-bar"
-    class="h-1 bg-blue-500 dark:bg-indigo-500 fixed top-0 left-0 z-50 transition-all duration-300 ease-linear"
-    style="width: 0;"></div>
-  {% endblock navbar %}
+ 
+    <aside class="hidden fixed left-0 top-0 z-50 h-screen w-70 bg-white/80 backdrop-blur-md dark:bg-gray-900/80 border-r border-gray-100 dark:border-gray-800" id="navbar-menu">
+      {% if user.is_authenticated %}
+        <div class="p-4 mb-6">
+          <div class="flex items-center mb-3">
+            <div class="relative">
+              <img src="{{ user.get_image }}" alt="Profile" 
+                class="w-10 h-10 rounded-full bg-gray-100 object-cover"
+              />
+              <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full dark:border-gray-800"></div>
+            </div>
+            <div class="ml-3">
+              <h2 class="text-sm font-medium text-gray-900 dark:text-white">{{ user.username }}</h2>
+              <h2 class="text-sm font-medium text-gray-900 dark:text-white">{{ user.email }}</h2>
+            </div>
+          </div>
+        </div>
 
-  <div id="sidebar-overlay"
-    class="fixed inset-0 bg-black opacity-50 z-40 hidden backdrop-blur-sm transition-all duration-300"></div>
+        <div class="px-3">
+          <div class="mb-6">
+            <p class="px-3 mb-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">{% trans "Inicio" %}</p>
+            <ul class="space-y-1">
+              <li>
+                <a href="{% url 'home' %}" 
+                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors">
+                  <i class="fas fa-home w-5 h-5 text-gray-500 dark:text-gray-400 mr-3 group-hover:text-blue-600 dark:group-hover:text-blue-500"></i>
+                  {% trans "Inicio" %}
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'core:profile' %}" 
+                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors">
+                  <i class="fas fa-user w-5 h-5 text-gray-500 dark:text-gray-400 mr-3 group-hover:text-blue-600 dark:group-hover:text-blue-500"></i>
+                  {% trans "Perfil" %}
+                </a>
+              </li>
+              <li>
+                <button type="button" 
+                  class="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors"
+                  data-collapse-toggle="audience-dropdown">
+                  <i class="fas fa-paint-brush w-5 h-5 text-gray-500 dark:text-gray-400 mr-3 group-hover:text-blue-600 dark:group-hover:text-blue-500"></i>
+                  <span class="flex-1">{% trans "Temas" %}</span>
+                  <i class="fas fa-chevron-down w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform"></i>
+                </button>
+                <ul id="audience-dropdown" class="py-2 space-y-1">
+                  <li>
+                    <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                      onclick="setTheme('light')">
+                      <div
+                        style="display: grid; grid-template-columns: repeat(2, 1fr); width: 50px; height: 50px; border-radius: 4px; overflow: hidden; margin-right: 0.75rem;">
+                        <div style="width: 100%; height: 100%;" class="bg-white border border-gray-200"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-blue-700"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-white border border-gray-200"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-blue-200"></div>
+                      </div>
+                      <span class="text-sm font-medium">{% trans "Claro" %}</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                      onclick="setTheme('dark')">
+                      <div
+                        style="display: grid; grid-template-columns: repeat(2, 1fr); width: 50px; height: 50px; border-radius: 4px; overflow: hidden; margin-right: 0.75rem;">
+                        <div style="width: 100%; height: 100%;" class="bg-gray-800"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-blue-700"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-gray-800"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-blue-200"></div>
+                      </div>
+                      <span class="text-sm font-medium">{% trans "Oscuro" %}</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                      onclick="setTheme('theme1')">
+                      <div style="display: grid; grid-template-columns: repeat(2, 1fr); width: 50px; height: 50px; border-radius: 4px; overflow: hidden; margin-right: 0.75rem;">
+                        <div style="width: 100%; height: 100%;" class="bg-theme1-500"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-theme1-700"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-theme1-300"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-theme1-600"></div>
+                      </div>
+                      <span class="text-sm font-medium">{% trans "Naranja" %}</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                      onclick="setTheme('theme2')">
+                      <div style="display: grid; grid-template-columns: repeat(2, 1fr); width: 50px; height: 50px; border-radius: 4px; overflow: hidden; margin-right: 0.75rem;">
+                        <div style="width: 100%; height: 100%;" class="bg-theme2-500"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-theme2-700"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-theme2-300"></div>
+                        <div style="width: 100%; height: 100%;" class="bg-theme2-600"></div>
+                      </div>
+                      <span class="text-sm font-medium">{% trans "Azul" %}</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+      
+          <div class="mb-6">
+            <p class="px-3 mb-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">{% trans "Configuraciones" %}</p>
+            <ul class="space-y-1">
+              <li>
+                <a href="{% url 'core:user_settings' %}" 
+                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors">
+                  <i class="fas fa-cog w-5 h-5 text-gray-500 dark:text-gray-400 mr-3 group-hover:text-blue-600 dark:group-hover:text-blue-500"></i>
+                  {% trans "Configuraciones" %}
+                </a>
+              </li>
+            </ul>
+          </div>
+      
+          <div>
+            <p class="px-3 mb-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">{% trans "Cuenta" %}</p>
+            <ul class="space-y-1">
+              <li>
+                <a href="{% url 'security:signout' %}" 
+                  class="flex items-center px-3 py-2 text-sm font-medium text-red-500 rounded-lg dark:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors">
+                  <i class="fas fa-sign-out-alt w-5 h-5 text-gray-500 dark:text-gray-400 mr-3 group-hover:text-blue-600 dark:group-hover:text-blue-500"></i>
+                  {% trans "Cerrar Sesión" %}
+                </a>
+              </li>
+            </ul>
+          </div>
+          {% else %}
+          <div>
+            <p class="px-3 mb-3 text-xs font-medium text-gray-500 uppercase dark:text-gray-400">{% trans "Cuenta" %}</p>
+            <ul class="space-y-1">
+              <li>
+                <a href="{% url 'security:signup' %}" 
+                  class="flex items-center px-3 py-2 text-sm font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors">
+                  <i class="fas fa-user-plus w-5 h-5 text-gray-500 dark:text-gray-400 mr-3 group-hover:text-blue-600 dark:group-hover:text-blue-500"></i>
+                  {% trans "Registrarse" %}
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'security:signin' %}" 
+                  class="flex items-center px-3 py-2 text-sm font-medium text-red-500 rounded-lg dark:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-800 group transition-colors">
+                  <i class="fas fa-sign-in-alt w-5 h-5 text-gray-500 dark:text-gray-400 mr-3 group-hover:text-blue-600 dark:group-hover:text-blue-500"></i>
+                  {% trans "Iniciar Sesión" %}
+                </a>
+              </li>          
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </aside>
+    
+    <div id="progress-bar" class="h-1 bg-blue-500 dark:bg-indigo-500 fixed top-0 left-0 z-50 transition-all duration-300 ease-linear" style="width: 0;"></div>
+{% endblock navbar %}
 
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black opacity-50 z-40 hidden backdrop-blur-sm transition-all duration-300"></div>
   {% if user.is_authenticated %}
   <div id="drawer-navigation"
     class="fixed top-0 left-0 z-50 h-screen p-6 overflow-y-auto transition-transform -translate-x-full bg-white w-64 dark:bg-gray-800"
