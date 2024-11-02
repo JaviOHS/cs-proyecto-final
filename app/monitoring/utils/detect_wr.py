@@ -18,8 +18,8 @@ rekognition = boto3.client(
     region_name=settings.AWS_S3_REGION_NAME
 )
 
-max_no_detection_frames = 30
-detection_interval = 60  
+max_no_detection_frames = 5
+detection_interval = 60
 
 class DetectionState:
     def __init__(self):
@@ -40,33 +40,47 @@ def detect_objects_in_frame(frame, session, frame_index, fps):
             MaxLabels=10,
             MinConfidence=75
         )
-
         detected_items = [
             (label['Name'], label['Confidence'])
             for label in response['Labels']
             if label['Name'] in ['Knife', 'Pistol', 'Weapon', 'Gun', 'Firearm', 'Rifle', 'Shotgun', 'Revolver', 'Handgun']
         ]
 
+        bounding_boxes = []
+        for label in response['Labels']:
+            if label['Name'] in ['Knife', 'Pistol', 'Weapon', 'Gun', 'Firearm', 'Rifle', 'Shotgun', 'Revolver', 'Handgun']:
+                if 'Instances' in label and label['Instances']:
+                    bounding_boxes.append(label['Instances'][0]['BoundingBox'])
+
         if detected_items:
             process_detection(frame, detected_items, session, frame_index)
+            frame = draw_bounding_boxes(frame, bounding_boxes)
         elif detection_state.is_detecting:
             if time.time() - detection_state.last_detection_time > max_no_detection_frames * detection_interval / fps:
                 save_video_segment(detection_state.frames_buffer, detection_state.event_start_time, session, [])
                 detection_state.is_detecting = False
                 detection_state.frames_buffer = []
-
         detection_state.frames_buffer.append((frame.copy(), time.time()))
-        
+
         max_buffer_size = int(fps * 10)  
         if len(detection_state.frames_buffer) > max_buffer_size:
             detection_state.frames_buffer.pop(0)
-
         return draw_labels_on_frame(frame, detected_items)
 
     except Exception as e:
         print(f"{RED_COLOR}Error al llamar a Rekognition: {e}{RESET_COLOR}")
         return frame
-    
+
+def draw_bounding_boxes(frame, bounding_boxes):
+    height, width, _ = frame.shape
+    for box in bounding_boxes:
+        left = int(box['Left'] * width)
+        top = int(box['Top'] * height)
+        right = int((box['Left'] + box['Width']) * width)
+        bottom = int((box['Top'] + box['Height']) * height)
+        cv2.rectangle(frame, (left, top), (right, bottom), (255, 0, 0), 2)
+    return frame
+
 def process_detection(frame, detected_items, session, frame_index):
     if not detection_state.is_detecting:
         detection_state.is_detecting = True
@@ -83,29 +97,17 @@ def draw_labels_on_frame(frame, detected_items):
                     (10, 30 * (idx + 1)), 
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
     return frame
- 
-def draw_labels_on_frame(frame, detected_items):
-    for idx, (label, confidence) in enumerate(detected_items):
-        cv2.putText(frame, f"{label}: {confidence:.2f}%", 
-                    (10, 30 * (idx + 1)), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-    return frame
 
 def save_video_segment(frames, start_time, session, detected_items):
     video_filename = f"{start_time:.2f}_{time.strftime('%Y%m%d_%H%M%S')}.mp4"
     video_path = os.path.join(settings.BASE_DIR, video_filename)
-
     height, width, _ = frames[0][0].shape
     out = cv2.VideoWriter(video_path, cv2.VideoWriter_fourcc(*'mp4v'), 10, (width, height))
 
     for frame, _ in frames:
         out.write(frame)
-
     out.release()
-    print(f"{GREEN_COLOR}Segmento de video guardado: {video_filename}{RESET_COLOR}")
-
     weapons_info = f'{', '.join(item[0] for item in detected_items)}'
-
  
     try:
         is_weapon = True
@@ -125,8 +127,6 @@ def save_video_segment(frames, start_time, session, detected_items):
             attachment_path=video_path,
             attachment_name=video_filename
         )
-        print(f"{GREEN_COLOR}Correo enviado correctamente.{RESET_COLOR}")
-
         os.remove(video_path)
         print(f"{GREEN_COLOR}Archivo {video_filename} eliminado después de enviar el correo.{RESET_COLOR}")
     except Exception as e:

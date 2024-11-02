@@ -7,20 +7,22 @@ from app.alarm.utils import validate_sound_file
 from app.threat_management.models import Detection
 import requests
 import io
-
+import threading
 pygame.init()
 
+def check_audio_completion():
+    while pygame.mixer.music.get_busy():
+        continue
+    Alarm.alarm_sound_playing = False
+    
 def play_audio_from_s3(url):
     try:
         response = requests.get(url, stream=True)
         response.raise_for_status()
         audio_data = io.BytesIO(response.content)
-        try:
-            pygame.mixer.music.load(audio_data)
-            pygame.mixer.music.play()
-        except Exception as e:
-            print(f"Error al reproducir con pygame: {e}\nIntentando reproducir con pydub...")
-
+        pygame.mixer.music.load(audio_data)
+        pygame.mixer.music.play()
+        threading.Thread(target=check_audio_completion).start()
     except requests.RequestException as e:
         print(f"Error al obtener el archivo de audio: {e}")
     except Exception as e:

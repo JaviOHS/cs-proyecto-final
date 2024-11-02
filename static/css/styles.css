@@ -4272,11 +4272,6 @@ video {
   --tw-ring-color: rgb(30 64 175 / var(--tw-ring-opacity));
 }
 
-.dark\:focus\:ring-blue-900:focus:is(.dark *) {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(30 58 138 / var(--tw-ring-opacity));
-}
-
 .dark\:focus\:ring-gray-600:focus:is(.dark *) {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(75 85 99 / var(--tw-ring-opacity));
@@ -4688,6 +4683,10 @@ video {
 }
 
 @media (min-width: 1280px) {
+  .xl\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .xl\:px-0 {
     padding-left: 0px;
     padding-right: 0px;
@@ -4701,6 +4700,12 @@ video {
   .xl\:py-16 {
     padding-top: 4rem;
     padding-bottom: 4rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .\32xl\:grid-cols-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 
