@@ -45,72 +45,41 @@
   }
 
   // Buscar una respuesta en el JSON
-    async function initializeChatbot() {
-      await loadJSONData();
-
-      // Mostrar el menú de selección de modelos siempre
-      selectedModel = await showModelOptions();
-      saveSelectedModel(selectedModel);
-
-      const $modelSelection = document.querySelector('#model-selection');
-      const $currentModel = document.querySelector('#current-model');
-      $modelSelection.classList.add('hidden');
+  async function initializeChatbot() {
+    await loadJSONData();
     
-      if (!$modelSelection || !$currentModel) {
-        console.error('Required elements for model selection not found');
-        return;
-      }
+    // Esperar a que el usuario seleccione un modelo
+    selectedModel = await showModelOptions();
+    saveSelectedModel(selectedModel);
     
-    
-      // Revisar si hay un modelo guardado
-      const savedModel = getSavedModel();
-      
-      if (savedModel.model) {
-        // Si hay un modelo guardado, usarlo
-        selectedModel = savedModel.model;
-        $currentModel.textContent = savedModel.name || 'LLaMA 3';
-      } else {
-        // Si no hay modelo guardado, usar un modelo por defecto
-        selectedModel = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
-        $currentModel.textContent = 'LLaMA 3';
-        saveSelectedModel(selectedModel);
-      }
-    
-      // Resetea el modelo mostrado
-      $currentModel.textContent = 'Ninguno';
-    
-      selectedModel = await showModelOptions();
-      
-      // Opciones principales del menú
-      const mainMenuOptions = [
-        "¿Quién eres?",
-        "Información sobre autenticación",
-        "Información sobre el sistema",
-        "Perfil del Usuario",
-        "Información sobre alertas",
-        "Información sobre monitoreo",
-        "Información sobre reportes"
-      ];
-    
-      // Mensaje de bienvenida personalizado con emojis relevantes
-      const welcomeMessage = [
-        "¡Hola 👋! Soy Alexis, tu ChatBot personal.",
-        "Estoy aquí para ayudarte con cualquier duda al momento de usar nuestro software.",
-        "¿En qué puedo ayudarte 😊?"
-      ].join("\n");
-    
-      await addMessageWithOptions(
-        welcomeMessage,
-        mainMenuOptions,
-        'bot'
-      );
-    
-      // Pequeña pausa para mejor experiencia de usuario
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    
-      enableChat();
-    }
+    const $modelSelection = document.querySelector('#model-selection');
+    $modelSelection.classList.add('hidden');
+  
+    // Resto del código de inicialización...
+    const mainMenuOptions = [
+      "¿Quién eres?",
+      "Información sobre autenticación",
+      "Información sobre el sistema",
+      "Perfil del Usuario",
+      "Información sobre alertas",
+      "Información sobre monitoreo",
+      "Información sobre reportes"
+    ];
+  
+    const welcomeMessage = [
+      "¡Hola 👋! Soy Alexis, tu ChatBot personal.",
+      "Estoy aquí para ayudarte con cualquier duda al momento de usar nuestro software.",
+      "¿En qué puedo ayudarte 😊?"
+    ].join("\n");
+  
+    await addMessageWithOptions(
+      welcomeMessage,
+      mainMenuOptions,
+      'bot'
+    );
+  
+    enableChat();
+  }
 
 
 
@@ -393,44 +362,52 @@
       const $modelSelection = document.querySelector('#model-selection');
       const $currentModel = document.querySelector('#current-model');
       
-      if (!$modelSelection) {
-        console.error('Model selection element not found');
-        resolve('Llama-3.2-1B-Instruct-q4f32_1-MLC'); // Default model
+      if (!$modelSelection || !$currentModel) {
+        console.error('Required elements not found');
+        resolve('Llama-3.2-1B-Instruct-q4f32_1-MLC');
         return;
       }
   
+      // Mostrar el menú de selección inmediatamente
       $modelSelection.classList.remove('hidden');
   
       const modelOptions = $modelSelection.querySelectorAll('.model-option');
       const retryButton = $modelSelection.querySelector('#retry-button');
   
-      if (!retryButton || modelOptions.length === 0) {
-        console.error('Model options or retry button not found');
-        resolve('Llama-3.2-1B-Instruct-q4f32_1-MLC'); // Default model
-        return;
-      }
+      // Función para manejar la selección del modelo
+      function handleModelSelection(event) {
+        const selectedOption = event.currentTarget;
+        
+        // Ocultar el menú de selección
+        $modelSelection.classList.add('hidden');
+        
+        // Remover los event listeners
+        modelOptions.forEach(option => {
+          option.removeEventListener('click', handleModelSelection);
+        });
+        retryButton.removeEventListener('click', handleModelSelection);
   
-      function handleModelChoice(event) {
-        const choice = event.target.closest('.model-option, #retry-button');
-        if (choice) {
-          $modelSelection.classList.add('hidden');
-          modelOptions.forEach(option => option.removeEventListener('click', handleModelChoice));
-          retryButton.removeEventListener('click', handleModelChoice);
-  
-          if (choice.textContent.includes('LLaMA 3') || choice === retryButton) {
-            selectedModel = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
-            $currentModel.textContent = 'LLaMA 3';
-          } else if (choice.textContent.includes('ChatGPT-3.5-turbo')) {
-            selectedModel = 'gpt-3.5-turbo';
-            $currentModel.textContent = 'ChatGPT-3.5-turbo';
-          }
-  
-          resolve(selectedModel);
+        // Determinar el modelo seleccionado
+        let selectedModel;
+        if (selectedOption === retryButton || selectedOption.textContent.includes('LLaMA 3')) {
+          selectedModel = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
+          $currentModel.textContent = 'LLaMA 3';
+        } else if (selectedOption.textContent.includes('ChatGPT-3.5-turbo')) {
+          selectedModel = 'gpt-3.5-turbo';
+          $currentModel.textContent = 'ChatGPT-3.5-turbo';
         }
+  
+        resolve(selectedModel);
       }
   
-      modelOptions.forEach(option => option.addEventListener('click', handleModelChoice));
-      retryButton.addEventListener('click', handleModelChoice);
+      // Agregar event listeners una sola vez
+      modelOptions.forEach(option => {
+        option.removeEventListener('click', handleModelSelection); // Remover listener existente si hay
+        option.addEventListener('click', handleModelSelection);
+      });
+      
+      retryButton.removeEventListener('click', handleModelSelection); // Remover listener existente si hay
+      retryButton.addEventListener('click', handleModelSelection);
     });
   }
 
