@@ -19,18 +19,18 @@
   let isEngineInitializing = false
   let selectedModel = null
 
-  // Nueva función para guardar el modelo seleccionado
-  function saveSelectedModel(model) {
-    localStorage.setItem('selectedChatbotModel', model);
-    localStorage.setItem('selectedChatbotModelName', $currentModel.textContent);
-  }
+    // Nueva función para guardar el modelo seleccionado
+    function saveSelectedModel(model) {
+      localStorage.setItem('selectedChatbotModel', model);
+      localStorage.setItem('selectedChatbotModelName', $currentModel.textContent);
+    }
 
-  // Nueva función para recuperar el modelo guardado
-  function getSavedModel() {
-    const savedModel = localStorage.getItem('selectedChatbotModel');
-    const savedModelName = localStorage.getItem('selectedChatbotModelName');
-    return { model: savedModel, name: savedModelName };
-  }
+    // Nueva función para recuperar el modelo guardado
+    function getSavedModel() {
+      const savedModel = localStorage.getItem('selectedChatbotModel');
+      const savedModelName = localStorage.getItem('selectedChatbotModelName');
+      return { model: savedModel, name: savedModelName };
+    }
 
   // Cargar los datos del JSON
   async function loadJSONData() {
@@ -45,77 +45,74 @@
   }
 
   // Buscar una respuesta en el JSON
-  function findAnswerInJSON(question) {
-    const lowerQuestion = question.toLowerCase();
-    const match = jsonData.find(item =>
-      lowerQuestion.includes(item.question.toLowerCase())
-    );
-    return match ? match.answer : null;
-  }
+    async function initializeChatbot() {
+      await loadJSONData();
 
-  // Inicializar el chatbot y cargar el modelo
-  async function initializeChatbot() {
-    await loadJSONData();
-
-    const $modelSelection = document.querySelector('#model-selection');
-    const $currentModel = document.querySelector('#current-model');
-  
-    if (!$modelSelection || !$currentModel) {
-      console.error('Required elements for model selection not found');
-      return;
-    }
-  
-    $modelSelection.classList.add('hidden');
-  
-    // Revisar si hay un modelo guardado
-    const savedModel = getSavedModel();
-    
-    if (savedModel.model) {
-      // Si hay un modelo guardado, usarlo
-      selectedModel = savedModel.model;
-      $currentModel.textContent = savedModel.name || 'LLaMA 3';
-    } else {
-      // Si no hay modelo guardado, usar un modelo por defecto
-      selectedModel = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
-      $currentModel.textContent = 'LLaMA 3';
+      // Mostrar el menú de selección de modelos siempre
+      selectedModel = await showModelOptions();
       saveSelectedModel(selectedModel);
-    }
-  
-    // Resetea el modelo mostrado
-    $currentModel.textContent = 'Ninguno';
-  
-    selectedModel = await showModelOptions();
+
+      const $modelSelection = document.querySelector('#model-selection');
+      const $currentModel = document.querySelector('#current-model');
+      $modelSelection.classList.add('hidden');
     
-    // Opciones principales del menú
-    const mainMenuOptions = [
-      "¿Quién eres?",
-      "Información sobre autenticación",
-      "Información sobre el sistema",
-      "Perfil del Usuario",
-      "Información sobre alertas",
-      "Información sobre monitoreo",
-      "Información sobre reportes"
-    ];
-  
-    // Mensaje de bienvenida personalizado con emojis relevantes
-    const welcomeMessage = [
-      "¡Hola 👋! Soy Alexis, tu ChatBot personal.",
-      "Estoy aquí para ayudarte con cualquier duda al momento de usar nuestro software.",
-      "¿En qué puedo ayudarte 😊?"
-    ].join("\n");
-  
-    await addMessageWithOptions(
-      welcomeMessage,
-      mainMenuOptions,
-      'bot'
-    );
-  
-    // Pequeña pausa para mejor experiencia de usuario
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  
-    enableChat();
-  }
+      if (!$modelSelection || !$currentModel) {
+        console.error('Required elements for model selection not found');
+        return;
+      }
+    
+    
+      // Revisar si hay un modelo guardado
+      const savedModel = getSavedModel();
+      
+      if (savedModel.model) {
+        // Si hay un modelo guardado, usarlo
+        selectedModel = savedModel.model;
+        $currentModel.textContent = savedModel.name || 'LLaMA 3';
+      } else {
+        // Si no hay modelo guardado, usar un modelo por defecto
+        selectedModel = 'Llama-3.2-1B-Instruct-q4f32_1-MLC';
+        $currentModel.textContent = 'LLaMA 3';
+        saveSelectedModel(selectedModel);
+      }
+    
+      // Resetea el modelo mostrado
+      $currentModel.textContent = 'Ninguno';
+    
+      selectedModel = await showModelOptions();
+      
+      // Opciones principales del menú
+      const mainMenuOptions = [
+        "¿Quién eres?",
+        "Información sobre autenticación",
+        "Información sobre el sistema",
+        "Perfil del Usuario",
+        "Información sobre alertas",
+        "Información sobre monitoreo",
+        "Información sobre reportes"
+      ];
+    
+      // Mensaje de bienvenida personalizado con emojis relevantes
+      const welcomeMessage = [
+        "¡Hola 👋! Soy Alexis, tu ChatBot personal.",
+        "Estoy aquí para ayudarte con cualquier duda al momento de usar nuestro software.",
+        "¿En qué puedo ayudarte 😊?"
+      ].join("\n");
+    
+      await addMessageWithOptions(
+        welcomeMessage,
+        mainMenuOptions,
+        'bot'
+      );
+    
+      // Pequeña pausa para mejor experiencia de usuario
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    
+      enableChat();
+    }
+
+
 
   // Nueva función para crear una opción seleccionable
   function createOption(text) {
@@ -499,13 +496,27 @@
             }
           }
         );
-      } else {
-        // Para ChatGPT, no necesitamos inicializar un engine local
-        engine = { model: 'gpt-3.5-turbo' };
+      } else if (selectedModel === 'gpt-3.5-turbo') {
+        // Para ChatGPT, creamos un engine mock
+        engine = {
+          model: 'gpt-3.5-turbo',
+          chat: {
+            completions: {
+              create: async ({ messages }) => {
+                const response = await callOpenAIAPI(messages);
+                return {
+                  choices: [{
+                    delta: { content: response }
+                  }]
+                };
+              }
+            }
+          }
+        };
       }
     } catch (error) {
       console.error('Error initializing engine:', error);
-      addMessage("Lo siento, ha ocurrido un error al inicializar el chatbot. Por favor, intenta recargar la página.", 'bot');
+      throw error;
     } finally {
       isEngineInitializing = false;
       hideLoadingIndicator();
@@ -540,49 +551,151 @@
     $sendMessage.removeAttribute('disabled');
   }
 
+  // Función de añadir mensajes, con el icono de Voz
   async function addMessage(text, sender) {
     const messageElement = document.createElement('div');
     messageElement.classList.add('mb-4', 'p-3', 'rounded-lg', 'flex', 'flex-col');
-
+  
     if (sender === 'user') {
-      messageElement.classList.add(
-        'bg-blue-700',
-        'dark:bg-indigo-700',
-        'text-white',
-        'ml-auto',
-        'inline-block',
-        'px-4',
-        'py-2',
-        'rounded-lg',
-        'max-w-[60%]',
-        'text-left',
-        'font-semibold'
-      );
-      messageElement.innerHTML = `<p class="text-sm">${text}</p>`;
-      $chatMessages.appendChild(messageElement);
+        messageElement.classList.add(
+            'bg-blue-700',
+            'dark:bg-indigo-700',
+            'text-white',
+            'ml-auto',
+            'inline-block',
+            'px-4',
+            'py-2',
+            'rounded-lg',
+            'max-w-[60%]',
+            'text-left',
+            'font-semibold'
+        );
+        messageElement.innerHTML = `<p class="text-sm">${text}</p>`;
+        $chatMessages.appendChild(messageElement);
     } else {
-      messageElement.classList.add(
-        'bg-gray-100',
-        'dark:bg-[#0f1e41]',
-        'mr-auto',
-        'px-4',
-        'py-2',
-        'rounded-lg',
-        'w-full',
-        'max-w-[80%]',
-        'font-semibold'
-      );
-
-      const botTextElement = document.createElement('p');
-      botTextElement.classList.add('text-sm');
-      messageElement.appendChild(botTextElement);
-
-      $chatMessages.appendChild(messageElement);
-      $chatMessages.scrollTop = $chatMessages.scrollHeight;
-
-      await typeMessage(botTextElement, text);
+        messageElement.classList.add(
+            'bg-gray-100',
+            'dark:bg-[#0f1e41]',
+            'mr-auto',
+            'px-4',
+            'py-2',
+            'rounded-lg',
+            'w-full',
+            'max-w-[80%]',
+            'font-semibold'
+        );
+  
+        const messageContainer = document.createElement('div');
+        messageContainer.classList.add('flex', 'flex-col');
+  
+        const botTextElement = document.createElement('p');
+        botTextElement.classList.add('text-sm', 'mb-2');
+        
+        const soundButtonContainer = document.createElement('div');
+        soundButtonContainer.classList.add('flex', 'justify-start', 'mt-2', 'items-center', 'gap-2');
+        
+        // Estado para controlar si está reproduciendo
+        let isPlaying = false;
+        
+        const soundButton = document.createElement('button');
+        soundButton.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="transition-colors duration-200">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M11 4.9099C11 4.47485 10.4828 4.24734 10.1621 4.54132L6.67572 7.7372C6.49129 7.90626 6.25019 8.00005 6 8.00005H4C3.44772 8.00005 3 8.44776 3 9.00005V15C3 15.5523 3.44772 16 4 16H6C6.25019 16 6.49129 16.0938 6.67572 16.2629L10.1621 19.4588C10.4828 19.7527 11 19.5252 11 19.0902V4.9099ZM20.3166 6.35665C20.8019 6.09313 21.409 6.27296 21.6725 6.75833C22.5191 8.3176 22.9996 10.1042 22.9996 12.0001C22.9996 13.8507 22.5418 15.5974 21.7323 17.1302C21.4744 17.6185 20.8695 17.8054 20.3811 17.5475C19.8927 17.2896 19.7059 16.6846 19.9638 16.1962C20.6249 14.9444 20.9996 13.5175 20.9996 12.0001C20.9996 10.4458 20.6064 8.98627 19.9149 7.71262C19.6514 7.22726 19.8312 6.62017 20.3166 6.35665Z" fill="currentColor"/>
+          </svg>
+        `;
+        
+        soundButton.classList.add(
+          'p-2',
+          'rounded-full',
+          'text-gray-600',
+          'dark:text-gray-400',
+          'hover:bg-gray-100',
+          'dark:hover:bg-gray-700',
+          'hover:text-gray-900',
+          'dark:hover:text-gray-200',
+          'transition-all',
+          'duration-200',
+          'focus:outline-none',
+          'focus:ring-2',
+          'focus:ring-blue-500',
+          'dark:focus:ring-blue-400',
+          'focus:ring-opacity-50',
+          'transform',
+          'hover:scale-105',
+          'active:scale-95'
+        );
+  
+        // Función para obtener la mejor voz en español
+        function getBestSpanishVoice() {
+          const voices = speechSynthesis.getVoices();
+          // Priorizar voces naturales en español
+          const spanishVoices = voices.filter(voice => 
+            voice.lang.startsWith('es') && voice.localService
+          );
+          
+          if (spanishVoices.length > 0) {
+            return spanishVoices[0];
+          }
+          
+          // Si no hay voces locales, buscar cualquier voz en español
+          const anySpanishVoice = voices.filter(voice => 
+            voice.lang.startsWith('es')
+          );
+          
+          return anySpanishVoice[0] || null;
+        }
+        
+        soundButton.addEventListener('click', () => {
+          if (isPlaying) {
+            speechSynthesis.cancel();
+            isPlaying = false;
+            return;
+          }
+  
+          // Cancelar cualquier lectura en curso
+          speechSynthesis.cancel();
+          
+          const utterance = new SpeechSynthesisUtterance(text);
+          
+          // Configurar la voz y parámetros para una lectura más natural
+          utterance.voice = getBestSpanishVoice();
+          utterance.lang = 'es-ES';
+          utterance.rate = 1.0;  // Velocidad normal
+          utterance.pitch = 1.1; // Tono ligeramente más alto para más claridad
+          utterance.volume = 1.0; // Volumen máximo
+          
+          // Añadir pausas naturales en puntuación
+          const processedText = text.replace(/([.!?])\s+/g, '$1...');
+          utterance.text = processedText;
+  
+          // Eventos para controlar el estado de reproducción
+          utterance.onstart = () => {
+            isPlaying = true;
+            soundButton.classList.add('text-blue-500');
+          };
+          
+          utterance.onend = () => {
+            isPlaying = false;
+            soundButton.classList.remove('text-blue-500');
+          };
+          
+          utterance.onerror = () => {
+            isPlaying = false;
+            soundButton.classList.remove('text-blue-500');
+          };
+  
+          speechSynthesis.speak(utterance);
+        });
+  
+        messageContainer.appendChild(botTextElement);
+        soundButtonContainer.appendChild(soundButton);
+        messageContainer.appendChild(soundButtonContainer);
+        messageElement.appendChild(messageContainer);
+        $chatMessages.appendChild(messageElement);
+        
+        await typeMessage(botTextElement, text);
     }
-
+  
     $chatMessages.scrollTop = $chatMessages.scrollHeight;
   }
 
@@ -623,26 +736,38 @@
   }
 
   async function callOpenAIAPI(messages) {
-    const csrfToken = getCookie('csrftoken');  // Obtén el token CSRF
-
-    const response = await fetch('/core/api/chat/', {
-      method: 'POST', // Asegúrate de usar el método POST
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken,  // Incluye el token CSRF aquí
-      },
-      body: JSON.stringify({
-        messages: messages,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al llamar a la API de OpenAI');
+    const csrfToken = getCookie('csrftoken');
+    if (!csrfToken) {
+        throw new Error('CSRF token not found');
     }
 
-    const data = await response.json();
-    return data.choices[0].message.content;
-  }
+    try {
+        const response = await fetch('/core/api/chat/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({ messages }),
+            credentials: 'same-origin'
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(`API Error: ${response.status} - ${errorData.message || response.statusText}`);
+        }
+
+        const data = await response.json();
+        if (!data.choices?.[0]?.message?.content) {
+            throw new Error('Invalid response format from API');
+        }
+
+        return data.choices[0].message.content;
+    } catch (error) {
+        console.error('OpenAI API Error:', error);
+        throw error;
+    }
+}
 
   // Enviar el mensaje del usuario
   async function sendMessage() {
@@ -654,98 +779,127 @@
     $chatInput.setAttribute('disabled', '');
     $sendMessage.setAttribute('disabled', '');
 
-    const userMessage = { role: 'user', content: messageText };
-    messages.push(userMessage);
-
     try {
-      // Primero, buscar en el JSON
-      let reply = findAnswerInJSON(messageText);
+        // Primero, buscar en el JSON
+        let reply = findAnswerInJSON(messageText);
 
-      if (reply) {
-        // Si se encuentra una respuesta en el JSON, usarla directamente
-        await addMessage(reply, 'bot');
-      } else {
-        // Si no se encuentra en el JSON, usar el modelo seleccionado
-        engine = await initializeEngine();
+        if (reply) {
+            // Si se encuentra una respuesta en el JSON, usarla directamente
+            await addMessage(reply, 'bot');
+        } else {
+            // Asegurarse de que el engine está inicializado
+            try {
+                engine = await initializeEngine();
+            } catch (error) {
+                console.error('Error initializing engine:', error);
+                throw new Error('Failed to initialize chat engine');
+            }
 
-        if (selectedModel === 'Llama-3.2-1B-Instruct-q4f32_1-MLC') {
-          const chunks = await engine.chat.completions.create({
-            messages,
-            stream: true
-          });
+            if (!engine) {
+                throw new Error('Chat engine is not available');
+            }
 
-          reply = '';
+            if (selectedModel === 'Llama-3.2-1B-Instruct-q4f32_1-MLC') {
+                try {
+                    const chunks = await engine.chat.completions.create({
+                        messages: [...messages, { role: 'user', content: messageText }],
+                        stream: true
+                    });
 
-          const botMessageElement = document.createElement('div');
-          botMessageElement.classList.add('mb-4', 'p-3', 'rounded-lg', 'flex', 'flex-col', 'bg-gray-100', 'dark:bg-[#0f1e41]', 'mr-auto', 'px-4', 'py-2', 'rounded-lg', 'w-full', 'max-w-[80%]', 'font-semibold');
-          const botTextElement = document.createElement('p');
-          botTextElement.classList.add('text-sm');
-          botMessageElement.appendChild(botTextElement);
-          $chatMessages.appendChild(botMessageElement);
-          $chatMessages.scrollTop = $chatMessages.scrollHeight;
+                    let reply = '';
+                    const botMessageElement = document.createElement('div');
+                    botMessageElement.classList.add(
+                        'mb-4', 'p-3', 'rounded-lg', 'flex', 'flex-col',
+                        'bg-gray-100', 'dark:bg-[#0f1e41]', 'mr-auto',
+                        'px-4', 'py-2', 'w-full', 'max-w-[80%]', 'font-semibold'
+                    );
+                    
+                    const botTextElement = document.createElement('p');
+                    botTextElement.classList.add('text-sm');
+                    botMessageElement.appendChild(botTextElement);
+                    $chatMessages.appendChild(botMessageElement);
 
-          for await (const chunk of chunks) {
-            const content = chunk.choices[0]?.delta?.content ?? '';
-            reply += content;
-            botTextElement.textContent += content;
-            $chatMessages.scrollTop = $chatMessages.scrollHeight;
-          }
-        } else if (selectedModel === 'gpt-3.5-turbo') {
-          reply = await callOpenAIAPI(messages);
-          await addMessage(reply, 'bot');
+                    for await (const chunk of chunks) {
+                        const content = chunk.choices[0]?.delta?.content ?? '';
+                        reply += content;
+                        botTextElement.textContent = reply;
+                        $chatMessages.scrollTop = $chatMessages.scrollHeight;
+                    }
+
+                    messages.push({ role: 'assistant', content: reply });
+                } catch (error) {
+                    console.error('Error in LLaMA stream:', error);
+                    throw new Error('Failed to generate LLaMA response');
+                }
+            } else if (selectedModel === 'gpt-3.5-turbo') {
+                try {
+                    reply = await callOpenAIAPI([...messages, { role: 'user', content: messageText }]);
+                    await addMessage(reply, 'bot');
+                    messages.push({ role: 'assistant', content: reply });
+                } catch (error) {
+                    console.error('Error in OpenAI API call:', error);
+                    throw new Error('Failed to generate ChatGPT response');
+                }
+            } else {
+                throw new Error('Invalid model selected');
+            }
         }
-      }
-
-      messages.push({ role: 'assistant', content: reply });
     } catch (error) {
-      console.error('Error generating response:', error);
-      addMessage("Lo siento, ha ocurrido un error al generar la respuesta. Por favor, intenta de nuevo.", 'bot');
+        console.error('Error in message handling:', error);
+        await addMessage("Lo siento, ha ocurrido un error al generar la respuesta. Por favor, intenta de nuevo.", 'bot');
+    } finally {
+        $chatInput.removeAttribute('disabled');
+        $sendMessage.removeAttribute('disabled');
+        $chatInput.focus();
     }
-
-    $chatInput.removeAttribute('disabled');
-    $sendMessage.removeAttribute('disabled');
-    $chatInput.focus();
+}
+// Función findAnswerInJSON mejorada
+function findAnswerInJSON(query) {
+  if (!jsonData || !Array.isArray(jsonData)) {
+      console.warn('JSON data is not available or not in the expected format');
+      return null;
   }
 
+  // Normalizar la consulta
+  const normalizedQuery = query.toLowerCase().trim();
+
+  // Buscar coincidencia exacta primero
+  const exactMatch = jsonData.find(item => 
+      item.question.toLowerCase().trim() === normalizedQuery
+  );
+  if (exactMatch) return exactMatch.answer;
+
+  // Buscar coincidencia parcial si no hay coincidencia exacta
+  const partialMatch = jsonData.find(item =>
+      item.question.toLowerCase().trim().includes(normalizedQuery) ||
+      normalizedQuery.includes(item.question.toLowerCase().trim())
+  );
+  if (partialMatch) return partialMatch.answer;
+
+  return null;
+}
   // Event Listeners
-  document.addEventListener('DOMContentLoaded', () => {
-    const $openChat = document.querySelector('#open-chat');
-    const $closeChat = document.querySelector('#close-chat');
-    const $chatbot = document.querySelector('#chatbot');
-    const $chatMessages = document.querySelector('#chat-messages');
-    const $chatInput = document.querySelector('#chat-input');
-    const $sendMessage = document.querySelector('#send-message');
-    const $selectedModelDiv = document.querySelector('#selected-model');
+    $openChat.addEventListener('click', () => {
+      $chatbot.classList.remove('hidden', 'opacity-0', 'translate-y-5')
+      $openChat.classList.add('hidden')
+      initializeChatbot()
+    })
 
-    if ($openChat && $closeChat && $chatbot && $chatMessages && $chatInput && $sendMessage && $selectedModelDiv) {
-      $openChat.addEventListener('click', () => {
-        $chatbot.classList.remove('hidden', 'opacity-0', 'translate-y-5');
-        $openChat.classList.add('hidden');
-        initializeChatbot();
-      });
+    $closeChat.addEventListener('click', () => {
+      $chatbot.classList.add('hidden', 'opacity-0', 'translate-y-5')
+      $openChat.classList.remove('hidden')
+    })
 
-      $closeChat.addEventListener('click', () => {
-        $chatbot.classList.add('hidden', 'opacity-0', 'translate-y-5');
-        $openChat.classList.remove('hidden');
-        $chatMessages.innerHTML = '';
-        messages = [];
-        engine = null;
-      });
+    $sendMessage.addEventListener('click', sendMessage)
+    $chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage()
+    })
 
-      $sendMessage.addEventListener('click', sendMessage);
-      $chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
-      });
-
-      // Nuevo event listener para cambiar el modelo
-      $selectedModelDiv.addEventListener('click', changeModel);
-    } else {
-      console.error('Some required chat elements are missing');
-    }
-  });
+    $selectedModelDiv.addEventListener('click', changeModel)
+  
 </script>
 
-
+  <!-- Script para la funcionalidad del boton de ir arriba y abajo dentro del chatbot -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Elementos del DOM
@@ -887,7 +1041,7 @@
     // Inicializar el reconocimiento de voz al cargar
     initializeSpeechRecognition();
   });
-  </script>
+</script>
 
   <!-- Script para la funcionalidad del selector de emojis -->
 <script>
@@ -930,4 +1084,51 @@
       }
     });
   });
-  </script>
+</script>
+
+  <!-- Script para la funcionalidad del ir arriba y abajo dentro del ChatBot -->
+<script>
+  // Boton de ir arriba ene l ChatBot
+  document.addEventListener('DOMContentLoaded', function() {
+    const chatMessages = document.getElementById('chat-messages');
+    const scrollButton = document.getElementById('scroll-button');
+    const scrollIcon = document.getElementById('scroll-icon');
+    
+    // Estado inicial
+    let isAtTop = true;
+    
+    function updateScrollButton() {
+      isAtTop = chatMessages.scrollTop === 0;
+      if (isAtTop) {
+        scrollIcon.classList.remove('fa-chevron-up');
+        scrollIcon.classList.add('fa-chevron-down');
+      } else {
+        scrollIcon.classList.remove('fa-chevron-down');
+        scrollIcon.classList.add('fa-chevron-up');
+      }
+    }
+    
+    function handleScrollClick() {
+      if (isAtTop) {
+        // Scroll suave hacia abajo
+        chatMessages.scrollTo({
+          top: chatMessages.scrollHeight,
+          behavior: 'smooth'
+        });
+      } else {
+        // Scroll suave hacia arriba
+        chatMessages.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+    }
+    
+    // Event listeners
+    chatMessages.addEventListener('scroll', updateScrollButton);
+    scrollButton.addEventListener('click', handleScrollClick);
+    
+    // Inicializar estado del botón
+    updateScrollButton();
+  });
+</script>
