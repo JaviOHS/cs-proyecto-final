@@ -1,56 +1,128 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alertas - PASYS ALERT</title>
+  <title>Alerta de Seguridad - PASYS ALERT</title>
 </head>
+<body
+  style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a1f36; background-color: #f7fafc; margin: 0; padding: 0;">
+  <div
+    style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);">
+    <div
+      style="background: linear-gradient(125deg, #1e3a8a 0%, #1e40af 100%); color: #ffffff; text-align: center; padding: 40px 20px; position: relative;">
+      <div style="position: relative;">
+        <img
+          src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcShcy1kdTpTBXxMA-0XfsTqZP95UMFiRR3HgsK8yRa5NtBknor2"
+          alt="PASYS ALERT Logo"
+          style="width: 90px; height: auto; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h1 style="font-size: 28px; font-weight: 800; letter-spacing: 0.5px; margin: 0;">PASYS ALERT</h1>
+        <p style="margin: 10px 0 0; font-size: 16px; opacity: 0.9;">Sistema de Videovigilancia Inteligente</p>
+      </div>
+    </div>
 
-<body style="font-family: 'Roboto', Arial, sans-serif; line-height: 1.6; color: #333333; background-color: #f6f9fc; margin: 0; padding: 0;">
-  <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-    <div style="background: linear-gradient(135deg, #0056b3, #00a0e9); color: #ffffff; text-align: center; padding: 40px 20px;">
-      <img
-        src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcShcy1kdTpTBXxMA-0XfsTqZP95UMFiRR3HgsK8yRa5NtBknor2"
-        alt="PASYS ALERT Logo" style="width: 100px; height: auto; margin-bottom: 20px;border-radius: 8px;">
-      <h1 style="font-size: 32px; font-weight: 700; letter-spacing: 1px; margin: 0;">PASYS ALERT</h1>
-    </div>
     <div style="padding: 40px 30px;">
-      <h2 style="color: #0056b3; font-size: 24px; margin-top: 0; margin-bottom: 20px; text-align: center;">¡Alerta de
-        Amenaza Detectada! </h2>
-      <p>Estimado {{ session.user.get_full_name }},</p>
-      <p>Se ha detectado una amenaza en la sesión de monitoreo <strong>{{ session.id }}</strong>.</p>
-      <p><strong>Fecha y hora de la detección:</strong> {{ activation_time }}</p>
-      <p>Detalles del monitoreo:</p>
-      <ul>
-        <li><strong>Nombre de Sesión:</strong> {{ session.name }}</li>
-        <li><strong>Modelo de Detección:</strong> {{ session.detection_models.first }}</li>
-        <li><strong>Descripción:</strong> {{ session.description }}</li>
-        {% if is_crowding %}
-        <li><strong>Número de Personas:</strong> {{ num_people }}</li>
-        <li><strong>Umbral de Aglomeración:</strong> {{ threshold }}</li>
-        {% endif %}
-        {% if is_theft %}
-        <li><strong>Número de Robo:</strong> {{ theft_number }}</li>
-        <li><strong>Hora de Robo:</strong> {{ theft_time }}</li>
-        {% endif %}
-        {% if is_aggression %}
-        <li><strong>Número de Evento de Agresión:</strong> {{ event_id }}</li>
-        {% endif %}
-        {% if is_drop %}
-        <li><strong>Tiempo de Activación: </strong> {{ activation_time }}</li>
-        <li><strong>Posible Objeto: </strong> {{ category }}</li>
-        {% endif %}
-        {% if is_weapon %}
-        <li><strong>Tiempo de Detección: </strong> {{ weapons_time }}</li>
-        {% endif %}
-      </ul>
-      <p>Por favor, revise los archivos adjuntos y tome las medidas necesarias.</p>
+      <div
+        style="background-color: #fee2e2; border-left: 4px solid #dc2626; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+        <h2 style="color: #dc2626; font-size: 22px; margin: 0 0 10px; display: flex; align-items: center;">
+          ¡Alerta de Seguridad!
+        </h2>
+        <p style="margin: 0; color: #991b1b;">Activación de protocolo de seguridad en tiempo real</p>
+      </div>
+      <p style="font-size: 16px; color: #374151;">Estimado/a <strong>{{ session.user.get_full_name }}</strong>,<br>Se ha detectado una amenaza.</p>
+      <div style="background-color: #f8fafc; border-radius: 8px; padding: 25px; margin: 20px 0;">
+        <h3 style="color: #1e40af; font-size: 18px; margin: 0 0 15px;">Detalles de la Detección</h3>
+        <div style="display: grid; gap: 15px;">
+          <div style="display: flex; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;">
+            <span style="font-weight: 600; color: #4b5563; width: 180px;">ID de Sesión:</span>
+            <span style="color: #1f2937;">{{ session.id }}</span>
+          </div>
+          <div style="display: flex; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;">
+            <span style="font-weight: 600; color: #4b5563; width: 180px;">Fecha y Hora:</span>
+            <span style="color: #1f2937;">{{ activation_time }}</span>
+          </div>
+          <div style="display: flex; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;">
+            <span style="font-weight: 600; color: #4b5563; width: 180px;">Nombre de Sesión:</span>
+            <span style="color: #1f2937;">{{ session.name }}</span>
+          </div>
+          <div style="display: flex; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;">
+            <span style="font-weight: 600; color: #4b5563; width: 180px;">Modelo de Detección:</span>
+            <span style="color: #1f2937;">{{ session.detection_model }}</span>
+          </div>
+        </div>
+      </div>
+      {% if is_crowding %}
+      <div style="background-color: #fff7ed; border-radius: 8px; padding: 25px; margin: 20px 0;">
+        <h3 style="color: #9a3412; font-size: 18px; margin: 0 0 15px;">Detección de Aglomeración</h3>
+        <div style="display: grid; gap: 15px;">
+          <div style="display: flex; align-items: center;">
+            <span style="font-weight: 600; color: #9a3412; width: 180px;">Personas Detectadas:</span>
+            <span style="color: #431407;">{{ num_people }}</span>
+          </div>
+          <div style="display: flex; align-items: center;">
+            <span style="font-weight: 600; color: #9a3412; width: 180px;">Umbral:</span>
+            <span style="color: #431407;">{{ threshold }}</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% if is_theft %}
+      <div style="background-color: #fef2f2; border-radius: 8px; padding: 25px; margin: 20px 0;">
+        <h3 style="color: #991b1b; font-size: 18px; margin: 0 0 15px;">Detección de Robo</h3>
+        <div style="display: grid; gap: 15px;">
+          <div style="display: flex; align-items: center;">
+            <span style="font-weight: 600; color: #991b1b; width: 180px;">Número de Robo:</span>
+            <span style="color: #7f1d1d;">{{ theft_number }}</span>
+          </div>
+          <div style="display: flex; align-items: center;">
+            <span style="font-weight: 600; color: #991b1b; width: 180px;">Hora:</span>
+            <span style="color: #7f1d1d;">{{ theft_time }}</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% if is_weapon %}
+      <div style="background-color: #fef2f2; border-radius: 8px; padding: 25px; margin: 20px 0;">
+        <h3 style="color: #991b1b; font-size: 18px; margin: 0 0 15px;">Detección de Arma</h3>
+        <div style="display: flex; align-items: center;">
+          <span style="font-weight: 600; color: #991b1b; width: 180px;">Tiempo de Detección:</span>
+          <span style="color: #7f1d1d;">{{ activation_time }}</span>
+        </div>
+      </div>
+      {% endif %}
+      {% if is_drop %}
+      <div style="background-color: #f0fdf4; border-radius: 8px; padding: 25px; margin: 20px 0;">
+        <h3 style="color: #166534; font-size: 18px; margin: 0 0 15px;">Detección de Objeto</h3>
+        <div style="display: grid; gap: 15px;">
+          <div style="display: flex; align-items: center;">
+            <span style="font-weight: 600; color: #166534; width: 180px;">Tiempo:</span>
+            <span style="color: #14532d;">{{ activation_time }}</span>
+          </div>
+          <div style="display: flex; align-items: center;">
+            <span style="font-weight: 600; color: #166534; width: 180px;">Objeto Detectado:</span>
+            <span style="color: #14532d;">{{ category }}</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <div style="background-color: #eff6ff; border-radius: 8px; padding: 20px; margin: 30px 0;">
+        <p style="margin: 0; color: #1e40af; font-weight: 500;">
+          Se han adjuntado evidencias visuales del evento. Por favor, revise los archivos y tome las medidas de
+          seguridad correspondientes.
+        </p>
+      </div>
     </div>
-    <div style="background-color: #f8f8f8; text-align: center; padding: 30px 20px; font-size: 14px; color: #666666;">
-      <p>Este es un correo automático.<br>Por favor no responda a esta dirección.</p>
+    <div style="background-color: #f8fafc; text-align: center; padding: 30px 20px; border-top: 1px solid #e2e8f0;">
+      <p style="margin: 0; font-size: 14px; color: #64748b;">
+        Este es un mensaje automático generado por el sistema PASYS ALERT.<br>
+        Por favor, no responda a este correo electrónico.
+      </p>
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+        <p style="margin: 0; font-size: 12px; color: #94a3b8;">
+          © 2024 PASYS ALERT. Todos los derechos reservados.
+        </p>
+      </div>
     </div>
   </div>
 </body>
-
 </html>

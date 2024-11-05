@@ -30,7 +30,8 @@ class RealTimeMonitoringView(View):
             'details': f'{session.name} - {session.description}'
         }
         return render(request, 'real_time_monitoring.html', context)
-
+    
+    
 class VideoStreamView(View):
     detection_modules = {
         1: {'module': 'app.monitoring.utils.detect_theft', 'function': 'detect_theft', 'interval': 12},
@@ -135,4 +136,3 @@ class VideoStreamView(View):
                            b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
         finally:
             stop_event.set()
-   

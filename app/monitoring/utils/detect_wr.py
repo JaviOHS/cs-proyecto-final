@@ -8,8 +8,12 @@ from app.alarm.models import Alarm
 from app.monitoring.utils.send_email import send_alert_email_video
 from app.threat_management.models import DetectionCounter
 from config.utils import GREEN_COLOR, RESET_COLOR, RED_COLOR, YELLOW_COLOR
+import numpy as np
 
 executor = ThreadPoolExecutor(max_workers=4)
+
+max_no_detection_frames = 5
+detection_interval = 60
 
 rekognition = boto3.client(
     'rekognition',
@@ -18,8 +22,97 @@ rekognition = boto3.client(
     region_name=settings.AWS_S3_REGION_NAME
 )
 
-max_no_detection_frames = 5
-detection_interval = 60
+TOY_COLORS = {
+    'bright_orange': ([5, 50, 50], [15, 255, 255]),
+    'bright_blue': ([100, 150, 100], [130, 255, 255]),
+    'bright_green': ([45, 150, 100], [75, 255, 255]),
+    'bright_red': ([0, 150, 100], [5, 255, 255]),
+    'bright_yellow': ([20, 150, 100], [30, 255, 255])
+}
+
+VALIDATION_CONFIG = {
+    'max_toy_color_ratio': 0.3,
+    'min_metallic_ratio': 0.15,
+    'context_labels_toy': [
+        'Toy', 'Game', 'Play', 'Child', 'Kids', 'Plastic',
+        'Entertainment', 'Recreation', 'Costume', 'Party'
+    ],
+    'context_labels_real': [
+        'Military', 'Police', 'Combat', 'Tactical', 'Security',
+        'Steel', 'Metal', 'Ammunition', 'Magazine'
+    ]
+}
+
+class WeaponValidator:
+    def __init__(self):
+        self.metallic_colors_hsv = {
+            'dark_gray': ([0, 0, 40], [180, 30, 140]),
+            'metallic': ([0, 0, 140], [180, 30, 220]),
+            'black': ([0, 0, 0], [180, 30, 40])
+        }
+    
+    def is_valid_weapon(self, frame, bbox, detected_labels):
+        try:
+            height, width = frame.shape[:2]
+            x1 = int(bbox['Left'] * width)
+            y1 = int(bbox['Top'] * height)
+            x2 = int((bbox['Left'] + bbox['Width']) * width)
+            y2 = int((bbox['Top'] + bbox['Height']) * height)
+            
+            weapon_region = frame[y1:y2, x1:x2]
+            if weapon_region.size == 0:
+                return False, 0, "Región de detección inválida"
+            hsv_region = cv2.cvtColor(weapon_region, cv2.COLOR_BGR2HSV)
+            toy_color_ratio = self._calculate_toy_color_ratio(hsv_region)
+            if toy_color_ratio > VALIDATION_CONFIG['max_toy_color_ratio']:
+                return False, 0.4, f"Alto porcentaje de colores típicos de juguete ({toy_color_ratio:.2%})"
+            metallic_ratio = self._calculate_metallic_ratio(hsv_region)
+            if metallic_ratio < VALIDATION_CONFIG['min_metallic_ratio']:
+                return False, 0.5, f"Bajo porcentaje de colores metálicos ({metallic_ratio:.2%})"
+            context_score = self._analyze_context(detected_labels)
+            if context_score < 0:
+                return False, 0.6, "Contexto sugiere juguete"
+            if self._has_orange_tip(weapon_region):
+                return False, 0.2, "Detectada punta naranja característico de juguete"
+            confidence = min(0.95, (metallic_ratio + (1 - toy_color_ratio) + context_score) / 3)
+            return True, confidence, "Validación exitosa"
+
+        except Exception as e:
+            print(f"{RED_COLOR}Error en la validación: {e}{RESET_COLOR}")
+            return False, 0, f"Error en validación: {str(e)}"
+
+    def _calculate_toy_color_ratio(self, hsv_image):
+        toy_mask = np.zeros(hsv_image.shape[:2], dtype=np.uint8)
+        for color_range in TOY_COLORS.values():
+            lower, upper = np.array(color_range[0]), np.array(color_range[1])
+            mask = cv2.inRange(hsv_image, lower, upper)
+            toy_mask = cv2.bitwise_or(toy_mask, mask)
+        return np.count_nonzero(toy_mask) / (hsv_image.shape[0] * hsv_image.shape[1])
+
+    def _calculate_metallic_ratio(self, hsv_image):
+        metallic_mask = np.zeros(hsv_image.shape[:2], dtype=np.uint8)
+        for color_range in self.metallic_colors_hsv.values():
+            lower, upper = np.array(color_range[0]), np.array(color_range[1])
+            mask = cv2.inRange(hsv_image, lower, upper)
+            metallic_mask = cv2.bitwise_or(metallic_mask, mask)
+        return np.count_nonzero(metallic_mask) / (hsv_image.shape[0] * hsv_image.shape[1])
+
+    def _has_orange_tip(self, weapon_region):
+        height, width = weapon_region.shape[:2]
+        tip_region = weapon_region[0:height, width-int(width*0.2):width]
+        hsv_tip = cv2.cvtColor(tip_region, cv2.COLOR_BGR2HSV)
+        
+        lower_orange, upper_orange = np.array(TOY_COLORS['bright_orange'][0]), np.array(TOY_COLORS['bright_orange'][1])
+        orange_mask = cv2.inRange(hsv_tip, lower_orange, upper_orange)
+        
+        orange_ratio = np.count_nonzero(orange_mask) / (tip_region.shape[0] * tip_region.shape[1])
+        return orange_ratio > 0.3
+
+    def _analyze_context(self, detected_labels):
+        toy_context_count = sum(1 for label in detected_labels if label[0] in VALIDATION_CONFIG['context_labels_toy'])
+        real_context_count = sum(1 for label in detected_labels if label[0] in VALIDATION_CONFIG['context_labels_real'])
+        
+        return real_context_count - toy_context_count
 
 class DetectionState:
     def __init__(self):
@@ -31,54 +124,67 @@ class DetectionState:
 detection_state = DetectionState()
 
 def detect_objects_in_frame(frame, session, frame_index, fps):
+    weapon_validator = WeaponValidator()
+    
     _, jpeg_image = cv2.imencode('.jpg', frame)
     image_bytes = jpeg_image.tobytes()
 
     try:
         response = rekognition.detect_labels(
             Image={'Bytes': image_bytes},
-            MaxLabels=10,
-            MinConfidence=75
+            MaxLabels=20,
+            MinConfidence=60
         )
-        detected_items = [
-            (label['Name'], label['Confidence'])
-            for label in response['Labels']
-            if label['Name'] in ['Knife', 'Pistol', 'Weapon', 'Gun', 'Firearm', 'Rifle', 'Shotgun', 'Revolver', 'Handgun']
-        ]
-
-        bounding_boxes = []
+        
+        detected_weapons = []
         for label in response['Labels']:
             if label['Name'] in ['Knife', 'Pistol', 'Weapon', 'Gun', 'Firearm', 'Rifle', 'Shotgun', 'Revolver', 'Handgun']:
                 if 'Instances' in label and label['Instances']:
-                    bounding_boxes.append(label['Instances'][0]['BoundingBox'])
+                    for instance in label['Instances']:
+                        is_valid, confidence, reason = weapon_validator.is_valid_weapon(
+                            frame, 
+                            instance['BoundingBox'],
+                            [(l['Name'], l['Confidence']) for l in response['Labels']]
+                        )
+                        
+                        if is_valid:
+                            detected_weapons.append((
+                                label['Name'],
+                                confidence * label['Confidence'],
+                                instance['BoundingBox']
+                            ))
+                        else:
+                            print(f"{YELLOW_COLOR}Detección descartada: {reason}{RESET_COLOR}")
 
-        if detected_items:
-            process_detection(frame, detected_items, session, frame_index)
-            frame = draw_bounding_boxes(frame, bounding_boxes)
+        if detected_weapons:
+            process_detection(frame, detected_weapons, session, frame_index)
+            frame = draw_validated_detections(frame, detected_weapons)
+            
         elif detection_state.is_detecting:
             if time.time() - detection_state.last_detection_time > max_no_detection_frames * detection_interval / fps:
                 save_video_segment(detection_state.frames_buffer, detection_state.event_start_time, session, [])
                 detection_state.is_detecting = False
                 detection_state.frames_buffer = []
+
         detection_state.frames_buffer.append((frame.copy(), time.time()))
-
-        max_buffer_size = int(fps * 10)  
-        if len(detection_state.frames_buffer) > max_buffer_size:
-            detection_state.frames_buffer.pop(0)
-        return draw_labels_on_frame(frame, detected_items)
-
-    except Exception as e:
-        print(f"{RED_COLOR}Error al llamar a Rekognition: {e}{RESET_COLOR}")
+        
         return frame
 
-def draw_bounding_boxes(frame, bounding_boxes):
-    height, width, _ = frame.shape
-    for box in bounding_boxes:
-        left = int(box['Left'] * width)
-        top = int(box['Top'] * height)
-        right = int((box['Left'] + box['Width']) * width)
-        bottom = int((box['Top'] + box['Height']) * height)
-        cv2.rectangle(frame, (left, top), (right, bottom), (255, 0, 0), 2)
+    except Exception as e:
+        print(f"{RED_COLOR}Error en la detección: {e}{RESET_COLOR}")
+        return frame
+    
+def draw_validated_detections(frame, detected_weapons):
+    for weapon_name, confidence, bbox in detected_weapons:
+        height, width = frame.shape[:2]
+        x1 = int(bbox['Left'] * width)
+        y1 = int(bbox['Top'] * height)
+        x2 = int((bbox['Left'] + bbox['Width']) * width)
+        y2 = int((bbox['Top'] + bbox['Height']) * height)
+        
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
+        label = f"{weapon_name}: {confidence:.1f}%"
+        cv2.putText(frame, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     return frame
 
 def process_detection(frame, detected_items, session, frame_index):
@@ -88,15 +194,7 @@ def process_detection(frame, detected_items, session, frame_index):
         detection_state.event_start_time = time.time()
         print(f"{YELLOW_COLOR}Detección en el fotograma {frame_index}: Se ha detectado un objeto de interés.{RESET_COLOR}")
         send_alert(detected_items, session)
-
     detection_state.last_detection_time = time.time()
-
-def draw_labels_on_frame(frame, detected_items):
-    for idx, (label, confidence) in enumerate(detected_items):
-        cv2.putText(frame, f"{label}: {confidence:.2f}%", 
-                    (10, 30 * (idx + 1)), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-    return frame
 
 def save_video_segment(frames, start_time, session, detected_items):
     video_filename = f"{start_time:.2f}_{time.strftime('%Y%m%d_%H%M%S')}.mp4"
@@ -114,8 +212,8 @@ def save_video_segment(frames, start_time, session, detected_items):
         recipient_email = session.user.email
         context = {
             'session': session,
-            'weapons_detected': weapons_info,
-            'weapons_time': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'weapons_info': weapons_info,
+            'activation_time': time.strftime('%Y-%m-%d %H:%M:%S'),
             'is_weapon': is_weapon
         }
 
