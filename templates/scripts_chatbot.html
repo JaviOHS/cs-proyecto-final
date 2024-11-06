@@ -86,7 +86,7 @@
   // Nueva función para crear una opción seleccionable
   function createOption(text) {
     const option = document.createElement('div');
-    option.className = 'text-center text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 my-2 py-2 rounded-lg mx-4 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200';
+    option.className = 'text-center text-xs text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 my-2 py-2 rounded-lg mx-4 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200';
     option.innerHTML = `<span>${text}</span>`;
     
     option.addEventListener('click', async () => {
@@ -119,7 +119,7 @@
       );
 
       const botTextElement = document.createElement('p');
-      botTextElement.classList.add('text-sm');
+      botTextElement.classList.add('text-xs');
       messageElement.appendChild(botTextElement);
 
       $chatMessages.appendChild(messageElement);
@@ -148,7 +148,7 @@
         'text-left',
         'font-semibold'
       );
-      messageElement.innerHTML = `<p class="text-sm">${text}</p>`;
+      messageElement.innerHTML = `<p class="text-xs">${text}</p>`;
       $chatMessages.appendChild(messageElement);
     }
 
@@ -547,7 +547,7 @@
             'text-left',
             'font-semibold'
         );
-        messageElement.innerHTML = `<p class="text-sm">${text}</p>`;
+        messageElement.innerHTML = `<p class="text-xs">${text}</p>`;
         $chatMessages.appendChild(messageElement);
     } else {
         messageElement.classList.add(
@@ -566,7 +566,7 @@
         messageContainer.classList.add('flex', 'flex-col');
   
         const botTextElement = document.createElement('p');
-        botTextElement.classList.add('text-sm', 'mb-2');
+        botTextElement.classList.add('text-xs', 'mb-2');
         
         const soundButtonContainer = document.createElement('div');
         soundButtonContainer.classList.add('flex', 'justify-start', 'mt-2', 'items-center', 'gap-2');
@@ -792,7 +792,7 @@
                     );
                     
                     const botTextElement = document.createElement('p');
-                    botTextElement.classList.add('text-sm');
+                    botTextElement.classList.add('text-xs');
                     botMessageElement.appendChild(botTextElement);
                     $chatMessages.appendChild(botMessageElement);
 

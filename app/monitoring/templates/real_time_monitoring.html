@@ -3,41 +3,41 @@
 {% load i18n %}
 <title>{% block title %}{{ title1 }} {% endblock title %}</title>
 {% block content %}
-<div class="py-12 lg:py-14"></div>
-<div id="notifications-container" class="fixed top-16 right-4 z-50 w-96 max-w-full" data-aos="fade-left"></div>
-<div class="container px-6 mx-auto" data-aos="fade-up">
-  <div class="flex flex-col items-center justify-center">
+<div class="py-8 lg:py-10"></div>
+<div id="notifications-container" class="fixed top-14 right-3 z-50 w-80 max-w-full" data-aos="fade-left"></div>
+<div class="container px-4 mx-auto" data-aos="fade-up">
+  <div class="flex flex-col items-center">
     <span class="information">
       {{ title1 }}
     </span>
   </div>
-  <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
+  <h1 class="title-font text-2xl text-center mt-3">{{ title2 }}</h1>
   <p class="description-font text-center">{{ details }}<br>
-    <span class="text-green-500 dark:text-green-300 font-bold text-center">
+    <span class="text-green-500 dark:text-green-300 font-bold">
       {{ detection.name }}
     </span>
   </p>
-  <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center">
-    <div class="secondary-container-bg p-4 rounded-lg shadow-md">
-      <div class="text-center py-4 space-y-6 flex flex-col items-center justify-center">
+  <div class="grid grid-cols-1 gap-3 mt-3 items-center justify-center">
+    <div class="secondary-container-bg p-3 rounded-md shadow">
+      <div class="text-center py-3 space-y-4 flex flex-col items-center">
         <img src="{% url 'monitoring:video_feed' session.id %}" alt="Cámara en tiempo real"
-          class="w-[50%] rounded-2xl shadow-lg" />
+          class="w-[40%] rounded-xl shadow" />
       </div>
     </div>
   </div>
-  <div class="flex justify-center mt-6 mb-4 space-x-2">
+  <div class="flex justify-center mt-4 mb-3 space-x-2">
     <a href="{% url 'monitoring:monitoring_session' %}">
       <button class="home-and-back-button">
-        <i class="fa-solid fa-angles-left text-lg"></i>
+        <i class="fa-solid fa-angles-left"></i>
       </button>
     </a>
     <a href="{% url 'home' %}">
       <button class="home-and-back-button">
-        <i class="fa-solid fa-home text-lg"></i>
+        <i class="fa-solid fa-home"></i>
       </button>
     </a>
     <button onclick="location.reload()" class="home-and-back-button">
-      <i class="fa-solid fa-sync-alt text-lg"></i>
+      <i class="fa-solid fa-sync-alt"></i>
     </button>
   </div>
 </div>
@@ -57,7 +57,7 @@
 <script>
   function createNotificationElement(message, tags) {
     const notificationDiv = document.createElement('div');
-    const baseClasses = 'flex items-center p-4 mb-4 rounded-lg notification-fade';
+    const baseClasses = 'flex items-center p-3 mb-3 rounded-md notification-fade';
 
     const styleClasses = tags === 'error'
       ? 'text-red-800 border border-red-300 bg-red-50 dark:bg-gray-800 dark:text-red-300 dark:border-red-800'
@@ -68,9 +68,9 @@
 
     const icon = tags === 'error' ? 'fa-times-circle' : 'fa-exclamation-triangle';
     notificationDiv.innerHTML = `
-        <i class="fas ${icon} flex-shrink-0 inline w-4 h-4 me-3"></i>
+        <i class="fas ${icon} flex-shrink-0 inline w-4 h-4 me-2"></i>
         <div>
-            <span class="font-black">${tags === 'error' ? 'Error: ' : 'Alerta: '}</span>
+            <span class="font-medium">${tags === 'error' ? 'Error: ' : 'Alerta: '}</span>
             <span class="description-font">${message}</span>
         </div>
     `;

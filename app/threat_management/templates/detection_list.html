@@ -2,33 +2,37 @@
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% load i18n %}
 {% block content %}
-<div class="py-12 lg:py-14"></div>
-<div class="container px-6 mx-auto" data-aos="fade-up">
-  <div class="flex flex-col items-center justify-center">
-    <span class="information">
-      {{ title1 }}
-    </span>
-  </div>
-  <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
-  <p class="description-font text-center">
+<div class="py-8 lg:py-10"></div>
+<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+  <div class="container mx-auto px-4 text-center" data-aos="fade-up" data-aos-delay="300">
+    <div class="flex flex-col items-center justify-center">
+      <span class="information [.theme1_&]:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
+        {{ title1 }}
+      </span>
+    </div>
+    <h1 class="text-3xl font-bold mt-3
+      text-gray-900 dark:text-white [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
+      {{ title2 }}
+    </h1>
+  <p class="description-font text-center text-sm [.theme1_&]:text-theme1-800 [.theme2_&]:text-theme2-800">
     {% if user.is_superuser %}
     {% trans "Gestione las amenazas disponibles en el sistema." %}
     {% else %}
     {% trans "Consulte las amenazas disponibles en el sistema." %}
     {% endif %}
   </p>
-  <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center">
-    <div class="secondary-container-bg p-4 rounded-lg shadow-md">
+  <div class="grid grid-cols-1 gap-3 mt-3 items-center justify-center">
+    <div class="secondary-container-bg p-2 rounded-lg shadow-md [.theme1_&]:bg-theme1-100 [.theme2_&]:bg-theme2-100">
       {% if detection_models %}
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6">
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6">
         {% for model in detection_models %}
         <div
-          class="group relative text-center items-center flex justify-center flex-col bg-red-100 dark:bg-red-800 rounded-xl p-3 transition-all duration-500 hover:bg-red-500 dark:hover:bg-red-600">
-          <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+          class="group relative text-center items-center flex justify-center flex-col bg-red-100 dark:bg-red-800 rounded-xl p-2 transition-all duration-500 hover:bg-red-500 dark:hover:bg-red-600 [.theme1_&]:bg-theme1-200 [.theme1_&]:hover:bg-theme1-400 [.theme2_&]:bg-theme2-200 [.theme2_&]:hover:bg-theme2-400">
+          <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-2 w-9 h-9 [.theme1_&]:bg-theme1-100 [.theme1_&]:text-theme1-500 [.theme2_&]:bg-theme2-100 [.theme2_&]:text-theme2-500">
             <i class="{{ model.icon }} text-lg text-red-500 dark:text-white text-center"></i>
           </div>
-          <h2 class="title-module-cards">{{ model.name }}</h2>
-          <div class="description-module-cards leading-5 space-y-2">
+          <h2 class="title-module-cards text-base [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">{{ model.name }}</h2>
+          <div class="description-module-cards leading-5 space-y-1 text-sm [.theme1_&]:text-theme1-800 [.theme2_&]:text-theme2-800">
             {% if user.is_superuser %}
             <p>ID: {{ model.id }}</p>
             {% endif %}
@@ -36,27 +40,27 @@
             <p>{% trans "Creación:" %}<br>{{ model.created_at | date:"d/m/Y" }} {% trans "a las" %} {{ model.created_at | date:"H:i" }} {% trans "horas." %}</p>
           </div>
           {% if user.is_superuser %}
-          <div class="flex mt-3 space-x-2">
-            <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+          <div class="flex mt-2 space-x-1">
+            <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-2 w-9 h-9 [.theme1_&]:bg-theme1-100 [.theme1_&]:text-theme1-500 [.theme2_&]:bg-theme2-100 [.theme2_&]:text-theme2-500">
               <a href="{% url 'detection:detection_update' model.id %}"
                 data-tooltip-target="tooltip-edit-{{ model.id }}">
                 <i class="fa-solid fa-edit text-lg text-red-500 dark:text-white"></i>
               </a>
             </div>
             <div id="tooltip-edit-{{ model.id }}" role="tooltip"
-              class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+              class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
               Editar amenaza
               <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
 
-            <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+            <div class="bg-white dark:bg-red-700 rounded-full flex justify-center items-center mb-2 w-9 h-9 [.theme1_&]:bg-theme1-100 [.theme1_&]:text-theme1-500 [.theme2_&]:bg-theme2-100 [.theme2_&]:text-theme2-500">
               <a href="{% url 'detection:detection_delete' model.id %}"
                 data-tooltip-target="tooltip-delete-{{ model.id }}">
                 <i class="fa-solid fa-trash text-lg text-red-500 dark:text-white"></i>
               </a>
             </div>
             <div id="tooltip-delete-{{ model.id }}" role="tooltip"
-              class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+              class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
               Eliminar amenaza
               <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
@@ -66,8 +70,8 @@
         {% endfor %}
       </div>
       {% else %}
-      <p class="description-module-cards leading-5">
-        {% trans "No hay amenazas disponibles." %} <span class="text-green-300 font-bold">{% trans "Qué onda, administradores" %}</span>
+      <p class="description-module-cards leading-5 text-sm [.theme1_&]:text-theme1-800 [.theme2_&]:text-theme2-800">
+        {% trans "No hay amenazas disponibles." %} <span class="text-green-300 font-bold [.theme1_&]:text-theme1-600 [.theme2_&]:text-theme2-600">{% trans "Qué onda, administradores" %}</span>
       </p>
       {% endif %}
     </div>
@@ -77,41 +81,42 @@
   {% include 'components/pagination.html' %}
   {% endblock pagination %}
 
-  <div class="flex justify-center mt-6 mb-4 space-x-2">
+  <div class="flex justify-center mt-3 mb-3 space-x-1">
     {% if user.is_superuser %}
     <a href="{% url 'detection:detection_create' %}">
-      <button data-tooltip-target="tooltip-add-threat" class="add-threat-button">
-        <i class="fa-solid fa-plus"></i>
+      <button data-tooltip-target="tooltip-add-threat" class="add-threat-button [.theme1_&]:bg-theme1-500 [.theme1_&]:hover:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
+        <i class="fa-solid fa-plus text-sm"></i>
       </button>
     </a>
     <div id="tooltip-add-threat" role="tooltip"
-      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
       Añadir amenaza
       <div class="tooltip-arrow" data-popper-arrow></div>
     </div>
     {% endif %}
 
     <a href="{% url 'monitoring:monitoring_session' %}">
-      <button data-tooltip-target="tooltip-video" class="monitoring-video-button">
-        <i class="fa-solid fa-video"></i>
+      <button data-tooltip-target="tooltip-video" class="monitoring-video-button [.theme1_&]:bg-theme1-500 [.theme1_&]:hover:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
+        <i class="fa-solid fa-video text-sm"></i>
       </button>
     </a>
     <div id="tooltip-video" role="tooltip"
-      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
       Monitoreo en vivo
       <div class="tooltip-arrow" data-popper-arrow></div>
     </div>
-
+    
     <a href="{% url 'home' %}">
-      <button data-tooltip-target="tooltip-home" class="home-and-back-button">
-        <i class="fa-solid fa-home"></i>
+      <button data-tooltip-target="tooltip-home" class="home-and-back-button [.theme1_&]:bg-theme1-400 [.theme1_&]:hover:bg-theme1-500 [.theme2_&]:bg-theme2-400 [.theme2_&]:hover:bg-theme2-500">
+        <i class="fa-solid fa-home text-sm"></i>
       </button>
     </a>
     <div id="tooltip-home" role="tooltip"
-      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
       Volver al Inicio
       <div class="tooltip-arrow" data-popper-arrow></div>
     </div>
   </div>
 </div>
+</section>
 {% endblock %}
