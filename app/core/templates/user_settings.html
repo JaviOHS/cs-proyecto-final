@@ -16,7 +16,7 @@
   </div>
   <form method="POST" class="space-y-4" data-aos="fade-up" data-aos-delay="300">
     {% csrf_token %}
-    <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 transition-all hover:shadow-md">
+    <div class="secondary-container-bg rounded-xl p-4 transition-all hover:shadow-md">
       <div class="flex items-center justify-between gap-3">
         <div class="flex-1">
           <label for="{{ form.is_2fa_enabled.id_for_label }}" class="text-base font-medium text-gray-900 dark:text-white [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 transition-all hover:shadow-md">
+    <div class="secondary-container-bg rounded-xl p-4 transition-all hover:shadow-md">
       <div class="flex items-center justify-between gap-3">
         <div class="flex-1">
           <label for="{{ form.is_facial_recognition_enabled.id_for_label }}" class="text-base font-medium text-gray-900 dark:text-white [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">

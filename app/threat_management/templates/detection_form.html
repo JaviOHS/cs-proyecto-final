@@ -63,28 +63,27 @@
       </form>
     </div>
   </div>
-</div>
-<div class="flex justify-center mt-3 mb-2 space-x-1">
-  <a href="{% url 'detection:detection_list' %}">
-    <button data-tooltip-target="tooltip-detection-list" class="home-and-back-button [.theme1_&]:bg-theme1-400 [.theme1_&]:hover:bg-theme1-500 [.theme2_&]:bg-theme2-400 [.theme2_&]:hover:bg-theme2-500">
-      <i class="fa-solid fa-angles-left text-base"></i>
-    </button>
-  </a>
-  <div id="tooltip-detection-list" role="tooltip"
-    class="absolute z-10 invisible inline-block px-2 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-    Volver a la Lista de Detecciones
-    <div class="tooltip-arrow" data-popper-arrow></div>
+  <div class="flex justify-center mt-3 mb-2 space-x-1">
+    <a href="{% url 'detection:detection_list' %}">
+      <button data-tooltip-target="tooltip-detection-list" class="home-and-back-button [.theme1_&]:bg-theme1-400 [.theme1_&]:hover:bg-theme1-500 [.theme2_&]:bg-theme2-400 [.theme2_&]:hover:bg-theme2-500">
+        <i class="fa-solid fa-angles-left text-base"></i>
+      </button>
+    </a>
+    <div id="tooltip-detection-list" role="tooltip"
+      class="absolute z-10 invisible inline-block px-2 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      Volver a la Lista de Detecciones
+      <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
+    <a href="{% url 'home' %}">
+      <button data-tooltip-target="tooltip-home" class="home-and-back-button [.theme1_&]:bg-theme1-400 [.theme1_&]:hover:bg-theme1-500 [.theme2_&]:bg-theme2-400 [.theme2_&]:hover:bg-theme2-500">
+        <i class="fa-solid fa-home text-base"></i>
+      </button>
+    </a>
+    <div id="tooltip-home" role="tooltip"
+      class="absolute z-10 invisible inline-block px-2 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      Volver al Inicio
+      <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
   </div>
-  <a href="{% url 'home' %}">
-    <button data-tooltip-target="tooltip-home" class="home-and-back-button [.theme1_&]:bg-theme1-400 [.theme1_&]:hover:bg-theme1-500 [.theme2_&]:bg-theme2-400 [.theme2_&]:hover:bg-theme2-500">
-      <i class="fa-solid fa-home text-base"></i>
-    </button>
-  </a>
-  <div id="tooltip-home" role="tooltip"
-    class="absolute z-10 invisible inline-block px-2 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-    Volver al Inicio
-    <div class="tooltip-arrow" data-popper-arrow></div>
-  </div>
-</div>
 </section>
 {% endblock content %}

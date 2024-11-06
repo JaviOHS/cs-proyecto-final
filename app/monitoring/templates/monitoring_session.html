@@ -16,34 +16,33 @@
       {{ title2 }}
     </h1>
   <p class="description-font text-center">{% trans 'Gestionar Sesiones de Monitoreo. '%}</p>
-  <div class="grid grid-cols-1 gap-3 mt-2 items-center justify-center space-y-1">
-    <div class="secondary-container-bg p-3 rounded-lg shadow-md">
+  <div class="grid grid-cols-1 gap-4 mt-3 items-center justify-center">
+    <div class="secondary-container-bg p-4 rounded-lg shadow-lg">
       {% if monitoring_sessions %}
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {% for session in monitoring_sessions %}
-        <div class="group relative bg-blue-100 dark:bg-blue-800 rounded-xl p-2 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
-          <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center mb-2 w-10 h-10">
+        <div class="group relative flex flex-col justify-center text-center items-center bg-blue-100 dark:bg-blue-800 rounded-xl p-4 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
+          <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center mb-3 w-12 h-12">
             <a href="{% url 'monitoring:real_time_view' session_id=session.id %}" data-tooltip-target="tooltip-video-{{ session.id }}">
-              <i class="fa-solid fa-video text-lg text-blue-500 dark:text-white text-center"></i>
+              <i class="fa-solid fa-video text-xl text-blue-500 dark:text-white"></i>
             </a>
           </div>
-          <div id="tooltip-video-{{ session.id }}" role="tooltip"
-            class="absolute z-10 invisible inline-block px-2 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+          <div id="tooltip-video-{{ session.id }}" role="tooltip" class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
             Ver Sesión en Tiempo Real
             <div class="tooltip-arrow" data-popper-arrow></div>
           </div>
           <span class="text-sm text-green-500 dark:text-green-400 font-bold">ID {{ session.id }}</span>
-          <h2 class="title-module-cards mb-1">
+          <h2 class="title-module-cards text-lg font-semibold mb-1">
             {{ session.name }}
           </h2>
-          <div class="description-module-cards space-y-1">
-            <p><i class="fa-solid fa-comment"></i> {{ session.description }}</p>
-            <p class="text-purple-600 dark:text-purple-300"><i class="fa-regular fa-calendar-check"></i> Sesión creada el {{ session.start_time|date:"d/m/Y" }} a las {{ session.start_time|time:"H:i" }}</p>
+          <div class="description-module-cards space-y-1 text-sm">
+            <p>{{ session.description }}</p>
+            <p class="text-purple-600 dark:text-purple-300">{% trans "Creación:" %} {{ session.start_time|date:"d/m/Y" }} - {{ session.start_time|time:"H:i" }}</p>
             <p class="text-orange-600 dark:text-orange-300"><i class="fa-solid fa-land-mine-on"></i> {{ session.detection_model }}</p>
             {% if session.camera_status %}
             <p class="text-green-600 dark:text-green-300"><i class="fa-solid fa-check"></i> Cámara activa después de última conexión.</p>
             {% else %}
-            <p class="text-red-500 dark:text-red-300 font-black"><i class="fa-solid fa-circle-exclamation"></i> La cámara no estuvo disponible después de la última conexión.<br>Verifique si la IP ha cambiado.</p>
+            <p class="text-red-500 dark:text-red-300 font-bold"><i class="fa-solid fa-circle-exclamation"></i> La cámara no está disponible tras la última conexión.<br>Verifique si la IP ha cambiado.</p>
             {% endif %}
           </div>
           <div class="flex mt-2 space-x-2">
@@ -52,8 +51,7 @@
                 <i class="fa-solid fa-edit text-lg text-blue-500 dark:text-white"></i>
               </a>
             </div>
-            <div id="tooltip-editar-{{ session.id }}" role="tooltip"
-              class="absolute z-10 invisible inline-block px-2 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            <div id="tooltip-editar-{{ session.id }}" role="tooltip" class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
               Editar Sesión
               <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
@@ -62,8 +60,7 @@
                 <i class="fa-solid fa-trash text-lg text-blue-500 dark:text-white"></i>
               </a>
             </div>
-            <div id="tooltip-eliminar-{{ session.id }}" role="tooltip"
-              class="absolute z-10 invisible inline-block px-2 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            <div id="tooltip-eliminar-{{ session.id }}" role="tooltip" class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
               Eliminar Sesión
               <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
@@ -72,7 +69,7 @@
         {% endfor %}
       </div>
       {% else %}
-      <p class="description-module-cards text-center leading-5">
+      <p class="description-module-cards text-center text-sm leading-5">
         No hay sesiones de monitoreo disponibles. <span class="text-green-300 font-bold">Empiece creando una nueva sesión.</span>
       </p>
       {% endif %}

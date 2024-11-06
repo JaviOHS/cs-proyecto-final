@@ -133,7 +133,6 @@
         </a>
         {% endif %}
       </div>
-
       <div class="group relative primary-container-bg flex flex-col justify-between rounded-xl shadow-md p-3 transition-all duration-500 hover:bg-orange-500 dark:hover:bg-orange-600">
         <div class="secondary-container-bg rounded-full flex justify-center items-center mb-4 w-12 h-12 transition-all duration-300 group-hover:rotate-12">
           <i class="fas fa-bell text-2xl text-orange-600 dark:text-orange-300"></i>
@@ -146,7 +145,6 @@
         </a>
         {% endif %}
       </div>
-
       <div class="group relative primary-container-bg flex flex-col justify-between rounded-xl shadow-md p-3 transition-all duration-500 hover:bg-red-500 dark:hover:bg-red-600">
         <div class="secondary-container-bg rounded-full flex justify-center items-center mb-4 w-12 h-12 transition-all duration-300 group-hover:rotate-12">
           <i class="ri-shield-fill text-2xl text-red-600 dark:text-red-300"></i>
@@ -159,7 +157,6 @@
         </a>
         {% endif %}
       </div>
-
       <div class="group relative primary-container-bg flex flex-col justify-between rounded-xl shadow-md p-3 transition-all duration-500 hover:bg-green-500 dark:hover:bg-green-600">
         <div class="secondary-container-bg rounded-full flex justify-center items-center mb-4 w-12 h-12 transition-all duration-300 group-hover:rotate-12">
           <i class="fas fa-chart-line text-2xl text-green-600 dark:text-green-300"></i>
@@ -172,7 +169,6 @@
         </a>
         {% endif %}
       </div>
-
       {% if user.is_superuser %}
       <div
         class="group relative primary-container-bg flex flex-col justify-between rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-purple-500 dark:hover:bg-purple-600">
@@ -189,25 +185,23 @@
   </div>
 </section>
 
-<section id="equipo" class="dark:bg-bg-principal py-6 dark:bg-gray-900">
+<section id="equipo" class="primary-container-bg py-6">
   <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6" data-aos="fade-up" data-aos-delay="300">
     <div class="flex flex-col items-center justify-center">
       <span class="information [.theme1_&]:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
         {% trans 'Nuestro Equipo' %}
       </span>
     </div>
-
     <h2 class="title-font text-2xl text-center my-3 [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
       {% trans 'Profesionales Detrás del Proyecto' %}
     </h2>
     <p class="description-font text-center [.theme1_&]:text-theme1-700 [.theme2_&]:text-theme2-700">
       {% trans 'Conoce al talentoso equipo que hace posible nuestra visión.' %}
     </p>
-
     <div class="flex justify-center items-stretch gap-8 flex-wrap mt-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-1 perspective-1000">
-        <div class="group flex-1 basis-80 max-w-md relative overflow-hidden primary-container-bg rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-100 dark:border-gray-700">    
-          <div class="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-gray-800/90 shadow-xl transition-all duration-500 hover:shadow-[0_20px_60px_-10px_rgba(59,130,246,0.3)] backdrop-blur-sm border border-white/20 dark:border-gray-700/20">
+        <div class="group flex-1 basis-80 max-w-md relative overflow-hidden primary-container-bg rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-sm">    
+          <div class="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-[#0f172a]/90 shadow-xl transition-all duration-500 hover:shadow-[0_20px_60px_-10px_rgba(59,130,246,0.3)] backdrop-blur-sm border border-white/20 dark:border-gray-700/20">
             <div class="relative h-[350px] overflow-hidden">
               <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-30 z-10 group-hover:opacity-50 transition-opacity duration-700"></div>
               <img src="{% static 'img/components/equipo_trabajo.png' %}" alt="Javier Omar Haro Soledispa" class="w-full h-full object-cover object-center transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"/>
@@ -217,21 +211,17 @@
                 <div class="h-0.5 w-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 group-hover:w-28 transition-all duration-500"></div>
               </div>
             </div>
-            
             <div class="p-6 relative backdrop-blur-sm">
               <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-bl-full -z-10 animate-gradient"></div>
-              
               <div class="flex flex-wrap gap-2 mb-6">
                 <span class="px-2 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-full dark:bg-blue-900/50 dark:text-blue-300">Django</span>
                 <span class="px-2 py-1 text-sm font-medium text-purple-600 bg-purple-100 rounded-full dark:bg-purple-900/50 dark:text-purple-300">Python</span>
                 <span class="px-2 py-1 text-sm font-medium text-green-600 bg-green-100 rounded-full dark:bg-green-900/50 dark:text-green-300">AWS</span>
                 <span class="px-2 py-1 text-sm font-medium text-orange-600 bg-orange-100 rounded-full dark:bg-orange-900/50 dark:text-orange-300">OpenCV</span>
               </div>
-              
               <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
                 {% trans 'Especialista en el uso de tecnologías como Django, Python, Amazon Web Services, OpenCV Tailwind CSS, JS, HTML con más de 1 año de experiencia.' %}
               </p>
-              
               <div class="flex space-x-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <a href="https://github.com/JaviOHS" target="_blank" rel="noopener noreferrer" class="group/icon flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-all duration-300">
                   <div class="relative">
@@ -251,9 +241,8 @@
             </div>
           </div>
         </div>
-
-        <div class="group flex-1 basis-80 max-w-md relative overflow-hidden primary-container-bg rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-100 dark:border-gray-700">    
-          <div class="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-gray-800/90 shadow-xl transition-all duration-500 hover:shadow-[0_20px_60px_-10px_rgba(59,130,246,0.3)] backdrop-blur-sm border border-white/20 dark:border-gray-700/20">
+        <div class="group flex-1 basis-80 max-w-md relative overflow-hidden primary-container-bg rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-sm">    
+          <div class="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-[#0f172a]/90 shadow-xl transition-all duration-500 hover:shadow-[0_20px_60px_-10px_rgba(59,130,246,0.3)] backdrop-blur-sm border border-white/20 dark:border-gray-700/20">
             <div class="relative h-[350px] overflow-hidden">
               <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-30 z-10 group-hover:opacity-50 transition-opacity duration-700"></div>
               <img src="{% static 'img/components/equipo_trabajo.png' %}" alt="Steven Alexander Nieto Durán" class="w-full h-full object-cover object-center transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"/>
@@ -263,21 +252,17 @@
                 <div class="h-0.5 w-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 group-hover:w-28 transition-all duration-500"></div>
               </div>
             </div>
-            
             <div class="p-6 relative backdrop-blur-sm">
               <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-bl-full -z-10 animate-gradient"></div>
-              
               <div class="flex flex-wrap gap-2 mb-6">
                 <span class="px-2 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-full dark:bg-blue-900/50 dark:text-blue-300">Django</span>
                 <span class="px-2 py-1 text-sm font-medium text-purple-600 bg-purple-100 rounded-full dark:bg-purple-900/50 dark:text-purple-300">Python</span>
                 <span class="px-2 py-1 text-sm font-medium text-green-600 bg-green-100 rounded-full dark:bg-green-900/50 dark:text-green-300">AWS</span>
                 <span class="px-2 py-1 text-sm font-medium text-orange-600 bg-orange-100 rounded-full dark:bg-orange-900/50 dark:text-orange-300">OpenCV</span>
               </div>
-              
               <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
                 {% trans 'Especialista en el uso de tecnologías como Django, Python, Amazon Web Services, OpenCV Tailwind CSS, JS, HTML con más de 1 año de experiencia.' %}
               </p>
-              
               <div class="flex space-x-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <a href="https://github.com/AlexisJr2004" target="_blank" rel="noopener noreferrer" class="group/icon flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-all duration-300">
                   <div class="relative">
