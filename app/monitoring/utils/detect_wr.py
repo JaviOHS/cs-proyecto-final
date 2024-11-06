@@ -9,8 +9,8 @@ from app.monitoring.utils.send_email import send_alert_email_video
 from app.threat_management.models import DetectionCounter
 from config.utils import GREEN_COLOR, RESET_COLOR, RED_COLOR, YELLOW_COLOR
 import numpy as np
-
-executor = ThreadPoolExecutor(max_workers=4)
+import queue
+import threading
 
 max_no_detection_frames = 5
 detection_interval = 60
@@ -187,12 +187,63 @@ def draw_validated_detections(frame, detected_weapons):
         cv2.putText(frame, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     return frame
 
+executor = ThreadPoolExecutor(max_workers=4)
+event_queue = queue.Queue()
+
+class BackgroundEventProcessor(threading.Thread):
+    def __init__(self):
+        super().__init__(daemon=True)
+        self.running = True
+    
+    def run(self):
+        while self.running:
+            try:
+                event_data = event_queue.get(timeout=1)
+                if event_data:
+                    self._process_event(event_data)
+                event_queue.task_done()
+            except queue.Empty:
+                continue
+    
+    def _process_event(self, event_data):
+        session = event_data['session']
+        video_path = event_data['video_path']
+        detected_items = event_data['detected_items']
+        executor.submit(send_email_with_video, session, video_path, detected_items)
+
+background_processor = BackgroundEventProcessor()
+background_processor.start()
+
+def send_email_with_video(session, video_path, detected_items):
+    recipient_email = session.user.email
+    weapons_info = ', '.join(item[0] for item in detected_items)
+    context = {
+        'session': session,
+        'weapons_info': weapons_info,
+        'activation_time': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'is_weapon': True
+    }
+    
+    try:
+        send_alert_email_video(
+            subject=f'Detección de arma en la sesión {session.id}',
+            template_name='email_content.html',
+            context=context,
+            recipient_list=[recipient_email],
+            attachment_path=video_path,
+            attachment_name=os.path.basename(video_path)
+        )
+        os.remove(video_path)
+        print(f"{GREEN_COLOR}Video {video_path} eliminado después de enviar el correo.{RESET_COLOR}")
+    except Exception as e:
+        print(f"{RED_COLOR}Error al enviar el correo: {e}{RESET_COLOR}")
+
 def process_detection(frame, detected_items, session, frame_index):
     if not detection_state.is_detecting:
         detection_state.is_detecting = True
         detection_state.last_detection_time = time.time()
         detection_state.event_start_time = time.time()
-        print(f"{YELLOW_COLOR}Detección en el fotograma {frame_index}: Se ha detectado un objeto de interés.{RESET_COLOR}")
+        print(f"{YELLOW_COLOR}Detección en el fotograma {frame_index}: objeto de interés detectado.{RESET_COLOR}")
         send_alert(detected_items, session)
     detection_state.last_detection_time = time.time()
 
@@ -205,34 +256,16 @@ def save_video_segment(frames, start_time, session, detected_items):
     for frame, _ in frames:
         out.write(frame)
     out.release()
-    weapons_info = f'{', '.join(item[0] for item in detected_items)}'
- 
-    try:
-        is_weapon = True
-        recipient_email = session.user.email
-        context = {
-            'session': session,
-            'weapons_info': weapons_info,
-            'activation_time': time.strftime('%Y-%m-%d %H:%M:%S'),
-            'is_weapon': is_weapon
-        }
 
-        send_alert_email_video(
-            subject=f'Detección de arma en la sesión {session.id}',
-            template_name='email_content.html',
-            context=context,
-            recipient_list=[recipient_email],
-            attachment_path=video_path,
-            attachment_name=video_filename
-        )
-        os.remove(video_path)
-        print(f"{GREEN_COLOR}Archivo {video_filename} eliminado después de enviar el correo.{RESET_COLOR}")
-    except Exception as e:
-        print(f"{RED_COLOR}Error al enviar el correo o leer el archivo: {e}{RESET_COLOR}")
-        
+    event_data = {
+        'session': session,
+        'video_path': video_path,
+        'detected_items': detected_items
+    }
+    event_queue.put(event_data)
+       
 def send_alert(detected_items, session):
     detection = session.detection_model
-    
     detection_counter, created = DetectionCounter.objects.get_or_create(
         detection=detection,
         user=session.user
@@ -248,7 +281,6 @@ def send_alert(detected_items, session):
     else:
         print("No se pudo crear o encontrar la alarma.")
                 
-    alert_message = f"{YELLOW_COLOR}¡Alerta! Se ha detectado un objeto de interés: {', '.join(item[0] for item in detected_items)}{RESET_COLOR}"
+    alert_message = f"{YELLOW_COLOR}¡Alerta! Detección de: {', '.join(item[0] for item in detected_items)}{RESET_COLOR}"
     print(alert_message)
-
     return alert_message
