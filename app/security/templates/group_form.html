@@ -17,7 +17,7 @@
     <div class="secondary-container-bg w-full max-w-4xl shadow-lg rounded-lg p-6">
       <form method="post" class="space-y-6">
         {% csrf_token %}
-        <div class="flex flex-col">
+        <div class="flex flex-col lg:mx-52">
           <label class="labels">{{ form.name.label }}</label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -27,31 +27,30 @@
           </div>
         </div>
         <div class="flex flex-col space-y-4">
-          <label class="labels">Permisos</label>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 items" id="permissions-container">
+          <label class="labels w-full">Permisos</label>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full" id="permissions-container">
             {% regroup form.permissions.field.queryset by content_type as permission_groups %}
             {% for group in permission_groups %}
-              <div class="flex flex-col items-center bg-slate-50 dark:bg-[#0c1322] rounded-lg p-4 w-full">
-                <h3 class="text-lg font-semibold text-blue-600 dark:text-indigo-400 mb-3">
-                  {{ group.grouper|split_at_pipe  }}
+              <div class="bg-slate-50 dark:bg-[#0c1322] rounded-lg p-4 w-full shadow-md">
+                <h3 class="text-lg font-semibold text-blue-600 dark:text-indigo-400 mb-3 text-left w-full">
+                  {{ group.grouper|split_at_pipe }}
                 </h3>
                 <div class="space-y-2">
                   {% for permission in group.list %}
                     <div>
-                      <input type="checkbox" id="permission_{{ permission.id }}" name="permissions" value="{{ permission.id }}" class="peer hidden" {% if permission in form.instance.permissions.all %}checked{% endif %}>
-                      <label for="permission_{{ permission.id }}" class="checkbox-label">
-                        <div class="flex items-center space-x-2">
-                          <div class="flex-shrink-0">
-                            <i class="form-icons fa-solid fa-key"></i>
-                          </div>
-                          <div class="flex flex-col">
-                            <span class="font-medium text-gray-900 dark:text-white">
-                              {{ permission.name }}
-                            </span>
-                            <span class="text-xs text-gray-500 dark:text-gray-400">
-                              {{ permission.codename }}
-                            </span>
-                          </div>
+                      <input type="checkbox" id="permission_{{ permission.id }}" name="permissions" value="{{ permission.id }}" 
+                        class="peer hidden" {% if permission in form.instance.permissions.all %}checked{% endif %}>
+                      <label for="permission_{{ permission.id }}" class="checkbox-label w-full flex items-center space-x-3">
+                        <div class="flex-shrink-0">
+                          <i class="form-icons fa-solid fa-key text-blue-600 dark:text-indigo-400"></i>
+                        </div>
+                        <div class="flex flex-col">
+                          <span class="font-medium text-gray-900 dark:text-white">
+                            {{ permission.name }}
+                          </span>
+                          <span class="text-xs text-gray-500 dark:text-gray-400">
+                            {{ permission.codename }}
+                          </span>
                         </div>
                       </label>
                     </div>

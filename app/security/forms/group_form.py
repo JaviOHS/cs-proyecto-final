@@ -24,3 +24,12 @@ class GroupForm(forms.ModelForm):
                 'autofocus': True,
             }),
         }
+        
+    def __init__(self, *args, **kwargs):
+        super(GroupForm, self).__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['permissions'].initial = self.instance.permissions.all()
+    
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        return name.title()

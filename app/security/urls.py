@@ -11,6 +11,7 @@ urlpatterns = [
     path('extend-session/', auth.ExtendSessionView.as_view(), name='extend_session'),
     path('manage/permissions/', manage_permissions.ManagePermissionsView.as_view(), name='manage_permissions'),
     path('user/update/<int:pk>/', manage_permissions.UserUpdateView.as_view(), name='user_update'),
+    path('user/delete/<int:pk>/', manage_permissions.UserDeleteView.as_view(), name='user_delete'),
     path('group/create/', manage_permissions.GroupCreateView.as_view(), name='group_create'),
     path('group/update/<int:pk>/', manage_permissions.GroupUpdateView.as_view(), name='group_update'),
     path('group/delete/<int:pk>/', manage_permissions.GroupDeleteView.as_view(), name='group_delete'),
