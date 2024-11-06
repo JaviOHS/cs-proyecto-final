@@ -2,53 +2,42 @@
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %} {% load i18n %}
 
-<section id="hero-section" class="primary-container-bg pt-12 hero-background bg-cover bg-center bg-no-repeat overflow-x-hidden">
-  <div class="group relative flex flex-col-reverse py-12 lg:pt-0 lg:flex-col lg:pb-0">
-    <div class="inset-y-0 top-0 right-0 z-0 w-full max-w-xl px-4 mx-auto md:px-0 lg:pr-0 lg:mb-0 lg:mx-0 lg:w-8/12 lg:max-w-full lg:absolute xl:px-0">
-      <svg class="w-[50%] absolute ml-24 hidden h-full transform -translate-x-1/2 lg:block
-        text-blue-200 dark:text-indigo-600 [.theme1_&]:text-theme1-200 [.theme2_&]:text-theme2-200" 
-        viewBox="0 0 100 100" fill="currentColor" preserveAspectRatio="none slice">
+<section id="hero-section" class="primary-container-bg pt-2 hero-background bg-cover bg-center bg-no-repeat overflow-x-hidden">
+  <div class="group relative flex flex-col-reverse mt-12 py-10 lg:pt-0 lg:flex-col lg:pb-0">
+    <div class="inset-y-0 top-0 right-0 z-0 w-full max-w-xl px-2 mx-auto md:px-0 lg:pr-0 lg:mb-0 lg:mx-0 lg:w-8/12 lg:max-w-full lg:absolute xl:px-0">
+      <svg class="w-[50%] absolute ml-12 hidden h-full transform -translate-x-1/2 lg:block text-blue-200 dark:text-indigo-600 [.theme1_&]:text-theme1-200 [.theme2_&]:text-theme2-200" viewBox="0 0 100 100" fill="currentColor" preserveAspectRatio="none slice">
         <path d="M50 0H100L50 100H0L50 0Z"></path>
       </svg>
-      <img class="lg:ml-24 lg:h-full object-cover w-full h-64 rounded-2xl lg:rounded-none 
-        bg-blue-400 dark:bg-indigo-400  [.theme1_&]:bg-theme1-400 [.theme2_&]:bg-theme2-400" 
-        src="{% static 'img/components/hero.png' %}" alt="Imagen de hero"/>
+      <img class="lg:ml-12 lg:h-full object-cover w-full h-64 rounded-2xl lg:rounded-none bg-blue-400 dark:bg-indigo-400 [.theme1_&]:bg-theme1-400 [.theme2_&]:bg-theme2-400" src="{% static 'img/components/hero.png' %}" alt="Imagen de hero"/>
     </div>
-    <div class="relative flex flex-col items-left w-full max-w-xl px-4 mx-auto md:px-0 lg:px-8 lg:max-w-screen-xl lg:ml-12">
-      <div class="mb-12 lg:my-32 lg:max-w-lg lg:pr-4" data-aos="fade-right" data-aos-delay="200">
-        <h1 class="mb-4 font-Pacifico text-4xl font-bold tracking-tight sm:text-5xl sm:leading-none
-          text-gray-900 dark:text-white [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
+    <div class="relative flex flex-col items-left w-full max-w-xl px-2 mx-auto md:px-0 lg:px-4 lg:max-w-screen-xl lg:ml-6">
+      <div class="mb-6 lg:my-16 lg:max-w-lg lg:pr-2" data-aos="fade-right" data-aos-delay="200">
+        <h1 class="mb-3 font-Pacifico text-4xl font-bold tracking-tight sm:text-5xl sm:leading-none text-gray-900 dark:text-white [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
           {% trans "Una solución para tu negocio." %}<br>
           {% if user.is_authenticated %}
             {% if user.is_superuser %}
-              <span class="inline-block text-3xl font-bold
-                text-blue-700 dark:text-indigo-400 [.theme1_&]:text-theme1-600 [.theme2_&]:text-theme2-600">
+              <span class="inline-block text-3xl font-bold text-blue-700 dark:text-indigo-400 [.theme1_&]:text-theme1-600 [.theme2_&]:text-theme2-600">
                 {% trans 'Bienvenido,' %} {{ user.username }}.
               </span>
             {% else %}
-              <span class="inline-block text-3xl font-bold
-                text-blue-700 dark:text-indigo-400 [.theme1_&]:text-theme1-600 [.theme2_&]:text-theme2-600">
+              <span class="inline-block text-3xl font-bold text-blue-700 dark:text-indigo-400 [.theme1_&]:text-theme1-600 [.theme2_&]:text-theme2-600">
                 {% trans 'Bienvenido,' %} {{ user.username }}.
               </span>
             {% endif %}
           {% else %}
-            <span class="inline-block text-3xl font-bold
-              text-blue-700 dark:text-indigo-400 [.theme1_&]:text-theme1-600 [.theme2_&]:text-theme2-600">
+            <span class="inline-block text-3xl font-bold text-blue-700 dark:text-indigo-400 [.theme1_&]:text-theme1-600 [.theme2_&]:text-theme2-600">
               {% trans 'Bienvenido, usuario anónimo.' %}
             </span>
           {% endif %}
         </h1>
-        <p class="pr-4 mb-4 text-base font-bold md:text-lg
-          text-gray-900 dark:text-gray-300 [.theme1_&]:text-theme1-800 [.theme2_&]:text-theme2-800">
+        <p class="pr-2 mb-3 text-base font-bold md:text-lg text-gray-900 dark:text-gray-300 [.theme1_&]:text-theme1-800 [.theme2_&]:text-theme2-800">
           {% trans "¡Explora nuestro increíble sistema!" %}<br>
           {% trans "Te invitamos a descubrir un mundo de múltiples posibilidades y beneficios, con el objetivo de optimizar tu emprendimiento al siguiente nivel." %}
         </p>
         <div class="flex items-center">
-          <a href="#herramientas" class="inline-flex items-center justify-center h-12 px-6 mr-5 font-medium tracking-wide
-            text-white bg-blue-600 hover:bg-blue-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 [.theme1_&]:bg-theme1-500 [.theme1_&]:hover:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600
-            transition-colors duration-200 rounded-lg">
+          <a href="#herramientas" class="inline-flex items-center justify-center h-10 px-4 mr-3 font-medium tracking-wide text-white bg-blue-600 hover:bg-blue-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 [.theme1_&]:bg-theme1-500 [.theme1_&]:hover:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600 transition-colors duration-200 rounded-lg">
             {% trans "Explorar" %}
-            <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
             </svg>
           </a>
@@ -217,7 +206,6 @@
 
     <div class="flex justify-center items-stretch gap-8 flex-wrap mt-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-1 perspective-1000">
-        <!-- Tarjeta de Javier -->
         <div class="group flex-1 basis-80 max-w-md relative overflow-hidden primary-container-bg rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-100 dark:border-gray-700">    
           <div class="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-gray-800/90 shadow-xl transition-all duration-500 hover:shadow-[0_20px_60px_-10px_rgba(59,130,246,0.3)] backdrop-blur-sm border border-white/20 dark:border-gray-700/20">
             <div class="relative h-[350px] overflow-hidden">
@@ -264,7 +252,6 @@
           </div>
         </div>
 
-        <!-- Tarjeta de Steven (similar a la anterior con datos actualizados) -->
         <div class="group flex-1 basis-80 max-w-md relative overflow-hidden primary-container-bg rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-100 dark:border-gray-700">    
           <div class="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-gray-800/90 shadow-xl transition-all duration-500 hover:shadow-[0_20px_60px_-10px_rgba(59,130,246,0.3)] backdrop-blur-sm border border-white/20 dark:border-gray-700/20">
             <div class="relative h-[350px] overflow-hidden">

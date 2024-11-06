@@ -41,7 +41,41 @@
                     {% trans "Sobre Nosotros" %}
                 </a>
               </li>
-    
+              <div id="static-modal" class="fixed inset-0 z-50 opacity-0 pointer-events-none transition-all duration-300 ease-in-out">
+                <div class="fixed inset-0 bg-black/30 backdrop-blur-sm transition-all duration-300 ease-in-out"></div>
+                <div class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl p-4">
+                    <div class="bg-white rounded-xl shadow-2xl dark:bg-gray-800 transition-all duration-300 ease-in-out transform scale-95 opacity-0">
+                        <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-gray-900 dark:text-white">{% trans "Sobre Nosotros" %}</h3>
+                            <button type="button" 
+                                class="text-gray-400 hover:text-gray-500 transition-colors duration-200 ease-in-out rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700" 
+                                data-modal-close>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="p-4 space-y-6">
+                          <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                              {% trans "Somos una empresa líder especializada en soluciones de videovigilancia inteligente, con un enfoque innovador en la seguridad empresarial. Nuestro software de última generación se adapta perfectamente a las necesidades específicas de cada cliente, desde pequeñas empresas hasta corporaciones en expansión, garantizando una protección integral y eficiente de sus activos." %}
+                          </p>
+                          <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                              {% trans "Nuestra misión es proporcionar tecnología de vanguardia en seguridad que permita a nuestros clientes mantener el control total de sus operaciones. Mediante sistemas avanzados de monitoreo y análisis en tiempo real, ofrecemos la tranquilidad y confianza que su negocio necesita para crecer de manera segura en el entorno actual." %}
+                          </p>
+                          <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                              {% trans "Respaldados por años de experiencia en el sector de seguridad, nuestras soluciones incorporan tecnologías de última generación, incluyendo análisis de video inteligente, detección temprana de amenazas y gestión centralizada de múltiples ubicaciones, todo diseñado para proteger lo que más importa: su negocio." %}
+                          </p>
+                      </div>
+                        <div class="p-4 border-t dark:border-gray-700 flex justify-end gap-3">
+                            <button type="button" 
+                                class="text-sm px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200 ease-in-out" 
+                                data-modal-close>
+                                {% trans "Aceptar" %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+              </div>          
               {% if user.is_authenticated %}
               <li class="relative py-1 md:py-0">
                 <button type="button" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
