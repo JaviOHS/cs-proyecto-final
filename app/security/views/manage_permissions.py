@@ -10,6 +10,7 @@ from app.security.forms.user_group_form import UserGroupForm
 from app.security.forms.group_form import GroupForm
 from app.core.views.confirm_delete import ConfirmDeleteView
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -19,7 +20,7 @@ class ManagePermissionsView(UserPermissionMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title1'] = 'Gestión de Permisos'
+        context['title1'] = _("Gestión de Permisos")
         query = self.request.GET.get('query', '')
 
         if query:
@@ -49,9 +50,9 @@ class UserUpdateView(FormErrorHandlingMixin, UserPermissionMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title1'] = 'Actualizar Usuario'
-        context['title2'] = 'Actualizar Información de Usuario'
-        context['description'] = 'Complete el formulario con los datos del usuario.'
+        context['title1'] = _("Actualizar Usuario")
+        context['title2'] = _("Actualizar Información de Usuario")
+        context['description'] = _("Complete el formulario con los datos del usuario.")
         return context
     
     def form_valid(self, form):
@@ -81,9 +82,9 @@ class GroupCreateView(FormErrorHandlingMixin, UserPermissionMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title1'] = 'Crear Grupo'
-        context['title2'] = 'Crear Grupo de Usuarios'
-        context['description'] = 'Complete el formulario con los datos del grupo.'
+        context['title1'] = _("Crear Grupo")
+        context['title2'] = _("Crear Grupo de Usuarios")
+        context['description'] = _("Complete el formulario con los datos del grupo.")
         return context
 
     def form_valid(self, form):
@@ -102,9 +103,9 @@ class GroupUpdateView(UserPermissionMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title1'] = 'Actualizar Grupo'
-        context['title2'] = 'Actualizar Información de Grupo'
-        context['description'] = 'Complete el formulario con los datos del grupo.'
+        context['title1'] = _("Actualizar Grupo")
+        context['title2'] = _("Actualizar Información de Grupo")
+        context['description'] = _("Complete el formulario con los datos del grupo.")
         return context
     
     def form_valid(self, form):

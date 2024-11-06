@@ -121,6 +121,66 @@ msgstr "Web Designer / Programmer"
 msgid "Cuenta"
 msgstr "Account"
 
+msgid "Usuarios"
+msgstr "Users"
+
+msgid "Gestionar permisos de usuarios y asignar grupos."
+msgstr "Manage user permissions and assign groups."
+
+msgid "Buscar Usuarios"
+msgstr "Search Users"
+
+msgid "No se encontraron resultados de búsqueda."
+msgstr "No search results found."
+
+msgid "Gestión de Grupos"
+msgstr "Group Management"
+
+msgid "Grupos"
+msgstr "Groups"
+
+msgid "Gestionar datos de grupos y permisos."
+msgstr "Manage group data and permissions."
+
+msgid "No hay grupos registrados. Lo cual es raro..."
+msgstr "No groups registered. Which is strange..."
+
+msgid "Gestión de Permisos"
+msgstr "Permission Management"
+
+msgid "Actualizar Usuario"
+msgstr "Update User"
+
+msgid "Actualizar Información de Usuario"
+msgstr "Update User Information"
+
+msgid "Complete el formulario con los datos del usuario."
+msgstr "Complete the form with the user data."
+
+msgid "Crear Grupo"
+msgstr "Create Group"
+
+msgid "Crear Grupo de Usuarios"
+msgstr "Create User Group"
+
+msgid "Complete el formulario con los datos del grupo."
+msgstr "Complete the form with the group information."
+
+msgid "Actualizar Grupo"
+msgstr "Update Group"
+
+msgid "Actualizar Información de Grupo"
+msgstr "Update Group Information"
+
+msgid "Permisos"
+msgstr "Permissions"
+
+msgid "Módulo de Permisos"
+msgstr "Permissions Module"
+
+msgid "Configuración de permisos y roles de usuario."
+msgstr "Setting user roles and permissions."
+
 
 
 # TRADUCCIOÓN DE home.html -------------------------------------------------------------------------------
