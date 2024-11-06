@@ -2,21 +2,21 @@
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %} {% load i18n %}
 
-<section id="hero-section" class="primary-container-bg pt-16 hero-background bg-cover bg-center bg-no-repeat overflow-x-hidden">
-  <div class="group relative flex flex-col-reverse py-16 lg:pt-0 lg:flex-col lg:pb-0">
+<section id="hero-section" class="primary-container-bg pt-12 hero-background bg-cover bg-center bg-no-repeat overflow-x-hidden">
+  <div class="group relative flex flex-col-reverse py-12 lg:pt-0 lg:flex-col lg:pb-0">
     <div class="inset-y-0 top-0 right-0 z-0 w-full max-w-xl px-4 mx-auto md:px-0 lg:pr-0 lg:mb-0 lg:mx-0 lg:w-8/12 lg:max-w-full lg:absolute xl:px-0">
-      <svg class="w-[50%] absolute ml-28 hidden h-full transform -translate-x-1/2 lg:block
+      <svg class="w-[50%] absolute ml-24 hidden h-full transform -translate-x-1/2 lg:block
         text-blue-200 dark:text-indigo-600 [.theme1_&]:text-theme1-200 [.theme2_&]:text-theme2-200" 
         viewBox="0 0 100 100" fill="currentColor" preserveAspectRatio="none slice">
         <path d="M50 0H100L50 100H0L50 0Z"></path>
       </svg>
-      <img class="lg:ml-28 lg:h-full object-cover w-full h-72 rounded-2xl lg:rounded-none 
+      <img class="lg:ml-24 lg:h-full object-cover w-full h-64 rounded-2xl lg:rounded-none 
         bg-blue-400 dark:bg-indigo-400  [.theme1_&]:bg-theme1-400 [.theme2_&]:bg-theme2-400" 
         src="{% static 'img/components/hero.png' %}" alt="Imagen de hero"/>
     </div>
-    <div class="relative flex flex-col items-left w-full max-w-xl px-4 mx-auto md:px-0 lg:px-8 lg:max-w-screen-xl lg:ml-16">
-      <div class="mb-16 lg:my-40 lg:max-w-lg lg:pr-5" data-aos="fade-right" data-aos-delay="200">
-        <h1 class="mb-5 font-Pacifico text-4xl font-bold tracking-tight sm:text-5xl sm:leading-none
+    <div class="relative flex flex-col items-left w-full max-w-xl px-4 mx-auto md:px-0 lg:px-8 lg:max-w-screen-xl lg:ml-12">
+      <div class="mb-12 lg:my-32 lg:max-w-lg lg:pr-4" data-aos="fade-right" data-aos-delay="200">
+        <h1 class="mb-4 font-Pacifico text-4xl font-bold tracking-tight sm:text-5xl sm:leading-none
           text-gray-900 dark:text-white [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
           {% trans "Una solución para tu negocio." %}<br>
           {% if user.is_authenticated %}
@@ -38,13 +38,13 @@
             </span>
           {% endif %}
         </h1>
-        <p class="pr-5 mb-5 text-base font-bold md:text-lg
+        <p class="pr-4 mb-4 text-base font-bold md:text-lg
           text-gray-900 dark:text-gray-300 [.theme1_&]:text-theme1-800 [.theme2_&]:text-theme2-800">
           {% trans "¡Explora nuestro increíble sistema!" %}<br>
           {% trans "Te invitamos a descubrir un mundo de múltiples posibilidades y beneficios, con el objetivo de optimizar tu emprendimiento al siguiente nivel." %}
         </p>
         <div class="flex items-center">
-          <a href="#herramientas" class="inline-flex items-center justify-center h-12 px-6 mr-6 font-medium tracking-wide
+          <a href="#herramientas" class="inline-flex items-center justify-center h-12 px-6 mr-5 font-medium tracking-wide
             text-white bg-blue-600 hover:bg-blue-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 [.theme1_&]:bg-theme1-500 [.theme1_&]:hover:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600
             transition-colors duration-200 rounded-lg">
             {% trans "Explorar" %}
@@ -58,14 +58,12 @@
   </div>
 </section>
 
-<section class="py-10 relative overflow-hidden dark:bg-bg-principal">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div
-      class="secondary-container-bg rounded-2xl py-10 px-10 xl:py-16 xl:px-20 flex items-center justify-between flex-col gap-16 lg:flex-row shadow-md relative"
-      data-aos="zoom-in-up">
+<section class="py-6 relative overflow-hidden dark:bg-bg-principal">
+  <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6">
+    <div class="secondary-container-bg rounded-xl py-6 px-6 xl:py-12 xl:px-16 flex items-center justify-between flex-col gap-10 lg:flex-row shadow-md relative" data-aos="zoom-in-up">
       <div id="light-effect" class="absolute pointer-events-none"></div>
       <div class="w-full lg:w-60">
-        <h2 class="title-font text-3xl mb-4 text-center lg:text-left [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
+        <h2 class="title-font text-2xl mb-3 text-center lg:text-left [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
           {% trans "Tecnologías Empleadas" %}
         </h2>
         <p class="description-font text-base leading-6 text-center lg:text-left [.theme1_&]:text-theme1-700 [.theme2_&]:text-theme2-700">
@@ -73,36 +71,35 @@
         </p>
       </div>
       <div class="w-full lg:w-4/5">
-        <div class="flex flex-col flex-1 gap-10 lg:gap-0 lg:flex-row lg:justify-between">
+        <div class="flex flex-col flex-1 gap-6 lg:gap-0 lg:flex-row lg:justify-between">
           <div class="block">
-            <div class="font-manrope font-bold text-4xl text-indigo-600 [.theme1_&]:text-theme1-500 [.theme2_&]:text-theme2-500 mb-3 text-center lg:text-left">
+            <div class="font-manrope font-bold text-3xl text-indigo-600 [.theme1_&]:text-theme1-500 [.theme2_&]:text-theme2-500 mb-2 text-center lg:text-left">
               <a href="https://www.djangoproject.com/" class="flex justify-center items-center" target="_blank">
-                <img src="{% static 'img/components/python_logo.PNG' %}" alt="Python Logo" class="h-16 rounded-lg">
+                <img src="{% static 'img/components/python_logo.PNG' %}" alt="Python Logo" class="h-14 rounded-lg">
               </a>
             </div>
             <span class="description-font text-center block lg:text-left">Python</span>
           </div>
           <div class="block">
-            <div class="font-manrope font-bold text-4xl text-indigo-600 [.theme1_&]:text-theme1-500 [.theme2_&]:text-theme2-500 mb-3 text-center lg:text-left">
+            <div class="font-manrope font-bold text-3xl text-indigo-600 [.theme1_&]:text-theme1-500 [.theme2_&]:text-theme2-500 mb-2 text-center lg:text-left">
               <a href="https://www.python.org/" class="flex justify-center items-center" target="_blank">
-                <img src="{% static 'img/components/Django_logo.PNG' %}" alt="Django Logo" class="h-16 rounded-lg">
+                <img src="{% static 'img/components/Django_logo.PNG' %}" alt="Django Logo" class="h-14 rounded-lg">
               </a>
             </div>
             <span class="description-font text-center block lg:text-left">Django</span>
           </div>
           <div class="block">
-            <div class="font-manrope font-bold text-4xl text-indigo-600 [.theme1_&]:text-theme1-500 [.theme2_&]:text-theme2-500 mb-3 text-center lg:text-left">
-              <a href="https://aws.amazon.com/es/free/?gclid=CjwKCAjwxNW2BhAkEiwA24Cm9KwARwJtjk1YuI-knrH-YzlP_awLKr01lxwFHe93UhAhNA8GMU8JBhoCcPwQAvD_BwE&trk=ac00e2de-8a41-4a1e-b3cd-eb4cc45abb02&sc_channel=ps&ef_id=CjwKCAjwxNW2BhAkEiwA24Cm9KwARwJtjk1YuI-knrH-YzlP_awLKr01lxwFHe93UhAhNA8GMU8JBhoCcPwQAvD_BwE:G:s&s_kwcid=AL!4422!3!647999754699!e!!g!!aws%20services!19685287093!146461585896"
-                class="flex justify-center items-center" target="_blank">
-                <img src="{% static 'img/components/AWS_logo.PNG' %}" alt="AWS Logo" class="h-16 rounded-lg">
+            <div class="font-manrope font-bold text-3xl text-indigo-600 [.theme1_&]:text-theme1-500 [.theme2_&]:text-theme2-500 mb-2 text-center lg:text-left">
+              <a href="https://aws.amazon.com/es/free/" class="flex justify-center items-center" target="_blank">
+                <img src="{% static 'img/components/AWS_logo.PNG' %}" alt="AWS Logo" class="h-14 rounded-lg">
               </a>
             </div>
             <span class="description-font text-center block lg:text-left">Amazon Web Services</span>
           </div>
           <div class="block">
-            <div class="font-manrope font-bold text-4xl text-indigo-600 [.theme1_&]:text-theme1-500 [.theme2_&]:text-theme2-500 mb-3 text-center lg:text-left">
+            <div class="font-manrope font-bold text-3xl text-indigo-600 [.theme1_&]:text-theme1-500 [.theme2_&]:text-theme2-500 mb-2 text-center lg:text-left">
               <a href="https://opencv.org/" class="flex justify-center items-center" target="_blank">
-                <img src="{% static 'img/components/opencv_logo.PNG' %}" alt="OpenCV Logo" class="h-16 rounded-lg">
+                <img src="{% static 'img/components/opencv_logo.PNG' %}" alt="OpenCV Logo" class="h-14 rounded-lg">
               </a>
             </div>
             <span class="description-font text-center block lg:text-left">OpenCV</span>
@@ -113,84 +110,180 @@
   </div>
 </section>
 
-<section id="herramientas" class="secondary-container-bg py-10">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" data-aos="fade-up" data-aos-delay="300">
+<section id="herramientas" class="secondary-container-bg py-6">
+  <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6" data-aos="fade-up" data-aos-delay="300">
     <div class="flex flex-col items-center justify-center">
       <span class="information [.theme1_&]:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
         {% trans 'Módulos' %}
       </span>
     </div>
-    <h2 class="title-font text-3xl text-center my-4 [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
+    <h2 class="title-font text-2xl text-center my-3 [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
       {% trans 'Módulos Disponibles' %}
     </h2>
     <p class="description-font text-center [.theme1_&]:text-theme1-700 [.theme2_&]:text-theme2-700">
       {% trans 'Como administrador, puedes gestionar los módulos de tu sistema.' %}
     </p>
-    <div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-        <div
-          class="group relative primary-container-bg flex flex-col justify-between rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
-          <div class="secondary-container-bg rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="fa-solid fa-video text-2xl text-blue-500 dark:text-blue-400"></i>
-          </div>
-          <h4 class="title-module-cards">
-            {% trans 'Módulo de Monitoreo' %}</h4>
-          <p class="description-module-cards">
-            {% trans 'Configuración de comportamientos predefinidos para detección.' %}
-          </p>
-          {% if user.is_authenticated %}
-          <a href="{% url 'monitoring:monitoring_session' %}"
-            class="button-module-cards bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-[50%]">
-            {% trans 'Empezar' %}
-          </a> {% endif %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <div class="group relative primary-container-bg flex flex-col justify-between rounded-xl shadow-md p-3 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
+        <div class="secondary-container-bg rounded-full flex justify-center items-center mb-4 w-12 h-12 transition-all duration-300 group-hover:rotate-12">
+          <i class="fas fa-video text-2xl text-blue-600 dark:text-blue-300"></i>
         </div>
-        <div
-          class="group relative primary-container-bg flex flex-col justify-between rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-orange-500 dark:hover:bg-orange-600">
-          <div class="secondary-container-bg rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="fa-solid fa-bell text-2xl text-orange-500 dark:text-orange-400"></i>
-          </div>
-          <h4 class="title-module-cards">
-            {% trans 'Módulo de Alertas' %}</h4>
-          <p class="description-module-cards">
-            {% trans 'Configuración de alertas personalizadas para diferentes situaciones.' %}
-          </p>
-          {% if user.is_authenticated %}
-          <a href="{% url 'alarm:alarm_list' %}"
-            class="button-module-cards bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800 w-[50%]">
-            {% trans 'Empezar' %}
-          </a> {% endif %}
+        <h4 class="title-module-cards">{% trans 'Módulo de Monitoreo' %}</h4>
+        <p class="description-module-cards">{% trans 'Configuración de comportamientos predefinidos para detección.' %}</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'monitoring:monitoring_session' %}" class="button-module-cards bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-[50%]">
+          {% trans 'Empezar' %}
+        </a>
+        {% endif %}
+      </div>
+      <div class="group relative primary-container-bg flex flex-col justify-between rounded-xl shadow-md p-3 transition-all duration-500 hover:bg-orange-500 dark:hover:bg-orange-600">
+        <div class="secondary-container-bg rounded-full flex justify-center items-center mb-4 w-12 h-12 transition-all duration-300 group-hover:rotate-12">
+          <i class="fas fa-bell text-2xl text-orange-600 dark:text-orange-300"></i>
         </div>
-        <div
-          class="group relative primary-container-bg flex flex-col justify-between rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-red-500 dark:hover:bg-red-600">
-          <div class="secondary-container-bg rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="ri-shield-fill text-2xl text-red-500 dark:text-red-400"></i>
-          </div>
-          <h4 class="title-module-cards">
-            {% trans 'Módulo de Amenazas' %}</h4>
-          <p class="description-module-cards">
-            {% trans 'Implementación de funcionalidades para agregar nuevas amenazas.' %}
-          </p>
-          {% if user.is_authenticated %}
-          <a href="{% url 'detection:detection_list' %}"
-            class="button-module-cards bg-red-500 rounded-lg hover:bg-red-600 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 w-[50%]">
-            {% trans 'Empezar' %}
-          </a> {% endif %}
+        <h4 class="title-module-cards">{% trans 'Módulo de Alertas' %}</h4>
+        <p class="description-module-cards">{% trans 'Configuración de alertas personalizadas para diferentes situaciones.' %}</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'alarm:alarm_list' %}" class="button-module-cards bg-orange-500 rounded-lg hover:bg-orange-600 focus:ring-4 focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800 w-[50%]">
+          {% trans 'Empezar' %}
+        </a>
+        {% endif %}
+      </div>
+      <div class="group relative primary-container-bg flex flex-col justify-between rounded-xl shadow-md p-3 transition-all duration-500 hover:bg-red-500 dark:hover:bg-red-600">
+        <div class="secondary-container-bg rounded-full flex justify-center items-center mb-4 w-12 h-12 transition-all duration-300 group-hover:rotate-12">
+          <i class="ri-shield-fill text-2xl text-red-600 dark:text-red-300"></i>
         </div>
-        <div
-          class="group relative primary-container-bg flex flex-col justify-between rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-green-500 dark:hover:bg-green-600">
-          <div class="secondary-container-bg rounded-full flex justify-center items-center mb-5 w-14 h-14">
-            <i class="fa-solid fa-chart-line text-2xl text-green-500 dark:text-green-400"></i>
+        <h4 class="title-module-cards">{% trans 'Módulo de Amenazas' %}</h4>
+        <p class="description-module-cards">{% trans 'Implementación de funcionalidades para agregar nuevas amenazas.' %}</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'detection:detection_list' %}" class="button-module-cards bg-red-500 rounded-lg hover:bg-red-600 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 w-[50%]">
+          {% trans 'Empezar' %}
+        </a>
+        {% endif %}
+      </div>
+      <div class="group relative primary-container-bg flex flex-col justify-between rounded-xl shadow-md p-3 transition-all duration-500 hover:bg-green-500 dark:hover:bg-green-600">
+        <div class="secondary-container-bg rounded-full flex justify-center items-center mb-4 w-12 h-12 transition-all duration-300 group-hover:rotate-12">
+          <i class="fas fa-chart-line text-2xl text-green-600 dark:text-green-300"></i>
+        </div>
+        <h4 class="title-module-cards">{% trans 'Módulo de Estadísticas' %}</h4>
+        <p class="description-module-cards">{% trans 'Implementación de generación de reportes en diferentes formatos.' %}</p>
+        {% if user.is_authenticated %}
+        <a href="{% url 'core:statistics' %}" class="button-module-cards bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-[50%]">
+          {% trans 'Empezar' %}
+        </a>
+        {% endif %}
+      </div>
+      {% if user.is_superuser %}
+      <div
+        class="group relative primary-container-bg flex flex-col justify-between rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-purple-500 dark:hover:bg-purple-600">
+        <div class="secondary-container-bg rounded-full flex justify-center items-center mb-5 w-14 h-14 transition-all duration-300 group-hover:rotate-12">
+          <i class="fas fa-cogs text-3xl text-purple-600 dark:text-purple-300"></i>
+        </div>
+        <h4 class="title-module-cards">{% trans 'Módulo de Permisos'%}</h4>
+        <p class="description-module-cards"> {% trans 'Configuración de permisos y roles de usuario.'%}</p>
+        <a href="{% url 'security:manage_permissions' %}"
+          class="button-module-cards bg-purple-500 rounded-lg hover:bg-purple-600 focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 w-[50%]">{% trans 'Empezar' %}</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section id="equipo" class="primary-container-bg py-6">
+  <div class="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6" data-aos="fade-up" data-aos-delay="300">
+    <div class="flex flex-col items-center justify-center">
+      <span class="information [.theme1_&]:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
+        {% trans 'Nuestro Equipo' %}
+      </span>
+    </div>
+    <h2 class="title-font text-2xl text-center my-3 [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
+      {% trans 'Profesionales Detrás del Proyecto' %}
+    </h2>
+    <p class="description-font text-center [.theme1_&]:text-theme1-700 [.theme2_&]:text-theme2-700">
+      {% trans 'Conoce al talentoso equipo que hace posible nuestra visión.' %}
+    </p>
+    <div class="flex justify-center items-stretch gap-8 flex-wrap mt-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-1 perspective-1000">
+        <div class="group flex-1 basis-80 max-w-md relative overflow-hidden primary-container-bg rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-sm">    
+          <div class="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-[#0f172a]/90 shadow-xl transition-all duration-500 hover:shadow-[0_20px_60px_-10px_rgba(59,130,246,0.3)] backdrop-blur-sm border border-white/20 dark:border-gray-700/20">
+            <div class="relative h-[350px] overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-30 z-10 group-hover:opacity-50 transition-opacity duration-700"></div>
+              <img src="{% static 'img/components/equipo_trabajo.png' %}" alt="Javier Omar Haro Soledispa" class="w-full h-full object-cover object-center transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"/>
+              <div class="absolute bottom-0 left-0 right-0 px-4 z-20 transform transition-all duration-500 backdrop-blur-sm bg-white/20 dark:bg-black/20 translate-y-4 group-hover:translate-y-0">
+                <h3 class="text-xl font-bold mb-2 text-white tracking-tight transition-colors duration-300">Javier Omar Haro Soledispa</h3>
+                <p class="text-lg font-medium text-gray-200 mb-3 opacity-90">{% trans 'Líder Proyecto / Programador' %}</p>
+                <div class="h-0.5 w-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 group-hover:w-28 transition-all duration-500"></div>
+              </div>
+            </div>
+            <div class="p-6 relative backdrop-blur-sm">
+              <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-bl-full -z-10 animate-gradient"></div>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="px-2 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-full dark:bg-blue-900/50 dark:text-blue-300">Django</span>
+                <span class="px-2 py-1 text-sm font-medium text-purple-600 bg-purple-100 rounded-full dark:bg-purple-900/50 dark:text-purple-300">Python</span>
+                <span class="px-2 py-1 text-sm font-medium text-green-600 bg-green-100 rounded-full dark:bg-green-900/50 dark:text-green-300">AWS</span>
+                <span class="px-2 py-1 text-sm font-medium text-orange-600 bg-orange-100 rounded-full dark:bg-orange-900/50 dark:text-orange-300">OpenCV</span>
+              </div>
+              <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+                {% trans 'Especialista en el uso de tecnologías como Django, Python, Amazon Web Services, OpenCV Tailwind CSS, JS, HTML con más de 1 año de experiencia.' %}
+              </p>
+              <div class="flex space-x-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <a href="https://github.com/JaviOHS" target="_blank" rel="noopener noreferrer" class="group/icon flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-all duration-300">
+                  <div class="relative">
+                    <i class="fa-brands fa-github text-xl transform transition-all duration-300 group-hover/icon:scale-110 group-hover/icon:rotate-12"></i>
+                    <div class="absolute inset-0 bg-blue-500/20 rounded-full filter blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <span class="text-sm font-medium translate-x-2 opacity-0 group-hover/icon:opacity-100 group-hover/icon:translate-x-0 transition-all duration-300">GitHub</span>
+                </a>
+                <a href="mailto:jharos@unemi.edu.ec" class="group/icon flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-all duration-300">
+                  <div class="relative">
+                    <i class="fa-solid fa-envelope text-xl transform transition-all duration-300 group-hover/icon:scale-110 group-hover/icon:rotate-12"></i>
+                    <div class="absolute inset-0 bg-blue-500/20 rounded-full filter blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <span class="text-sm font-medium translate-x-2 opacity-0 group-hover/icon:opacity-100 group-hover/icon:translate-x-0 transition-all duration-300">Email</span>
+                </a>
+              </div>
+            </div>
           </div>
-          <h4 class="title-module-cards">
-            {% trans 'Módulo de Estadísticas' %}</h4>
-          <p class="description-module-cards">
-            {% trans 'Implementación de generación de reportes en diferentes formatos.' %}
-          </p>
-          {% if user.is_authenticated %}
-          <a href="{% url 'core:statistics' %}"
-            class="button-module-cards bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-[50%]">
-            {% trans 'Empezar' %}
-          </a> {% endif %}
+        </div>
+        <div class="group flex-1 basis-80 max-w-md relative overflow-hidden primary-container-bg rounded-2xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-sm">    
+          <div class="relative overflow-hidden rounded-2xl bg-white/90 dark:bg-[#0f172a]/90 shadow-xl transition-all duration-500 hover:shadow-[0_20px_60px_-10px_rgba(59,130,246,0.3)] backdrop-blur-sm border border-white/20 dark:border-gray-700/20">
+            <div class="relative h-[350px] overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-30 z-10 group-hover:opacity-50 transition-opacity duration-700"></div>
+              <img src="{% static 'img/components/equipo_trabajo.png' %}" alt="Steven Alexander Nieto Durán" class="w-full h-full object-cover object-center transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"/>
+              <div class="absolute bottom-0 left-0 right-0 px-4 z-20 transform transition-all duration-500 backdrop-blur-sm bg-white/20 dark:bg-black/20 translate-y-4 group-hover:translate-y-0">
+                <h3 class="text-xl font-bold mb-2 text-white tracking-tight transition-colors duration-300">Steven Alexander Nieto Durán</h3>
+                <p class="text-lg font-medium text-gray-200 mb-3 opacity-90">{% trans 'Diseñador Web / Programador' %}</p>
+                <div class="h-0.5 w-20 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 group-hover:w-28 transition-all duration-500"></div>
+              </div>
+            </div>
+            <div class="p-6 relative backdrop-blur-sm">
+              <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-bl-full -z-10 animate-gradient"></div>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="px-2 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-full dark:bg-blue-900/50 dark:text-blue-300">Django</span>
+                <span class="px-2 py-1 text-sm font-medium text-purple-600 bg-purple-100 rounded-full dark:bg-purple-900/50 dark:text-purple-300">Python</span>
+                <span class="px-2 py-1 text-sm font-medium text-green-600 bg-green-100 rounded-full dark:bg-green-900/50 dark:text-green-300">AWS</span>
+                <span class="px-2 py-1 text-sm font-medium text-orange-600 bg-orange-100 rounded-full dark:bg-orange-900/50 dark:text-orange-300">OpenCV</span>
+              </div>
+              <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+                {% trans 'Especialista en el uso de tecnologías como Django, Python, Amazon Web Services, OpenCV Tailwind CSS, JS, HTML con más de 1 año de experiencia.' %}
+              </p>
+              <div class="flex space-x-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <a href="https://github.com/AlexisJr2004" target="_blank" rel="noopener noreferrer" class="group/icon flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-all duration-300">
+                  <div class="relative">
+                    <i class="fa-brands fa-github text-xl transform transition-all duration-300 group-hover/icon:scale-110 group-hover/icon:rotate-12"></i>
+                    <div class="absolute inset-0 bg-blue-500/20 rounded-full filter blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <span class="text-sm font-medium translate-x-2 opacity-0 group-hover/icon:opacity-100 group-hover/icon:translate-x-0 transition-all duration-300">GitHub</span>
+                </a>
+                <a href="mailto:snietod@unemi.edu.ec" class="group/icon flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-all duration-300">
+                  <div class="relative">
+                    <i class="fa-solid fa-envelope text-xl transform transition-all duration-300 group-hover/icon:scale-110 group-hover/icon:rotate-12"></i>
+                    <div class="absolute inset-0 bg-blue-500/20 rounded-full filter blur-lg opacity-0 group-hover/icon:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <span class="text-sm font-medium translate-x-2 opacity-0 group-hover/icon:opacity-100 group-hover/icon:translate-x-0 transition-all duration-300">Email</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

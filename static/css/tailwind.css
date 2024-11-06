@@ -201,3 +201,8 @@
   @apply 
     text-blue-600 dark:text-indigo-500;
 }
+
+.checkbox-label {
+  @apply w-full p-3 flex items-center text-gray-500 bg-white dark:bg-[#0c1322] border border-gray-200 dark:border-[#111b33] rounded-lg cursor-pointer transition-all duration-300;
+  @apply peer-checked:border-blue-600 peer-checked:text-blue-600 dark:peer-checked:border-indigo-600 dark:peer-checked:text-indigo-500;
+}

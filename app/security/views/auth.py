@@ -1,10 +1,11 @@
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import FormView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from app.core.models import User2FAPreferences
+from app.core.models import User2FA
 from app.security.forms.auth import CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
@@ -12,6 +13,13 @@ from app.security.mixins.authentication_mixin import AuthErrorHandlingMixin
 import random
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+
+class ExtendSessionView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        request.session.modified = True
+        return JsonResponse({'status': 'success'})
 
 class SignoutView(AuthErrorHandlingMixin, LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -30,8 +38,21 @@ class SignupView(AuthErrorHandlingMixin, FormView):
         user = form.save(commit=False)
         code = ''.join([str(random.randint(0, 9)) for _ in range(6)])
         
+        session_data = {}
+        for key, value in form.cleaned_data.items():
+            if key == 'image' and value:
+                path = default_storage.save(
+                    f'temp/signup_{form.cleaned_data["username"]}_{value.name}',
+                    ContentFile(value.read())
+                )
+                session_data['image_path'] = path
+            elif key not in ['password1', 'password2']:
+                session_data[key] = value
+                
+        session_data['password'] = form.cleaned_data['password1']
+        
         self.request.session['signup_2fa_code'] = code
-        self.request.session['signup_user_data'] = form.cleaned_data
+        self.request.session['signup_user_data'] = session_data
         
         send_mail(
             'Your 2FA Code for Registration',
@@ -56,7 +77,7 @@ class SigninView(AuthErrorHandlingMixin, FormView):
         user = authenticate(self.request, username=username, password=password)
 
         if user is not None:
-            two_fa_preferences, created = User2FAPreferences.objects.get_or_create(user=user)
+            two_fa_preferences, created = User2FA.objects.get_or_create(user=user)
             
             if two_fa_preferences.is_2fa_enabled:
                 code = ''.join([str(random.randint(0, 9)) for _ in range(6)])
@@ -83,7 +104,7 @@ class SigninView(AuthErrorHandlingMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        show_facial_recognition = User2FAPreferences.objects.filter(
+        show_facial_recognition = User2FA.objects.filter(
             is_facial_recognition_enabled=True
         ).exists()
         

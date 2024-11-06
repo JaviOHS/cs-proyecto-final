@@ -3,63 +3,64 @@
 <title>{% block title %}{{ title1 }} {% endblock title %}</title>
 {% load i18n %}
 {% block content %}
-<div class="py-12 lg:py-14"></div>
-<div class="container px-6 mx-auto" data-aos="fade-up">
-  <div class="flex flex-col items-center justify-center">
-    <span class="information">
-      {{ title1 }}
-    </span>
-  </div>
-  <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
+<div class="py-8 lg:py-10"></div>
+<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+  <div class="container mx-auto px-4 text-center" data-aos="fade-up" data-aos-delay="300">
+    <div class="flex flex-col items-center justify-center">
+      <span class="information [.theme1_&]:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
+        {{ title1 }}
+      </span>
+    </div>
+    <h1 class="text-3xl font-bold mt-3
+      text-gray-900 dark:text-white [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
+      {{ title2 }}
+    </h1>
   <p class="description-font text-center">{% trans 'Gestionar Sesiones de Monitoreo. '%}</p>
-  <div class="grid grid-cols-1 gap-4 mt-4 items-center justify-center space-y-2">
-    <div class="secondary-container-bg p-4 rounded-lg shadow-md">
+  <div class="grid grid-cols-1 gap-4 mt-3 items-center justify-center">
+    <div class="secondary-container-bg p-4 rounded-lg shadow-lg">
       {% if monitoring_sessions %}
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {% for session in monitoring_sessions %}
-        <div class="group relative bg-blue-100 dark:bg-blue-800 rounded-xl p-3 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
-          <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+        <div class="group relative flex flex-col justify-center text-center items-center bg-blue-100 dark:bg-blue-800 rounded-xl p-4 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-600">
+          <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center mb-3 w-12 h-12">
             <a href="{% url 'monitoring:real_time_view' session_id=session.id %}" data-tooltip-target="tooltip-video-{{ session.id }}">
-              <i class="fa-solid fa-video text-lg text-blue-500 dark:text-white text-center"></i>
+              <i class="fa-solid fa-video text-xl text-blue-500 dark:text-white"></i>
             </a>
           </div>
-          <div id="tooltip-video-{{ session.id }}" role="tooltip"
-            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+          <div id="tooltip-video-{{ session.id }}" role="tooltip" class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
             Ver Sesión en Tiempo Real
             <div class="tooltip-arrow" data-popper-arrow></div>
           </div>
           <span class="text-sm text-green-500 dark:text-green-400 font-bold">ID {{ session.id }}</span>
-          <h2 class="title-module-cards mb-2">
+          <h2 class="title-module-cards text-lg font-semibold mb-1">
             {{ session.name }}
           </h2>
-          <div class="description-module-cards space-y-2">
-            <p><i class="fa-solid fa-comment"></i> {{ session.description }}</p>
-            <p class="text-purple-600 dark:text-purple-300"><i class="fa-regular fa-calendar-check"></i> Sesión creada el {{ session.start_time|date:"d/m/Y" }} a las {{ session.start_time|time:"H:i" }}</p>
+          <div class="description-module-cards space-y-1 text-sm">
+            <p>{{ session.description }}</p>
+            <p class="text-purple-600 dark:text-purple-300">{% trans "Creación:" %} {{ session.start_time|date:"d/m/Y" }} - {{ session.start_time|time:"H:i" }}</p>
             <p class="text-orange-600 dark:text-orange-300"><i class="fa-solid fa-land-mine-on"></i> {{ session.detection_model }}</p>
             {% if session.camera_status %}
             <p class="text-green-600 dark:text-green-300"><i class="fa-solid fa-check"></i> Cámara activa después de última conexión.</p>
             {% else %}
-            <p class="text-red-500 dark:text-red-300 font-black"><i class="fa-solid fa-circle-exclamation"></i> La cámara no estuvo disponible después de la última conexión.<br>Verifique si la IP ha cambiado.</p>
+            <p class="text-red-500 dark:text-red-300 font-bold"><i class="fa-solid fa-circle-exclamation"></i> La cámara no está disponible tras la última conexión.<br>Verifique si la IP ha cambiado.</p>
             {% endif %}
           </div>
-          <div class="flex mt-3 space-x-2">
-            <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+          <div class="flex mt-2 space-x-2">
+            <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center w-10 h-10">
               <a href="{% url 'monitoring:update_session' session.id %}" data-tooltip-target="tooltip-editar-{{ session.id }}">
                 <i class="fa-solid fa-edit text-lg text-blue-500 dark:text-white"></i>
               </a>
             </div>
-            <div id="tooltip-editar-{{ session.id }}" role="tooltip"
-              class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            <div id="tooltip-editar-{{ session.id }}" role="tooltip" class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
               Editar Sesión
               <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
-            <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center mb-3 w-10 h-10">
+            <div class="bg-white dark:bg-blue-700 rounded-full flex justify-center items-center w-10 h-10">
               <a href="{% url 'monitoring:delete_session' session.id %}" data-tooltip-target="tooltip-eliminar-{{ session.id }}">
                 <i class="fa-solid fa-trash text-lg text-blue-500 dark:text-white"></i>
               </a>
             </div>
-            <div id="tooltip-eliminar-{{ session.id }}" role="tooltip"
-              class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            <div id="tooltip-eliminar-{{ session.id }}" role="tooltip" class="absolute z-10 invisible inline-block px-2 py-1 text-xs font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
               Eliminar Sesión
               <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
@@ -68,8 +69,8 @@
         {% endfor %}
       </div>
       {% else %}
-      <p class="description-module-cards text-center leading-5">
-        No hay sesiones de monitoreo disponibles. <span class="text-green-300 font-bold">Empice creando una nueva sesión. </span>
+      <p class="description-module-cards text-center text-sm leading-5">
+        No hay sesiones de monitoreo disponibles. <span class="text-green-300 font-bold">Empiece creando una nueva sesión.</span>
       </p>
       {% endif %}
     </div>
@@ -79,14 +80,14 @@
   {% include 'components/pagination.html' %}
   {% endblock pagination %}
 
-  <div class="flex justify-center mt-6 mb-4 space-x-2">
+  <div class="flex justify-center mt-4 mb-3 space-x-2">
     <a href="{% url 'monitoring:create_session' %}">
       <button data-tooltip-target="tooltip-crear-sesion" class="add-threat-button">
         <i class="fa-solid fa-plus"></i>
       </button>
     </a>
     <div id="tooltip-crear-sesion" role="tooltip"
-      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      class="absolute z-10 invisible inline-block px-2 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
       Crear Sesión de Monitoreo
       <div class="tooltip-arrow" data-popper-arrow></div>
     </div>
@@ -97,10 +98,11 @@
       </button>
     </a>
     <div id="tooltip-home" role="tooltip"
-      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      class="absolute z-10 invisible inline-block px-2 py-1 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
       Volver al Inicio
       <div class="tooltip-arrow" data-popper-arrow></div>
     </div>
   </div>
 </div>
+</section>
 {% endblock content %}

@@ -1,0 +1,102 @@
+{% extends "components/base.html" %}
+{% load static %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+{% load i18n %}
+{% block content %}
+<div class="py-8 lg:py-10"></div>
+<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+  <div class="container mx-auto px-4 text-center" data-aos="fade-up" data-aos-delay="300">
+    <div class="flex flex-col items-center justify-center">
+      <span class="information [.theme1_&]:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
+        {{ title1 }}
+    </span>
+  </div>
+  <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
+  <p class="description-font text-center">{{ description }}</p>
+  <div class="flex justify-center pt-2">
+    <div class="secondary-container-bg w-full max-w-4xl shadow-lg rounded-lg p-6">
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="flex flex-col">
+            <label class="labels">{{ form.username.label }}</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <i class="form-icons fa-solid fa-user"></i>
+              </div>
+              {{ form.username }}
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <label class="labels">{{ form.first_name.label }}</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <i class="form-icons fa-solid fa-signature"></i>
+              </div>
+              {{ form.first_name }}
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <label class="labels">{{ form.last_name.label }}</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <i class="form-icons fa-solid fa-id-card"></i>
+              </div>
+              {{ form.last_name }}
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col md:col-span-2">
+          <label class="labels mb-4">{{ form.groups.label }}</label>
+          <div class="flex space-x-2 justify-center" id="groups-container">
+            {% for group in form.groups %}
+            <div class="relative">
+              <input type="checkbox" id="{{ group.id_for_label }}" name="{{ group.data.name }}"
+                value="{{ group.data.value }}" class="peer hidden" {% if group.data.selected %}checked{% endif %}>
+              <label for="{{ group.id_for_label }}" class="checkbox-label">
+                <div class="block">
+                  <i class="fa-solid fa-users mb-2 text-blue-500 dark:text-indigo-400"></i>
+                  <div class="w-full text-lg font-semibold">{{ group.choice_label }}</div>
+                </div>
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="flex justify-center mt-8">
+          <button type="submit" class="save-change-button">
+            {% trans 'Guardar Cambios' %}
+            <i class="fa-solid fa-floppy-disk ml-2"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="flex justify-center mt-6 mb-4 space-x-2">
+    <a href="{% url 'security:manage_permissions' %}">
+      <button data-tooltip-target="tooltip-back" class="home-and-back-button">
+        <i class="fa-solid fa-angles-left text-lg"></i>
+      </button>
+    </a>
+    <div id="tooltip-back" role="tooltip"
+      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      Volver a Permisos
+      <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
+
+    <a href="{% url 'home' %}">
+      <button data-tooltip-target="tooltip-home" class="home-and-back-button">
+        <i class="fa-solid fa-home text-lg"></i>
+      </button>
+    </a>
+    <div id="tooltip-home" role="tooltip"
+      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+      Volver al Inicio
+      <div class="tooltip-arrow" data-popper-arrow></div>
+    </div>
+  </div>
+</div>
+</section>
+{% endblock content %}

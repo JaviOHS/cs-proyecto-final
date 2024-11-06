@@ -2,21 +2,24 @@
 {% load static %}
 {% block title %}{{ title1 }}{% endblock title %}
 {% load i18n %}
-
 {% block content %}
-<div class="py-12 lg:py-14"></div>
-<div class="container px-6 mx-auto" data-aos="fade-up">
-  <div class="flex flex-col items-center justify-center">
-    <span class="information">
-      {{ title1 }}
-    </span>
-  </div>
-  <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
-  <p class="description-font text-center">{{ details }}</p>
-  <div class="secondary-container-bg my-4 p-4 rounded-lg shadow-md">
-    <div class="text-center py-2 space-y-6 flex flex-col items-center justify-center">
+<div class="py-8 lg:py-10"></div>
+<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+  <div class="container mx-auto px-4 text-center" data-aos="fade-up" data-aos-delay="300">
+    <div class="flex flex-col items-center justify-center">
+      <span class="information [.theme1_&]:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
+        {{ title1 }}
+      </span>
+    </div>
+    <h1 class="text-3xl font-bold mt-3
+      text-gray-900 dark:text-white [.theme1_&]:text-theme1-900 [.theme2_&]:text-theme2-900">
+      {{ title2 }}
+    </h1>
+  <p class="description-font text-center [.theme1_&]:text-theme1-800 [.theme2_&]:text-theme2-800">{{ details }}</p>
+  <div class="secondary-container-bg my-3 p-2 rounded-md shadow [.theme1_&]:bg-theme1-100 [.theme2_&]:bg-theme2-100">
+    <div class="text-center py-1 space-y-3 flex flex-col items-center">
       {% if bar_chart %}
-      <div class="grid lg:grid-cols-2 lg:space-x-4">
+      <div class="grid lg:grid-cols-2 lg:gap-3">
         {{ bar_chart|safe }}
         {{ pie_chart|safe }}
       </div>
@@ -24,26 +27,27 @@
         {{ line_chart_detections_by_day|safe }}
       </div>
       <a href="{% url 'core:statistics_plantilla' %}">
-        <button class="aditional-button">{% trans "Exportar Estadísticas" %}</button>
+        <button class="aditional-button [.theme1_&]:bg-theme1-500 [.theme1_&]:hover:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">{% trans "Exportar Estadísticas" %}</button>
       </a>
       {% else %}
-      <p class="description-module-cards text-center leading-5">
-        {% trans "No hay datos por mostrar." %} <span class="text-green-300 font-bold">{% trans "¿Por qué no generar nuevos datos?" %}</span>
+      <p class="description-module-cards text-center leading-4 [.theme1_&]:text-theme1-800 [.theme2_&]:text-theme2-800">
+        {% trans "No hay datos por mostrar." %} <span class="text-green-300 font-bold [.theme1_&]:text-theme1-600 [.theme2_&]:text-theme2-600">{% trans "¿Por qué no generar nuevos datos?" %}</span>
       </p>
       {% endif %}
     </div>
   </div>
-  <div class="flex justify-center mt-6 mb-4 space-x-2">
+  <div class="flex justify-center mt-3 mb-3 space-x-2">
     <a href="{% url 'monitoring:monitoring_session' %}">
-      <button class="monitoring-video-button">
+      <button class="monitoring-video-button [.theme1_&]:bg-theme1-500 [.theme1_&]:hover:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
         <i class="fa-solid fa-video"></i>
       </button>
     </a>
     <a href="{% url 'home' %}">
-      <button class="home-and-back-button">
-        <i class="fa-solid fa-home text-lg"></i>
+      <button class="home-and-back-button [.theme1_&]:bg-theme1-400 [.theme1_&]:hover:bg-theme1-500 [.theme2_&]:bg-theme2-400 [.theme2_&]:hover:bg-theme2-500">
+        <i class="fa-solid fa-home"></i>
       </button>
     </a>
   </div>
 </div>
+</section>
 {% endblock content %}

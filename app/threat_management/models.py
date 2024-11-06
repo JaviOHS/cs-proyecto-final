@@ -10,8 +10,8 @@ class Detection(models.Model):
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Modelo de Detección de Amenaza"
-        verbose_name_plural = "Modelos de Detección de Amenazas"
+        verbose_name = "Detección de Amenaza"
+        verbose_name_plural = "Detección de Amenazas"
         
     def __str__(self):
         return self.name

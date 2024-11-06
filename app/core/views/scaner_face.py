@@ -4,19 +4,14 @@ import json
 import base64
 from io import BytesIO
 from PIL import Image
-from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import View
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
-import boto3
 import requests
-from botocore.exceptions import ClientError
-from django.conf import settings
-from app.core.models import User2FAPreferences
+from app.core.models import User2FA
 
 User = get_user_model()
 
@@ -117,7 +112,7 @@ class RegisterFaceView(LoginRequiredMixin, View):
             filename = f'face_{request.user.id}.jpg'
             request.user.image.save(filename, ContentFile(image_data), save=True)
 
-            preferences, created = User2FAPreferences.objects.get_or_create(user=request.user)
+            preferences, created = User2FA.objects.get_or_create(user=request.user)
             preferences.is_facial_recognition_enabled = True
             preferences.save()
 

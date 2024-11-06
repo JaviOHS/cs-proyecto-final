@@ -3,11 +3,11 @@
 {% load i18n %}
 <title>{% block title %} Verificación 2FA {% if is_signup %}para Registro{% endif %}{% endblock title %}</title>
 {% block content %}
-<div class="primary-container-bg p-8 relative overflow-hidden">
+<div class="primary-container-bg p-6 relative overflow-hidden">
   <div class="relative">
-    <section class="secondary-container-bg p-8 my-4 mx-auto max-w-4xl rounded-3xl" data-aos="fade-up" data-aos-delay="200">
-      <div class="gap-2 mb-8">
-        <h1 class="title-font text-3xl text-center mt-4">
+    <section class="secondary-container-bg p-6 my-3 mx-auto max-w-3xl rounded-2xl" data-aos="fade-up" data-aos-delay="200">
+      <div class="gap-2 mb-6">
+        <h1 class="title-font text-2xl text-center mt-3">
           Verificación de dos factores {% if is_signup %}para Registro{% endif %}
         </h1>
         <p class="description-font text-center">
@@ -20,7 +20,7 @@
       </div>  
       <div class="flex items-center justify-center">
         <div class="w-full max-w-md mx-auto">
-          <form method="POST" class="space-y-8">
+          <form method="POST" class="space-y-6">
             {% csrf_token %}
             <div class="text-center">
               <label for="{{ form.code.id_for_label }}" class="labels">Código de verificación</label>

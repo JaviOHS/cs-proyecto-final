@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 
 class UserPermissionMixin(UserPassesTestMixin):
     permission_required = ''
-    paginate_by = 8
+    paginate_by = 6
     
     def test_func(self):
         if not hasattr(self, 'get_object'):

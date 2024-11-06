@@ -88,6 +88,99 @@ msgstr "Activate the facial recognition function so you can log in using your fa
 msgid "Guardar Configuración"
 msgstr "Save Settings"
 
+msgid "Somos una empresa líder especializada en soluciones de videovigilancia inteligente, con un enfoque innovador en la seguridad empresarial. Nuestro software de última generación se adapta perfectamente a las necesidades específicas de cada cliente, desde pequeñas empresas hasta corporaciones en expansión, garantizando una protección integral y eficiente de sus activos."
+msgstr "We are a leading company specializing in intelligent video surveillance solutions, with an innovative approach to business security. Our cutting-edge software is perfectly adapted to the specific needs of each client, from small businesses to expanding corporations, guaranteeing comprehensive and efficient protection of their assets."
+
+msgid "Nuestra misión es proporcionar tecnología de vanguardia en seguridad que permita a nuestros clientes mantener el control total de sus operaciones. Mediante sistemas avanzados de monitoreo y análisis en tiempo real, ofrecemos la tranquilidad y confianza que su negocio necesita para crecer de manera segura en el entorno actual."
+msgstr "Our mission is to provide cutting-edge security technology that enables our customers to maintain full control of their operations. Through advanced real-time monitoring and analytics systems, we offer the peace of mind and confidence your business needs to grow safely in today's environment."
+
+msgid "Respaldados por años de experiencia en el sector de seguridad, nuestras soluciones incorporan tecnologías de última generación, incluyendo análisis de video inteligente, detección temprana de amenazas y gestión centralizada de múltiples ubicaciones, todo diseñado para proteger lo que más importa: su negocio."
+msgstr "Backed by years of experience in the security industry, our solutions incorporate cutting-edge technologies, including intelligent video analytics, early threat detection, and centralized management of multiple locations, all designed to protect what matters most: your business."
+
+msgid "Aceptar"
+msgstr "Accept"
+
+msgid "Nuestro Equipo"
+msgstr "Our Team"
+
+msgid "Profesionales Detrás del Proyecto"
+msgstr "Professionals Behind the Project"
+
+msgid "Conoce al talentoso equipo que hace posible nuestra visión."
+msgstr "Meet the talented team that makes our vision possible."
+
+msgid "Líder Proyecto / Programador"
+msgstr "Project Leader / Programmer"
+
+msgid "Especialista en el uso de tecnologías como Django, Python, Amazon Web Services, OpenCV Tailwind CSS, JS, HTML con más de 1 año de experiencia."
+msgstr "Specialist in the use of technologies such as Django, Python, Amazon Web Services, OpenCV Tailwind CSS, JS, HTML with more than 1 year of experience."
+
+msgid "Diseñador Web / Programador"
+msgstr "Web Designer / Programmer"
+
+msgid "Cuenta"
+msgstr "Account"
+
+msgid "Usuarios"
+msgstr "Users"
+
+msgid "Gestionar permisos de usuarios y asignar grupos."
+msgstr "Manage user permissions and assign groups."
+
+msgid "Buscar Usuarios"
+msgstr "Search Users"
+
+msgid "No se encontraron resultados de búsqueda."
+msgstr "No search results found."
+
+msgid "Gestión de Grupos"
+msgstr "Group Management"
+
+msgid "Grupos"
+msgstr "Groups"
+
+msgid "Gestionar datos de grupos y permisos."
+msgstr "Manage group data and permissions."
+
+msgid "No hay grupos registrados. Lo cual es raro..."
+msgstr "No groups registered. Which is strange..."
+
+msgid "Gestión de Permisos"
+msgstr "Permission Management"
+
+msgid "Actualizar Usuario"
+msgstr "Update User"
+
+msgid "Actualizar Información de Usuario"
+msgstr "Update User Information"
+
+msgid "Complete el formulario con los datos del usuario."
+msgstr "Complete the form with the user data."
+
+msgid "Crear Grupo"
+msgstr "Create Group"
+
+msgid "Crear Grupo de Usuarios"
+msgstr "Create User Group"
+
+msgid "Complete el formulario con los datos del grupo."
+msgstr "Complete the form with the group information."
+
+msgid "Actualizar Grupo"
+msgstr "Update Group"
+
+msgid "Actualizar Información de Grupo"
+msgstr "Update Group Information"
+
+msgid "Permisos"
+msgstr "Permissions"
+
+msgid "Módulo de Permisos"
+msgstr "Permissions Module"
+
+msgid "Configuración de permisos y roles de usuario."
+msgstr "Setting user roles and permissions."
+
 
 
 # TRADUCCIOÓN DE home.html -------------------------------------------------------------------------------

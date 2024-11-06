@@ -3,12 +3,12 @@
 {% load i18n %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %}
-<div class="py-20"></div>
-<div class="container px-6 mx-auto mb-4 flex items-center justify-center" data-aos="fade-up">
-  <div class="secondary-container-bg w-full max-w-xl p-8 shadow-md hover:shadow-lg rounded-2xl">
-    <div class="flex flex-col items-center text-center space-y-4">
+<div class="py-10"></div>
+<div class="container px-4 mx-auto mb-4 flex items-center justify-center" data-aos="fade-up">
+  <div class="secondary-container-bg w-full max-w-xl p-6 shadow-md hover:shadow-lg rounded-2xl">
+    <div class="flex flex-col items-center text-center space-y-2">
       <svg xmlns="http://www.w3.org/2000/svg"
-        class="primary-container-bg w-16 h-16 rounded-2xl p-3 text-red-400" fill="none"
+        class="primary-container-bg w-14 h-14 rounded-2xl p-2 text-red-400" fill="none"
         viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
@@ -22,11 +22,11 @@
       </div>
       <form method="post" action="{{ confirm_url }}">
         {% csrf_token %}
-        <div class="space-x-4">
-          <button type="submit" class="bg-red-500 px-5 py-2 text-sm font-bold shadow-sm hover:shadow-lg tracking-wider text-white rounded-full">
+        <div class="space-x-2">
+          <button type="submit" class="bg-red-500 px-4 py-2 text-sm font-bold shadow-sm hover:shadow-lg tracking-wider text-white rounded-full">
             {% trans 'Sí, eliminar' %}
           </button>
-          <a href="{{ cancel_url }}" class="bg-blue-500 px-5 py-2 text-sm font-bold shadow-sm hover:shadow-lg tracking-wider text-white rounded-full">
+          <a href="{{ cancel_url }}" class="bg-blue-500 px-4 py-2 text-sm font-bold shadow-sm hover:shadow-lg tracking-wider text-white rounded-full">
             {% trans 'Cancelar' %}
           </a>
         </div>
