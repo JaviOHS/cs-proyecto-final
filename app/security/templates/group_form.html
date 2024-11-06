@@ -1,6 +1,8 @@
 {% extends "components/base.html" %}
 {% load static %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% load i18n %}
+{% load custom_filters %}
 {% block content %}
 <div class="py-12 lg:py-14"></div>
 <div class="container px-6 mx-auto" data-aos="fade-up">
@@ -26,24 +28,19 @@
         </div>
         <div class="flex flex-col space-y-4">
           <label class="labels">Permisos</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <i class="form-icons fa-solid fa-search"></i>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="permissions-container">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 items" id="permissions-container">
             {% regroup form.permissions.field.queryset by content_type as permission_groups %}
             {% for group in permission_groups %}
-              <div class="permission-group bg-slate-50 dark:bg-[#0c1322] rounded-lg p-4">
-                <h3 class="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-3">
-                  {{ group.grouper }}
+              <div class="flex flex-col items-center bg-slate-50 dark:bg-[#0c1322] rounded-lg p-4 w-full">
+                <h3 class="text-lg font-semibold text-blue-600 dark:text-indigo-400 mb-3">
+                  {{ group.grouper|split_at_pipe  }}
                 </h3>
                 <div class="space-y-2">
                   {% for permission in group.list %}
-                    <div class="permission-item">
+                    <div>
                       <input type="checkbox" id="permission_{{ permission.id }}" name="permissions" value="{{ permission.id }}" class="peer hidden" {% if permission in form.instance.permissions.all %}checked{% endif %}>
                       <label for="permission_{{ permission.id }}" class="checkbox-label">
-                        <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
                           <div class="flex-shrink-0">
                             <i class="form-icons fa-solid fa-key"></i>
                           </div>
@@ -73,7 +70,6 @@
       </form>
     </div>
   </div>
-
   <div class="flex justify-center mt-6 mb-4 space-x-2">
     <a href="{% url 'security:manage_permissions' %}">
       <button data-tooltip-target="tooltip-back" class="home-and-back-button">
@@ -85,7 +81,6 @@
       Volver a Permisos
       <div class="tooltip-arrow" data-popper-arrow></div>
     </div>
-
     <a href="{% url 'home' %}">
       <button data-tooltip-target="tooltip-home" class="home-and-back-button">
         <i class="fa-solid fa-home text-lg"></i>
