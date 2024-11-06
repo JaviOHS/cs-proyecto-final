@@ -1,0 +1,188 @@
+{% extends "components/base.html" %}
+{% load static %}
+<title>{% block title %}{{ title1 }}{% endblock title %}</title>
+{% load i18n %}
+{% block content %}
+<div class="py-12 lg:py-14"></div>
+<div class="container px-6 mx-auto" data-aos="fade-up">
+  <div class="flex flex-col items-center justify-center">
+    <span class="information">
+      {{ title1 }}
+    </span>
+  </div>
+  <h2 class="title-font text-3xl text-center mt-4">Usuarios</h2>
+  <p class="description-font text-center">{% trans 'Gestionar permisos de usuarios y asignar grupos.' %}</p>
+  <div class="secondary-container-bg p-4 rounded-lg shadow-md mt-4">
+    {% if users %}
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-800 text-center">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grupos</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+          {% for user in users %}
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <img src="{{ user.get_image }}" alt="Foto de {{ user.username }}"
+                class="h-10 w-10 rounded-full object-cover border-2 border-blue-500 dark:border-indigo-400">
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900 dark:text-white">{{ user.first_name }} {{ user.last_name }}
+              </div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">{{ user.email }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900 dark:text-white">{{ user.username }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              {% for group in user.groups.all %}
+              <span
+                class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-indigo-900 dark:text-indigo-300">
+                {{ group.name }}
+              </span>
+              {% empty %}
+              <span class="text-gray-500 dark:text-gray-400 text-sm">Sin grupo</span>
+              {% endfor %}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex space-x-2">
+                <a href="{% url 'security:user_update' user.pk %}" data-tooltip-target="tooltip-editar-{{ user.id }}"
+                  class="text-blue-600 hover:text-blue-900 dark:text-indigo-400 dark:hover:text-indigo-300">
+                  <i class="fa-solid fa-edit"></i>
+                </a>
+                <div id="tooltip-editar-{{ user.id }}" role="tooltip"
+                  class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                  Editar Usuario
+                  <div class="tooltip-arrow" data-popper-arrow></div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="description-module-cards text-center leading-5">
+      No hay usuarios registrados.
+    </p>
+    {% endif %}
+  </div>
+</div>
+
+{% block pagination %}
+{% include 'components/pagination.html' %}
+{% endblock pagination %}
+
+<div class="py-8 lg:py-10"></div>
+<div class="container px-6 mx-auto" data-aos="fade-up">
+  <div class="flex flex-col items-center justify-center">
+    <span class="information">
+      Gestión de Grupos
+    </span>
+  </div>
+  <h2 class="title-font text-3xl text-center mt-4">Grupos</h2>
+  <p class="description-font text-center">Gestionar datos de grupos y permisos.</p>
+  <div class="secondary-container-bg p-4 rounded-lg shadow-md mt-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {% for group in groups %}
+      <div class="primary-container-bg rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-2">
+              <div class="p-2 bg-blue-100 dark:bg-indigo-900 rounded-lg">
+                <i class="fa-solid fa-users text-blue-600 dark:text-indigo-400"></i>
+              </div>
+              <h3 class="first-element-dropdown text-base">{{ group.name }}</h3>
+            </div>
+            <div class="flex items-center space-x-2"> 
+              <a href="{% url 'security:group_delete' group.id %}"
+                class="p-2 text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-200"
+                data-tooltip-target="tooltip-eliminar-grupo-{{ group.id }}">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+              <div id="tooltip-eliminar-grupo-{{ group.id }}" role="tooltip"
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                Eliminar Grupo
+                <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
+              <a href="{% url 'security:group_update' group.id %}"
+                class="p-2 text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors duration-200"
+                data-tooltip-target="tooltip-editar-grupo-{{ group.id }}">
+                <i class="fa-solid fa-edit"></i>
+              </a>
+              <div id="tooltip-editar-grupo-{{ group.id }}" role="tooltip"
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                Editar Grupo
+                <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+              <i class="fa-solid fa-user-check mr-2"></i>
+              <span>{{ group.user_set.count }} usuarios</span>
+            </div>
+            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+              <i class="fa-solid fa-shield-halved mr-2"></i>
+              <span>{{ group.permissions.count }} permisos</span>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2">
+            {% for permission in group.permissions.all|slice:":3" %}
+            <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-full">
+              {{ permission.name }}
+            </span>
+            {% endfor %}
+            {% if group.permissions.count > 3 %}
+            <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-full">
+              +{{ group.permissions.count|add:"-3" }} más
+            </span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-span-full text-center py-8">
+        <div class="text-gray-500 dark:text-gray-400">
+          <i class="fa-solid fa-users-slash text-4xl mb-3"></i>
+          <p class="text-lg">No hay grupos registrados. Lo cual es raro...</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="flex justify-center mt-6 mb-4 space-x-2">
+  <a href="{% url 'home' %}">
+    <button data-tooltip-target="tooltip-home" class="home-and-back-button">
+      <i class="fa-solid fa-home text-lg"></i>
+    </button>
+  </a>
+  <div id="tooltip-home" role="tooltip"
+    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+    Volver al Inicio
+    <div class="tooltip-arrow" data-popper-arrow></div>
+  </div>
+  <a href="{% url 'security:group_create' %}">
+    <button data-tooltip-target="tooltip-crear" class="home-and-back-button">
+      <i class="fa-solid fa-plus text-lg"></i>
+    </button>
+  </a>
+  <div id="tooltip-crear" role="tooltip"
+    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+    Crear Grupo
+    <div class="tooltip-arrow" data-popper-arrow></div>
+  </div>
+</div>
+</div>
+{% endblock content %}

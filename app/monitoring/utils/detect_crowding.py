@@ -4,6 +4,8 @@ from botocore.exceptions import ClientError
 from django.conf import settings
 from app.alarm.models import Alarm
 import time
+import queue
+import threading
 from app.monitoring.utils.send_email import send_alert_email
 from app.threat_management.models import DetectionCounter
 from concurrent.futures import ThreadPoolExecutor
@@ -16,9 +18,10 @@ rekognition = boto3.client(
     region_name=settings.AWS_S3_REGION_NAME
 )
 
-last_email_time = 10
 EMAIL_COOLDOWN = 10  
+last_email_time = 10
 executor = ThreadPoolExecutor(max_workers=4)
+event_queue = queue.Queue()
 
 def call_rekognition(frame_bytes):
     try:
@@ -31,9 +34,73 @@ def call_rekognition(frame_bytes):
     except ClientError as e:
         print(f"Error al llamar a Rekognition: {e}")
         return None
+
+class BackgroundCrowdingProcessor(threading.Thread):
+    def __init__(self):
+        super().__init__(daemon=True)
+        self.running = True
     
+    def run(self):
+        while self.running:
+            try:
+                event_data = event_queue.get(timeout=1)
+                if event_data:
+                    self._process_event(event_data)
+                event_queue.task_done()
+            except queue.Empty:
+                continue
+    
+    def _process_event(self, event_data):
+        frame_bytes_processed = event_data['frame_bytes_processed']
+        session = event_data['session']
+        num_people = event_data['num_people']
+        frame_index = event_data['frame_index']
+        fps = event_data['fps']
+        self._handle_alarm(session, num_people, frame_index, fps, frame_bytes_processed)
+    
+    def _handle_alarm(self, session, num_people, frame_index, fps, frame_bytes_processed):
+        detection = session.detection_model
+        detection_counter, created = DetectionCounter.objects.get_or_create(
+            detection=detection,
+            user=session.user
+        )
+        detection_counter.increment()
+
+        alarm = Alarm.objects.filter(detection=detection, user=session.user, is_active=True).first()
+        if not alarm:
+            alarm = Alarm()
+            alarm = alarm.create_alarm(detection, session.user)
+        if alarm:
+            executor.submit(alarm.activate)
+        else:
+            print("No se pudo crear o encontrar la alarma.")
+        
+        current_time = time.time()
+        global last_email_time
+        if current_time - last_email_time > EMAIL_COOLDOWN:
+            recipient_email = session.user.email
+            context = {
+                'session': session,
+                'num_people': num_people,
+                'threshold': session.crowding_threshold,
+                'frame_index': frame_index,
+                'fps': fps,
+            }
+            send_alert_email(
+                subject=f'Alerta de aglomeración en la sesión {session.id}',
+                template_name='email_content.html',
+                context=context,
+                image_content=frame_bytes_processed,
+                image_name='aglomeracion_detectada.jpg',
+                recipient_list=[recipient_email]
+            )
+            last_email_time = current_time
+            print(f"{GREEN_COLOR}Correo electrónico enviado a {recipient_email}{RESET_COLOR}")
+
+background_crowding_processor = BackgroundCrowdingProcessor()
+background_crowding_processor.start()
+
 def detect_crowding(frame, session, frame_index, fps):
-    global last_email_time
     crowding_detected = False
     num_people = 0
 
@@ -68,43 +135,14 @@ def detect_crowding(frame, session, frame_index, fps):
             _, buffer_processed = cv2.imencode('.jpg', frame)
             frame_bytes_processed = buffer_processed.tobytes()
             
-            detection = session.detection_model
-            detection_counter, created = DetectionCounter.objects.get_or_create(
-                detection=detection,
-                user=session.user
-            )
-            detection_counter.increment()
-            
-            alarm = Alarm.objects.filter(detection=detection, user=session.user, is_active=True).first()
-            if not alarm:
-                alarm = Alarm()
-                alarm = alarm.create_alarm(detection, session.user)
-            if alarm:
-                executor.submit(alarm.activate)
-            else:
-                print("No se pudo crear o encontrar la alarma.")
-                
-            current_time = time.time()
-            is_crowding = True
-            if current_time - last_email_time > EMAIL_COOLDOWN:
-                recipient_email = session.user.email
-                context = {
-                    'session': session,
-                    'num_people': num_people,
-                    'threshold': session.crowding_threshold,
-                    'frame_index': frame_index,
-                    'fps': fps,
-                    'is_crowding': is_crowding,
-                }
-                send_alert_email(
-                    subject=f'Alerta de aglomeración en la sesión {session.id}',
-                    template_name='email_content.html',
-                    context=context,
-                    image_content=frame_bytes_processed,
-                    image_name='aglomeracion_detectada.jpg',
-                    recipient_list=[recipient_email]
-                )
-                last_email_time = current_time
-                print(f"{GREEN_COLOR}Correo electrónico enviado a {recipient_email}{RESET_COLOR}")
+            event_data = {
+                'frame_bytes_processed': frame_bytes_processed,
+                'session': session,
+                'num_people': num_people,
+                'frame_index': frame_index,
+                'fps': fps
+            }
+            event_queue.put(event_data)
+            print(f"{GREEN_COLOR}Evento de aglomeración encolado{RESET_COLOR}")
 
     return frame

@@ -6,6 +6,8 @@ from app.threat_management.models import DetectionCounter
 from concurrent.futures import ThreadPoolExecutor
 import os
 from config.utils import RED_COLOR, GREEN_COLOR, RESET_COLOR, YELLOW_COLOR
+import queue
+import threading
 
 fgbg = cv2.createBackgroundSubtractorMOG2()
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
@@ -13,12 +15,39 @@ kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
 EMAIL_COOLDOWN = 10  
 COOLDOWN_TIME = timedelta(seconds=3) 
 MIN_FRAMES_WITHOUT_MOTION = 15  
+WARMUP_FRAMES = 10
+warmup_counter = 0
 last_email_time = 0
 executor = ThreadPoolExecutor(max_workers=4)
 is_movement_event_active = False
 frames_buffer = []
 frames_without_motion = 0 
 alarm_triggered = False
+event_queue = queue.Queue()
+
+class BackgroundEventProcessor(threading.Thread):
+    def __init__(self):
+        super().__init__(daemon=True)
+        self.running = True
+    
+    def run(self):
+        while self.running:
+            try:
+                event_data = event_queue.get(timeout=1)
+                if event_data:
+                    self._process_event(event_data)
+                event_queue.task_done()
+            except queue.Empty:
+                continue
+    
+    def _process_event(self, event_data):
+        session = event_data['session']
+        video_path = event_data['video_path']
+        event_id = event_data['event_id']
+        executor.submit(send_email_with_video, session, video_path, event_id)
+
+background_processor = BackgroundEventProcessor()
+background_processor.start()
 
 def process_contour(cnt):
     if cv2.contourArea(cnt) > 500:
@@ -55,12 +84,17 @@ def send_email_with_video(session, video_path, event_id):
         )
     except Exception as e:
         print(f"Error al enviar el correo electrónico: {e}")
-    
     os.remove(video_path)
     print(f"{GREEN_COLOR}Vídeo del evento eliminado después de enviarlo{RESET_COLOR}")
 
 def detect_motion(frame, session, frame_index, fps):
-    global last_email_time, is_movement_event_active, frames_buffer, frames_without_motion, alarm_triggered
+    global last_email_time, is_movement_event_active, frames_buffer, frames_without_motion, alarm_triggered, warmup_counter
+
+    if warmup_counter < WARMUP_FRAMES:
+        warmup_counter += 1
+        print(f"{YELLOW_COLOR}Calentamiento: Ignorando cuadro {warmup_counter}/{WARMUP_FRAMES}{RESET_COLOR}")
+        return frame
+
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     fgmask = fgbg.apply(gray)
     fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel)
@@ -106,5 +140,12 @@ def detect_motion(frame, session, frame_index, fps):
                 frames_without_motion = 0
                 event_id = datetime.now().timestamp()
                 video_path = save_video_segment(frames_buffer, event_id)
-                executor.submit(send_email_with_video, session, video_path, event_id)
+                
+                event_data = {
+                    'session': session,
+                    'video_path': video_path,
+                    'event_id': event_id
+                }
+                event_queue.put(event_data)
+
     return frame
