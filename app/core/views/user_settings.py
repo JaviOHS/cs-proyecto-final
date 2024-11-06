@@ -2,16 +2,16 @@ from django.views.generic import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.contrib import messages
-from app.core.models import User2FAPreferences
+from app.core.models import User2FA
 from django.utils.translation import gettext_lazy as _
 
 class UserSettingsView(LoginRequiredMixin, UpdateView):
-    model = User2FAPreferences
+    model = User2FA
     fields = ['is_2fa_enabled', 'is_facial_recognition_enabled']
     template_name = 'user_settings.html'
 
     def get_object(self, queryset=None):
-        return User2FAPreferences.objects.get_or_create(user=self.request.user)[0]
+        return User2FA.objects.get_or_create(user=self.request.user)[0]
 
     def get_success_url(self):
         return reverse('core:user_settings')

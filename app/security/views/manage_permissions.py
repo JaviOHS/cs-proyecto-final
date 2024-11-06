@@ -9,6 +9,7 @@ from django.views.generic import TemplateView
 from app.security.forms.user_group_form import UserGroupForm
 from app.security.forms.group_form import GroupForm
 from app.core.views.confirm_delete import ConfirmDeleteView
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -19,17 +20,26 @@ class ManagePermissionsView(UserPermissionMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title1'] = 'Gestión de Permisos'
-        users = User.objects.all()
-        groups = Group.objects.all()
-        permissions = Permission.objects.all()
+        query = self.request.GET.get('query', '')
 
+        if query:
+            users = User.objects.filter(
+                Q(username__icontains=query) |
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(email__icontains=query)
+            )
+        else:
+            users = User.objects.all()
+        
         context.update({
             'users': users,
-            'groups': groups, 
-            'permissions': permissions
+            'groups': Group.objects.all(),
+            'permissions': Permission.objects.all(),
+            'query': query
         })
         return context
-
+    
 class UserUpdateView(FormErrorHandlingMixin, UserPermissionMixin, UpdateView):
     model = User
     template_name = 'user_form.html'
@@ -51,6 +61,17 @@ class UserUpdateView(FormErrorHandlingMixin, UserPermissionMixin, UpdateView):
     def add_success_message(self):
         messages.success(self.request, "Éxito al actualizar usuario.")
     
+class UserDeleteView(FormErrorHandlingMixin, UserPermissionMixin, ConfirmDeleteView):
+    model = User
+    success_url = reverse_lazy('security:manage_permissions')
+    permission_required = 'delete_user'
+
+    def get_details(self):
+        return f"Usuario: {self.object.username}"
+    
+    def add_success_message(self):
+        messages.success(self.request, "Éxito al eliminar usuario.")
+
 class GroupCreateView(FormErrorHandlingMixin, UserPermissionMixin, CreateView):
     model = Group
     template_name = 'group_form.html'

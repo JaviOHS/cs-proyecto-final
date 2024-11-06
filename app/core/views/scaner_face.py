@@ -16,7 +16,7 @@ import boto3
 import requests
 from botocore.exceptions import ClientError
 from django.conf import settings
-from app.core.models import User2FAPreferences
+from app.core.models import User2FA
 
 User = get_user_model()
 
@@ -117,7 +117,7 @@ class RegisterFaceView(LoginRequiredMixin, View):
             filename = f'face_{request.user.id}.jpg'
             request.user.image.save(filename, ContentFile(image_data), save=True)
 
-            preferences, created = User2FAPreferences.objects.get_or_create(user=request.user)
+            preferences, created = User2FA.objects.get_or_create(user=request.user)
             preferences.is_facial_recognition_enabled = True
             preferences.save()
 

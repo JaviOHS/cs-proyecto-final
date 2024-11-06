@@ -705,6 +705,10 @@ video {
   right: 1rem;
 }
 
+.start-0 {
+  inset-inline-start: 0px;
+}
+
 .top-0 {
   top: 0px;
 }
@@ -794,6 +798,16 @@ video {
 .my-6 {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+.mx-10 {
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
+}
+
+.mx-52 {
+  margin-left: 13rem;
+  margin-right: 13rem;
 }
 
 .-mr-1 {
@@ -980,6 +994,10 @@ video {
   height: 3.5rem;
 }
 
+.h-16 {
+  height: 4rem;
+}
+
 .h-2 {
   height: 0.5rem;
 }
@@ -1082,6 +1100,10 @@ video {
 
 .w-14 {
   width: 3.5rem;
+}
+
+.w-16 {
+  width: 4rem;
 }
 
 .w-2 {
@@ -1510,10 +1532,6 @@ video {
   overflow: hidden;
 }
 
-.overflow-x-auto {
-  overflow-x: auto;
-}
-
 .overflow-y-auto {
   overflow-y: auto;
 }
@@ -1525,10 +1543,6 @@ video {
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.whitespace-nowrap {
   white-space: nowrap;
 }
 
@@ -2056,11 +2070,6 @@ video {
   padding-right: 1.5rem;
 }
 
-.py-0\.5 {
-  padding-top: 0.125rem;
-  padding-bottom: 0.125rem;
-}
-
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -2140,6 +2149,10 @@ video {
 
 .pr-4 {
   padding-right: 1rem;
+}
+
+.ps-3 {
+  padding-inline-start: 0.75rem;
 }
 
 .pt-1 {
@@ -3418,25 +3431,26 @@ video {
 
 .checkbox-label {
   display: flex;
-  width: 10rem;
+  width: 100%;
   cursor: pointer;
   align-items: center;
   border-radius: 0.5rem;
-  border-width: 2px;
+  border-width: 1px;
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-  padding: 1rem;
+  padding: 0.75rem;
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 300ms;
-  --tw-bg-opacity: 1;
-  background-color: rgb(248 250 252 / var(--tw-bg-opacity));
 }
 
 .checkbox-label:is(.dark *) {
+  --tw-border-opacity: 1;
+  border-color: rgb(17 27 51 / var(--tw-border-opacity));
   --tw-bg-opacity: 1;
   background-color: rgb(12 19 34 / var(--tw-bg-opacity));
 }
@@ -3446,11 +3460,6 @@ video {
   border-color: rgb(37 99 235 / var(--tw-border-opacity));
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity));
-}
-
-.checkbox-label:is(.dark *) {
-  --tw-border-opacity: 1;
-  border-color: rgb(17 27 51 / var(--tw-border-opacity));
 }
 
 .peer:checked ~ .checkbox-label:is(.dark *) {
@@ -3639,9 +3648,9 @@ video {
   color: rgb(29 78 216 / var(--tw-text-opacity));
 }
 
-.hover\:text-blue-900:hover {
+.hover\:text-blue-800:hover {
   --tw-text-opacity: 1;
-  color: rgb(30 58 138 / var(--tw-text-opacity));
+  color: rgb(30 64 175 / var(--tw-text-opacity));
 }
 
 .hover\:text-cyan-800:hover {
@@ -3905,11 +3914,6 @@ video {
 .peer:focus ~ .peer-focus\:ring-blue-300 {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(147 197 253 / var(--tw-ring-opacity));
-}
-
-.dark\:divide-gray-700:is(.dark *) > :not([hidden]) ~ :not([hidden]) {
-  --tw-divide-opacity: 1;
-  border-color: rgb(55 65 81 / var(--tw-divide-opacity));
 }
 
 .dark\:border-\[\#111b33\]:is(.dark *) {
@@ -4205,6 +4209,11 @@ video {
   color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
+.dark\:text-gray-600:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+
 .dark\:text-green-200:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(187 247 208 / var(--tw-text-opacity));
@@ -4263,6 +4272,11 @@ video {
 .dark\:text-red-300:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(252 165 165 / var(--tw-text-opacity));
+}
+
+.dark\:text-red-400:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(248 113 113 / var(--tw-text-opacity));
 }
 
 .dark\:text-red-500:is(.dark *) {
@@ -4415,6 +4429,11 @@ video {
 .dark\:hover\:text-indigo-400:hover:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(129 140 248 / var(--tw-text-opacity));
+}
+
+.dark\:hover\:text-red-300:hover:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(252 165 165 / var(--tw-text-opacity));
 }
 
 .dark\:hover\:text-white:hover:is(.dark *) {
@@ -4710,6 +4729,11 @@ video {
   .lg\:my-6 {
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
+  }
+
+  .lg\:mx-52 {
+    margin-left: 13rem;
+    margin-right: 13rem;
   }
 
   .lg\:mb-0 {

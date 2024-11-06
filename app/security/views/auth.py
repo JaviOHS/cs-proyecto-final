@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import FormView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from app.core.models import User2FAPreferences
+from app.core.models import User2FA
 from app.security.forms.auth import CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
@@ -78,7 +78,7 @@ class SigninView(AuthErrorHandlingMixin, FormView):
         user = authenticate(self.request, username=username, password=password)
 
         if user is not None:
-            two_fa_preferences, created = User2FAPreferences.objects.get_or_create(user=user)
+            two_fa_preferences, created = User2FA.objects.get_or_create(user=user)
             
             if two_fa_preferences.is_2fa_enabled:
                 code = ''.join([str(random.randint(0, 9)) for _ in range(6)])
@@ -105,7 +105,7 @@ class SigninView(AuthErrorHandlingMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        show_facial_recognition = User2FAPreferences.objects.filter(
+        show_facial_recognition = User2FA.objects.filter(
             is_facial_recognition_enabled=True
         ).exists()
         
