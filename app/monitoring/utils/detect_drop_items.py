@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 from datetime import datetime
 from collections import deque
-from config.utils import GREEN_COLOR, RESET_COLOR, RED_COLOR, YELLOW_COLOR
+from config.utils import GREEN_COLOR, RESET_COLOR, RED_COLOR
 from app.monitoring.utils.send_email import send_alert_email_video
 from concurrent.futures import ThreadPoolExecutor
 from django.conf import settings

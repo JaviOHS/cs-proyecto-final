@@ -32,7 +32,7 @@
             {% regroup form.permissions.field.queryset by content_type as permission_groups %}
             {% for group in permission_groups %}
               <div class="bg-slate-50 dark:bg-[#0c1322] rounded-lg p-4 w-full shadow-md">
-                <h3 class="text-lg font-semibold text-blue-600 dark:text-indigo-400 mb-3 text-left w-full">
+                <h3 class="text-lg font-semibold text-blue-600 dark:text-indigo-400 mb-3 text-center w-full">
                   {{ group.grouper|split_at_pipe }}
                 </h3>
                 <div class="space-y-2">

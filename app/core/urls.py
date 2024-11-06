@@ -1,6 +1,4 @@
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
 from app.core.views.home import HomeTemplateView
 from app.core.views.profile_view import ProfileView, UserProfileUpdateView
 from app.core.views.recuperation_email import PasswordResetView

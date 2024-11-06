@@ -4,18 +4,13 @@ import json
 import base64
 from io import BytesIO
 from PIL import Image
-from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import View
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
-import boto3
 import requests
-from botocore.exceptions import ClientError
-from django.conf import settings
 from app.core.models import User2FA
 
 User = get_user_model()

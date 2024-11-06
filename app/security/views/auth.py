@@ -14,7 +14,6 @@ import random
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 from django.core.files.storage import default_storage
-from django.core.files import File
 from django.core.files.base import ContentFile
 
 class ExtendSessionView(LoginRequiredMixin, View):

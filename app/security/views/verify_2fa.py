@@ -4,7 +4,6 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django import forms
-from app.security.forms.auth import CustomUserCreationForm
 from app.security.models import User
 from django.core.files.storage import default_storage
 from django.core.files import File
