@@ -4,11 +4,12 @@
 {% load i18n %}
 {% load custom_filters %}
 {% block content %}
-<div class="py-12 lg:py-14"></div>
-<div class="container px-6 mx-auto" data-aos="fade-up">
-  <div class="flex flex-col items-center justify-center">
-    <span class="information">
-      {{ title1 }}
+<div class="py-8 lg:py-10"></div>
+<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+  <div class="container mx-auto px-4 text-center" data-aos="fade-up" data-aos-delay="300">
+    <div class="flex flex-col items-center justify-center">
+      <span class="information [.theme1_&]:bg-theme1-600 [.theme2_&]:bg-theme2-500 [.theme2_&]:hover:bg-theme2-600">
+        {{ title1 }}
     </span>
   </div>
   <h1 class="title-font text-3xl text-center mt-4">{{ title2 }}</h1>
@@ -27,8 +28,8 @@
           </div>
         </div>
         <div class="flex flex-col space-y-4">
-          <label class="labels w-full">Permisos</label>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full" id="permissions-container">
+          <label class="labels w-full">{% trans 'Permisos' %}</label>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {% regroup form.permissions.field.queryset by content_type as permission_groups %}
             {% for group in permission_groups %}
               <div class="bg-slate-50 dark:bg-[#0c1322] rounded-lg p-4 w-full shadow-md">
@@ -40,11 +41,11 @@
                     <div>
                       <input type="checkbox" id="permission_{{ permission.id }}" name="permissions" value="{{ permission.id }}" 
                         class="peer hidden" {% if permission in form.instance.permissions.all %}checked{% endif %}>
-                      <label for="permission_{{ permission.id }}" class="checkbox-label w-full flex items-center space-x-3">
+                      <label for="permission_{{ permission.id }}" class="checkbox-label w-full space-x-3">
                         <div class="flex-shrink-0">
                           <i class="form-icons fa-solid fa-key text-blue-600 dark:text-indigo-400"></i>
                         </div>
-                        <div class="flex flex-col">
+                        <div class="flex flex-col text-left">
                           <span class="font-medium text-gray-900 dark:text-white">
                             {{ permission.name }}
                           </span>
@@ -91,4 +92,5 @@
     </div>
   </div>
 </div>
+</section>
 {% endblock content %}
