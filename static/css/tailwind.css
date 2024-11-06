@@ -205,5 +205,5 @@
 .checkbox-label {
   @apply flex items-center p-4 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:border-[#111b33] peer-checked:border-blue-600 dark:peer-checked:border-indigo-600
    dark:peer-checked:text-indigo-500 peer-checked:text-blue-600 primary-container-bg
-   w-42 transition-all duration-300;
+   w-40 transition-all duration-300;
 }
