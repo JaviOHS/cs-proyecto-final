@@ -222,7 +222,7 @@ class BackgroundEventProcessor(threading.Thread):
 def save_theft_event(session, frame_buffer, theft_time, theft_number, fps):
     try:
         video_filename = f'theft_video_{theft_number}.mp4'
-        video_path = os.path.join(settings.BASE_DIR, video_filename)
+        video_path = os.path.join(video_filename)
         
         create_video_from_frames(frame_buffer, video_path, fps)
         

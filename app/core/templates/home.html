@@ -192,6 +192,18 @@
             {% trans 'Empezar' %}
           </a> {% endif %}
         </div>
+        {% if user.is_superuser %}
+        <div
+          class="group relative primary-container-bg flex flex-col justify-between rounded-2xl shadow-md p-4 transition-all duration-500 hover:bg-purple-500 dark:hover:bg-purple-600">
+          <div class="secondary-container-bg rounded-full flex justify-center items-center mb-5 w-14 h-14 transition-all duration-300 group-hover:rotate-12">
+            <i class="fas fa-cogs text-3xl text-purple-600 dark:text-purple-300"></i>
+          </div>
+          <h4 class="title-module-cards">Módulo de Permisos</h4>
+          <p class="description-module-cards"> Configuración de permisos y roles de usuario.</p>
+          <a href="{% url 'security:manage_permissions' %}"
+            class="button-module-cards bg-purple-500 rounded-lg hover:bg-purple-600 focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 w-[50%]">Empezar</a>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>
