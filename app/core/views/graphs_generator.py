@@ -89,15 +89,17 @@ class GraphGenerator:
             ay=-40,
             font=dict(size=10, color='black')
         )
-
         bar_chart.update_layout(
-            title='Cantidad de Amenazas Detectadas y Predicción',
+            title={
+                'text': 'Cantidad de Amenazas Detectadas y Predicción',
+                'font': {'size': 14} 
+            },
             xaxis_title='Amenazas',
             yaxis_title='Número de Detecciones',
             template='plotly_white',
             plot_bgcolor='rgba(255, 255, 255, 0)',
             paper_bgcolor='rgba(255, 255, 255, 0)',
-            barmode='group',
+            barmode='group'
         )
 
         config = {
@@ -126,7 +128,10 @@ class GraphGenerator:
         )])
 
         pie_chart.update_layout(
-            title='Porcentaje de Amenazas Detectadas',
+            title={
+                'text': 'Porcentaje de Amenazas Detectadas',
+                'font': {'size': 14} 
+            },
             template='plotly_white',
             plot_bgcolor='rgba(255, 255, 255, 0)',
             paper_bgcolor='rgba(255, 255, 255, 0)'
@@ -177,16 +182,27 @@ class GraphGenerator:
         line_chart.add_annotation(
             x=future_dates[-1],
             y=y_pred[-1],
-            text='Se predice la siguiente cantidad de aumento de detecciones: ' + str(round(y_pred[-1], 2)),
+            text=f'Predicción: {round(y_pred[-1], 2)} detecciones', 
             showarrow=True,
-            arrowhead=2,
+            arrowhead=1,                   
             ax=0,
-            ay=-40,
-            font=dict(size=12, color='red')
+            ay=-30,                        
+            font=dict(
+                size=10,                   
+                color='red',
+                family='Arial'             
+            ),
+            bgcolor='rgba(255, 255, 255, 0.8)',  
+            bordercolor='red',
+            borderwidth=1,
+            borderpad=4                     
         )
 
         line_chart.update_layout(
-            title='Detecciones de Amenazas por Día y Predicciones',
+            title={
+                'text': 'Detecciones de Amenazas por Día y Predicciones',
+                'font': {'size': 14} 
+            },
             xaxis_title='Fecha',
             yaxis_title='Número de Detecciones',
             template='plotly_white',
