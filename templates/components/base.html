@@ -17,20 +17,23 @@
 </head>
 {% load i18n %}
 
-<body data-authenticated="{{ request.user.is_authenticated|lower }}" class="primary-container-bg text-items font-light">
+<body data-authenticated="{{ request.user.is_authenticated|lower }}" class="z-90 primary-container-bg text-items font-light">
   {% block navbar %}
     <header class="top-0 left-0 right-0 z-50 fixed w-full transition duration-300 ease-in-out backdrop-blur-none bg-opacity-100">
-      <nav id="navbar" class="fixed top-0 left-0 w-full bg-white border-gray-200 primary-container-bg transition-all duration-300">
+      <nav id="navbar" class="fixed top-0 left-0 w-full border-gray-200 bg-white dark:bg-gray-900 transition-all duration-300">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
           <a href="/" class="flex items-center space-x-2">
             <img src="{% static 'img/components/icon.png' %}" class="h-6" alt="PASYS ALERT LOGO" />
             <span class="nav-font-color text-xl">PASYS ALERT</span>
           </a>
+          
+          <div id="navbar-overlay" class="fixed inset-0 z-40 hidden transition-opacity duration-300"></div>
           <button data-collapse-toggle="navbar-menu" type="button"
-            class="inline-flex items-center p-1.5 w-8 h-8 justify-center text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            class="inline-flex items-center p-1.5 w-8 h-8 justify-center text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600 z-50">
             <span class="sr-only">Open main menu</span>
-            <i class="fas fa-bars"></i>
+            <i class="fas fa-bars-staggered transition-transform duration-300 menu-icon"></i>
           </button>
+      
           <div class="hidden w-full md:flex md:w-auto">
             <ul class="items-center bg-center flex flex-col md:flex-row md:space-x-8 p-2 md:p-0 font-medium rounded-lg">
               <li class="py-1 md:py-0">
@@ -166,8 +169,9 @@
         </div>
       </nav>
     </header>
- 
-    <aside class="hidden fixed left-0 top-0 z-50 h-screen w-70 bg-white/80 backdrop-blur-md dark:bg-gray-900/80 border-r border-gray-100 dark:border-gray-800" id="navbar-menu">
+
+
+    <aside class="rounded-r-3xl border-r hidden fixed left-0 top-0 z-50 h-screen w-70 bg-white/80 backdrop-blur-md dark:bg-gray-900/80 border-r border-gray-100 dark:border-gray-800" id="navbar-menu">
       {% if user.is_authenticated %}
         <div class="p-4 mb-6">
           <div class="flex items-center mb-3">
@@ -519,7 +523,7 @@
     </div>
   </div>
   {% load i18n %}
-  <footer>
+  <footer class="w-full mt-auto">
     <div class="w-full max-w-screen-xl mx-auto p-2 md:py-4">
       <div class="sm:flex sm:items-center sm:justify-between">
         <a href="/" class="logo">
@@ -528,7 +532,7 @@
         </a>
       </div>
       <hr class="my-4 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-6" />
-      <span class="footer-font-color text-sm">© 2024 <a href="" class="hover:underline">PASYS ALERT™</a>. {% trans 'Todos los derechos reservados.' %}</a></span>
+      <span class="footer-font-color text-sm">© 2024 <a href="" class="hover:underline">PASYS ALERT™</a>. {% trans 'Todos los derechos reservados.' %}</span>
     </div>
     <svg width="100%" height="100%" id="svg" viewBox="0 0 1440 400" xmlns="http://www.w3.org/2000/svg"
       class="transition duration-300 ease-in-out delay-150">
@@ -797,6 +801,7 @@
   {% include 'scripts.html' %}
   {% include 'scripts_chatbot.html' %}
   {% endblock scripts %}
+  {% include 'particles.html' %}
 
   {% block extra_js %}{% endblock %}
 </body>

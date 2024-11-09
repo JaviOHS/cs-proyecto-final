@@ -1,36 +1,67 @@
-{% extends 'components/base.html' %} 
+{% extends 'components/base.html' %}
 {% load static %}
 {% load i18n %}
-<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+
+<title>{% block title %}{{ title1 }}{% endblock title %}</title>
+
 {% block content %}
-<div class="py-10"></div>
-<div class="container px-4 mx-auto mb-4 flex items-center justify-center" data-aos="fade-up">
-  <div class="secondary-container-bg w-full max-w-xl p-6 shadow-md hover:shadow-lg rounded-2xl">
-    <div class="flex flex-col items-center text-center space-y-2">
-      <svg xmlns="http://www.w3.org/2000/svg"
-        class="primary-container-bg w-14 h-14 rounded-2xl p-2 text-red-400" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-      <div>
-        <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ title2 }}</h2>
-        <p class="text-gray-700 dark:text-gray-400 font-bold">
-          {% trans '¿Está seguro de esta decisión?' %}<br>
-          <span class="font-black text-green-400">{{ details }}</span><br>
-          <span class="text-red-400 font-black">{% trans 'Una vez eliminado, no podrás recuperar los datos.' %}</span>
-        </p>
+<div class="min-h-screen flex items-center justify-center bg-transparent dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 transform hover:scale-102 transition-all duration-300">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden p-8">
+      <!-- Header Icon -->
+      <div class="flex justify-center mb-6">
+        <div class="bg-red-50 dark:bg-red-900/30 rounded-full p-3">
+          <svg xmlns="http://www.w3.org/2000/svg"
+            class="h-12 w-12 text-red-500 dark:text-red-400 animate-pulse" 
+            fill="none"
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.5" 
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
       </div>
-      <form method="post" action="{{ confirm_url }}">
-        {% csrf_token %}
-        <div class="space-x-2">
-          <button type="submit" class="bg-red-500 px-4 py-2 text-sm font-bold shadow-sm hover:shadow-lg tracking-wider text-white rounded-full">
+
+      <!-- Content -->
+      <div class="text-center space-y-4">
+        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+          {{ title2 }}
+        </h2>
+        <div class="space-y-2">
+          <p class="text-lg text-gray-600 dark:text-gray-300">
+            {% trans '¿Está seguro de esta decisión?' %}
+          </p>
+          <p class="text-lg font-medium text-emerald-600 dark:text-emerald-400">
+            {{ details }}
+          </p>
+          <p class="text-sm font-medium text-red-500 dark:text-red-400">
+            {% trans 'Una vez eliminado, no podrás recuperar los datos.' %}
+          </p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+        <form method="post" action="{{ confirm_url }}" class="w-full sm:w-auto">
+          {% csrf_token %}
+          <button type="submit"
+            class="w-full sm:w-auto inline-flex justify-center items-center px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
             {% trans 'Sí, eliminar' %}
           </button>
-          <a href="{{ cancel_url }}" class="bg-blue-500 px-4 py-2 text-sm font-bold shadow-sm hover:shadow-lg tracking-wider text-white rounded-full">
-            {% trans 'Cancelar' %}
-          </a>
-        </div>
-      </form>
+        </form>
+        <a href="{{ cancel_url }}"
+          class="w-full sm:w-auto inline-flex justify-center items-center px-8 py-3 border border-gray-300 dark:border-gray-600 text-base font-medium rounded-lg text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          {% trans 'Cancelar' %}
+        </a>
+      </div>
     </div>
   </div>
 </div>

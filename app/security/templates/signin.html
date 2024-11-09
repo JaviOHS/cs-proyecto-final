@@ -3,7 +3,7 @@
 {% load i18n %}
 <title>{% block title %} {{ title1 }} {% endblock title %}</title>
 {% block content %}
-<div class="primary-container-bg p-6 relative overflow-hidden">
+<div class="z-50 bg-transparent p-6 relative overflow-hidden">
   <div class="relative">
     <a href="/" class="flex items-center mb-3 sm:mb-0 space-x-2 rtl:space-x-reverse text-center justify-center"
       data-aos="fade-up">
@@ -169,5 +169,8 @@
     });
   });
 </script>
+
+{% include 'particles.html' %}
+
 {% endblock content %}
 {% block navbar %}{% endblock navbar %}

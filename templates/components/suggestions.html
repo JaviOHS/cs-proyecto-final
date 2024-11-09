@@ -1,51 +1,63 @@
-<div id="suggestions"
-  class="fixed bottom-0 -right-0 z-[60] sm:max-w-sm w-full sm:w-auto p-8 opacity-0 transition-all duration-300">
-  <div
-    class="bg-blue-100 dark:bg-indigo-900 text-center relative p-4 backdrop-blur-lg dark:backdrop-blur-lg rounded-xl">
-    <h2 class="text-blue-700 dark:text-indigo-200 font-bold text-lg">Sugerencia</h2>
-    <p id="suggestion-message" class="text-gray-800 dark:text-gray-200 font-semibold text-base">Este es un mensaje por
-      defecto.</p>
-    <div id="suggestion-link-container" class="mt-2 hidden">
-      <a id="suggestion-link" href="#" class="text-blue-600 dark:text-blue-400 hover:underline font-bold" target="_blank"><i class="fa-solid fa-link"></i> </a>
+<div id="suggestions" class="fixed bottom-0 end-0 z-[60] sm:max-w-sm w-full mx-auto p-6 opacity-0 transition-all duration-300">
+  <!-- Card -->
+  <div class="p-4 bg-white/60 backdrop-blur-lg rounded-xl shadow-2xl dark:bg-neutral-900/60 dark:shadow-black/70">
+    <div class="flex justify-between gap-x-5">
+      <div class="grow">
+        <h2 class="font-semibold text-gray-800 dark:text-white">
+          Sugerencia
+        </h2>
+      </div>
+      <button type="button" 
+              onclick="closeSuggestions()"
+              class="inline-flex rounded-full p-2 text-gray-500 hover:bg-white focus:outline-none focus:bg-white dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+        <span class="sr-only">Cerrar</span>
+        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+      </button>
     </div>
-    <div class="mt-5 mb-2 w-full flex gap-x-2 justify-center">
-      <button type="button" class="aditional-button" onclick="closeSuggestions()">
-        Comprendo <i class="fa-solid fa-thumbs-up"></i>
+
+    <p id="suggestion-message" class="mt-2 text-sm text-gray-800 dark:text-neutral-200">
+      Este es un mensaje por defecto.
+    </p>
+
+    <div id="suggestion-link-container" class="mt-2 hidden">
+      <a id="suggestion-link" 
+         href="#" 
+         class="inline-flex items-center gap-x-1.5 text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-blue-500" 
+         target="_blank">
+        <i class="fa-solid fa-link"></i>
+        <span>Ver más</span>
+      </a>
+    </div>
+
+    <div class="mt-5 mb-2 w-full">
+      <button type="button" 
+              onclick="closeSuggestions()"
+              class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-700">
+        <span>Comprendo</span>
+        <i class="fa-solid fa-thumbs-up"></i>
       </button>
     </div>
   </div>
-  <svg class="absolute bottom-0 right-0 -z-10 w-full h-full" viewBox="0 0 273 250" fill="none"
-    xmlns="http://www.w3.org/2000/svg">
+
+  <!-- SVG Background -->
+  <svg class="-z-[1] absolute bottom-0 end-0" width="273" height="250" viewBox="0 0 273 250" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clip-path="url(#clip0_1727_230)">
-      <path
-        d="M274.983 42.5186C261.682 42.5186 248.926 47.8596 239.521 57.3668C230.116 66.874 224.833 79.7685 224.833 93.2137C224.833 106.659 230.116 119.553 239.521 129.061C248.926 138.568 261.682 143.909 274.983 143.909L274.983 120.374C267.857 120.374 261.023 117.512 255.984 112.419C250.945 107.325 248.114 100.417 248.114 93.2137C248.114 86.0103 250.945 79.1021 255.984 74.0085C261.023 68.915 267.857 66.0535 274.983 66.0535L274.983 42.5186Z"
-        fill="#3B82F6" class="dark:fill-indigo-800" />
-      <path
-        d="M274.982 0C250.405 -2.94804e-07 226.835 9.82069 209.456 27.3016C192.077 44.7826 182.314 68.4918 182.314 93.2136C182.314 117.935 192.077 141.645 209.456 159.126C226.835 176.606 250.405 186.427 274.982 186.427L274.982 143.153C261.815 143.153 249.187 137.892 239.876 128.526C230.566 119.161 225.335 106.458 225.335 93.2136C225.335 79.9688 230.566 67.2664 239.876 57.9009C249.187 48.5354 261.815 43.274 274.982 43.274L274.982 0Z"
-        fill="#1D4ED8" class="dark:fill-indigo-900" />
-      <circle cx="214.475" cy="222.95" r="59.962" transform="rotate(180 214.475 222.95)" stroke="#1E40AF"
-        stroke-width="3.27065" class="dark:stroke-indigo-700" />
-      <circle cx="214.476" cy="222.95" r="49.0598" transform="rotate(180 214.476 222.95)" stroke="#1E40AF"
-        stroke-width="3.27065" class="dark:stroke-indigo-700" />
-      <circle cx="214.475" cy="222.95" r="39.2478" transform="rotate(180 214.475 222.95)" stroke="#1E40AF"
-        stroke-width="3.27065" class="dark:stroke-indigo-700" />
-      <circle cx="214.476" cy="222.949" r="28.3457" transform="rotate(180 214.476 222.949)" stroke="#1E40AF"
-        stroke-width="3.27065" class="dark:stroke-indigo-700" />
-      <circle cx="214.475" cy="222.95" r="17.4435" transform="rotate(180 214.475 222.95)" stroke="#1E40AF"
-        stroke-width="3.27065" class="dark:stroke-indigo-700" />
-      <circle cx="214.476" cy="222.949" r="7.63152" transform="rotate(180 214.476 222.949)" stroke="#3B82F6"
-        stroke-width="3.27065" class="dark:stroke-indigo-500" />
-      <rect x="193.216" y="180.976" width="55.6011" height="40.338" transform="rotate(180 193.216 180.976)"
-        fill="#1E40AF" class="dark:fill-indigo-900" />
-      <path d="M137.615 235.487L137.615 179.886L193.216 179.886L137.615 235.487Z" fill="#1D4ED8"
-        class="dark:fill-indigo-800" />
-      <path d="M53.3108 199.749L108.476 110.517L163.642 199.749H53.3108Z" stroke="#1D4ED8" stroke-width="2.18043"
-        class="dark:stroke-indigo-700" />
-      <path d="M65.9582 91L123.08 182.578H8.83672L65.9582 91Z" fill="#1D4ED8" class="dark:fill-indigo-800" />
+      <path d="M274.983 42.5186C261.682 42.5186 248.926 47.8596 239.521 57.3668C230.116 66.874 224.833 79.7685 224.833 93.2137C224.833 106.659 230.116 119.553 239.521 129.061C248.926 138.568 261.682 143.909 274.983 143.909L274.983 120.374C267.857 120.374 261.023 117.512 255.984 112.419C250.945 107.325 248.114 100.417 248.114 93.2137C248.114 86.0103 250.945 79.1021 255.984 74.0085C261.023 68.915 267.857 66.0535 274.983 66.0535L274.983 42.5186Z" fill="#3B82F6"/>
+      <path d="M274.982 0C250.405 -2.94804e-07 226.835 9.82069 209.456 27.3016C192.077 44.7826 182.314 68.4918 182.314 93.2136C182.314 117.935 192.077 141.645 209.456 159.126C226.835 176.606 250.405 186.427 274.982 186.427L274.982 143.153C261.815 143.153 249.187 137.892 239.876 128.526C230.566 119.161 225.335 106.458 225.335 93.2136C225.335 79.9688 230.566 67.2664 239.876 57.9009C249.187 48.5354 261.815 43.274 274.982 43.274L274.982 0Z" fill="#1D4ED8"/>
+      <circle cx="214.475" cy="222.95" r="59.962" transform="rotate(180 214.475 222.95)" stroke="#1E40AF" stroke-width="3.27065"/>
+      <circle cx="214.476" cy="222.95" r="49.0598" transform="rotate(180 214.476 222.95)" stroke="#1E40AF" stroke-width="3.27065"/>
+      <circle cx="214.475" cy="222.95" r="39.2478" transform="rotate(180 214.475 222.95)" stroke="#1E40AF" stroke-width="3.27065"/>
+      <circle cx="214.476" cy="222.949" r="28.3457" transform="rotate(180 214.476 222.949)" stroke="#1E40AF" stroke-width="3.27065"/>
+      <circle cx="214.475" cy="222.95" r="17.4435" transform="rotate(180 214.475 222.95)" stroke="#1E40AF" stroke-width="3.27065"/>
+      <circle cx="214.476" cy="222.949" r="7.63152" transform="rotate(180 214.476 222.949)" stroke="#3B82F6" stroke-width="3.27065"/>
+      <rect x="193.216" y="180.976" width="55.6011" height="40.338" transform="rotate(180 193.216 180.976)" fill="#1E40AF"/>
+      <path d="M137.615 235.487L137.615 179.886L193.216 179.886L137.615 235.487Z" fill="#1D4ED8"/>
+      <path d="M53.3108 199.749L108.476 110.517L163.642 199.749H53.3108Z" stroke="#1D4ED8" stroke-width="2.18043"/>
+      <path d="M65.9582 91L123.08 182.578H8.83672L65.9582 91Z" fill="#1D4ED8"/>
     </g>
     <defs>
       <clipPath id="clip0_1727_230">
-        <rect width="273" height="250" fill="white" />
+        <rect width="273" height="250" fill="white"/>
       </clipPath>
     </defs>
   </svg>
@@ -90,10 +102,9 @@
     const suggestionsDiv = document.getElementById('suggestions');
     suggestionsDiv.style.display = 'block';
 
+    suggestionsDiv.offsetHeight; // Force reflow
 
-    suggestionsDiv.offsetHeight;
-
-    suggestionsDiv.classList.remove('opacity-0', 'suggestions-hide');
+    suggestionsDiv.classList.remove('opacity-0');
     suggestionsDiv.classList.add('opacity-100');
     suggestionsVisible = true;
   }
@@ -101,14 +112,12 @@
   function closeSuggestions() {
     const suggestionsDiv = document.getElementById('suggestions');
     suggestionsDiv.classList.remove('opacity-100');
-    suggestionsDiv.classList.add('suggestions-hide');
+    suggestionsDiv.classList.add('opacity-0');
     suggestionsVisible = false;
 
     suggestionsDiv.addEventListener('transitionend', () => {
       if (!suggestionsVisible) {
         suggestionsDiv.style.display = 'none';
-        suggestionsDiv.classList.remove('suggestions-hide');
-        suggestionsDiv.classList.add('opacity-0');
       }
     }, { once: true });
   }

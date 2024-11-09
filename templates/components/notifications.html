@@ -1,37 +1,114 @@
 {% if messages %}
-<div id="message-container" class="fixed top-16 right-4 w-full sm:w-80 mb-4 sm:mb-0 z-50" data-aos="fade-left" data-aos-duration="500" data-aos-delay="300">
+<div id="message-container" class="fixed top-16 left-2 right-2 sm:right-4 sm:left-auto w-auto sm:w-80 mb-4 sm:mb-0 z-50" data-aos="fade-left" data-aos-duration="500" data-aos-delay="300">
   {% for message in messages %}
   <div
-    class="flex items-start sm:items-center p-4 mb-4 rounded-lg shadow-lg transition-all duration-300 
+    class="message-item flex items-start p-3 sm:p-4 mb-3 sm:mb-4 rounded-lg shadow-lg transition-all duration-300 touch-pan-x 
     {% if message.tags == 'error' %} bg-red-500 text-white 
     {% elif message.tags == 'warning' %} bg-yellow-500 text-white 
     {% elif message.tags == 'success' %} bg-green-500 text-white 
-    {% else %} bg-blue-500 text-white {% endif %}">
+    {% else %} bg-blue-500 text-white {% endif %}"
+    style="transform: translateX(0); transition: transform 0.3s ease-out">
     
-    <div class="mr-3">
+    <div class="mr-2 sm:mr-3 flex-shrink-0">
       {% if message.tags == 'error' %}
-      <i class="fas fa-times-circle w-5 h-5"></i>
+      <i class="fas fa-times-circle w-4 h-4 sm:w-5 sm:h-5"></i>
       {% elif message.tags == 'warning' %}
-      <i class="fas fa-exclamation-triangle w-5 h-5"></i>
+      <i class="fas fa-exclamation-triangle w-4 h-4 sm:w-5 sm:h-5"></i>
       {% elif message.tags == 'success' %}
-      <i class="fas fa-check-circle w-5 h-5"></i>
+      <i class="fas fa-check-circle w-4 h-4 sm:w-5 sm:h-5"></i>
       {% else %}
-      <i class="fas fa-info-circle w-5 h-5"></i>
+      <i class="fas fa-info-circle w-4 h-4 sm:w-5 sm:h-5"></i>
       {% endif %}
     </div>
     
-    <div class="flex-1">
-      <span class="font-bold block sm:inline">
+    <div class="flex-1 min-w-0">
+      <span class="font-bold text-sm sm:text-base block mb-0.5 sm:mb-0 sm:inline">
         {% if message.tags == 'error' %} Error:
         {% elif message.tags == 'warning' %} Advertencia:
         {% elif message.tags == 'success' %} Éxito:
         {% else %} Info:
         {% endif %}
       </span>
-      <p class="text-sm">{{ message }}</p>
+      <p class="text-xs sm:text-sm truncate">{{ message }}</p>
     </div>
-    
   </div>
   {% endfor %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const messages = document.querySelectorAll('.message-item');
+  
+  // Función para detectar si es dispositivo móvil
+  function isMobileDevice() {
+    return (window.innerWidth < 640); // 640px es el breakpoint 'sm' de Tailwind
+  }
+
+  messages.forEach(message => {
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let currentTranslateX = 0;
+    
+    // Solo aplicar eventos táctiles si es dispositivo móvil
+    if (isMobileDevice()) {
+      message.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+      });
+
+      message.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        touchEndX = e.touches[0].clientX;
+        const diffX = touchEndX - touchStartX;
+        
+        const maxSlide = 100;
+        currentTranslateX = Math.max(Math.min(diffX, maxSlide), -maxSlide);
+        
+        message.style.transform = `translateX(${currentTranslateX}px)`;
+      });
+
+      message.addEventListener('touchend', function() {
+        const threshold = 50;
+        
+        if (Math.abs(currentTranslateX) > threshold) {
+          const direction = currentTranslateX > 0 ? 1 : -1;
+          message.style.transform = `translateX(${direction * 150}%)`;
+          message.style.opacity = '0';
+          
+          setTimeout(() => {
+            message.remove();
+          }, 300);
+        } else {
+          message.style.transform = 'translateX(0)';
+        }
+      });
+
+      // Auto-desaparecer solo en móviles después de 5 segundos
+      setTimeout(() => {
+        if (message && message.parentElement) {
+          message.style.transform = 'translateX(-150%)';
+          message.style.opacity = '0';
+          setTimeout(() => message.remove(), 300);
+        }
+      }, 5000);
+    }
+
+    // Para computadoras, solo agregar un botón de cerrar
+    else {
+      const closeButton = document.createElement('button');
+      closeButton.innerHTML = '<i class="fas fa-times"></i>';
+      closeButton.className = 'ml-3 text-white hover:text-gray-200 focus:outline-none';
+      closeButton.onclick = function() {
+        message.style.opacity = '0';
+        setTimeout(() => message.remove(), 300);
+      };
+      message.appendChild(closeButton);
+    }
+  });
+
+  // Actualizar comportamiento si cambia el tamaño de la ventana
+  window.addEventListener('resize', function() {
+    location.reload();
+  });
+});
+</script>
 {% endif %}
